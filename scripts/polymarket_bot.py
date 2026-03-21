@@ -17,6 +17,8 @@ import os
 import sys
 import json
 import argparse
+import threading
+import time
 from datetime import datetime, timezone
 
 try:
@@ -24,6 +26,11 @@ try:
     load_dotenv()
 except ImportError:
     pass
+
+try:
+    import schedule
+except ImportError:
+    schedule = None
 
 import subprocess
 import requests
@@ -651,11 +658,43 @@ COMMAND_HANDLERS = {
 }
 
 
+def _cron_loop():
+    """Background thread: runs polymarket_cron.run_full_cycle() on a schedule."""
+    from polymarket_cron import run_full_cycle
+
+    # Initial scan 30s after startup
+    time.sleep(30)
+    print("[CRON] Running initial scan...")
+    try:
+        run_full_cycle()
+    except Exception as e:
+        print(f"[CRON] Initial scan error: {e}")
+
+    # Schedule hourly scans
+    schedule.every(1).hours.do(lambda: run_full_cycle())
+    print("[CRON] Hourly scan scheduler started.")
+
+    while True:
+        schedule.run_pending()
+        time.sleep(30)
+
+
 def run_bot():
     """Run the bot in persistent polling mode — listens for commands and approvals."""
     print("Starting Polymarket Signal Bot...")
     print("Registering commands with Telegram...")
     register_bot_commands()
+
+    # Start embedded cron scheduler if enabled
+    enable_cron = os.getenv("ENABLE_CRON", "true").lower() in ("true", "1", "yes")
+    if enable_cron and schedule is not None:
+        cron_thread = threading.Thread(target=_cron_loop, daemon=True)
+        cron_thread.start()
+        print("Embedded cron scheduler started (hourly scans).")
+    elif enable_cron and schedule is None:
+        print("WARNING: 'schedule' package not installed — cron disabled.")
+    else:
+        print("Cron scheduler disabled (ENABLE_CRON=false).")
 
     print("Bot is running. Press Ctrl+C to stop.\n")
 

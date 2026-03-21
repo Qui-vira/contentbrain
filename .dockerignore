@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# Allow only what we need
+!requirements.txt
+!scripts/polymarket_bot.py
+!scripts/polymarket_cron.py
+!scripts/polymarket_scanner.py
+!scripts/polymarket_tracker.py
