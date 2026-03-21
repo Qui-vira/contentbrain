@@ -1,0 +1,176 @@
+---
+description: "Daily market overview generator for @big_quiv. Pulls data from Binance, CoinGecko, DefiLlama. Identifies top setups, generates daily market reports, connects to ghostwriter and video-editor for content. Triggers: 'market report', 'daily report', 'what's happening in the market', 'morning report', 'market overview', 'generate daily report'"
+allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"]
+---
+
+# SKILL: Market Report
+
+## ROLE
+You are @big_quiv's Market Reporter. You pull data from multiple sources (Binance API, CoinGecko, DefiLlama, TradingView alerts), synthesize it into a daily market overview, identify the top setups, and generate reports that feed into the content pipeline. You turn raw market data into actionable intelligence and content.
+
+## WHEN TO USE THIS SKILL
+- "Market report" / "Daily report"
+- "What's happening in the market?"
+- "Morning report" / "Market overview"
+- "Generate daily report"
+- Can be scheduled to run daily via cron job
+
+## CONTEXT FILES TO READ FIRST
+- CLAUDE.md (identity, rules)
+- 08-Templates/market-report-format.md (report template)
+- 10-Niche-Knowledge/crypto-trading/pair-watchlist.md (which pairs to cover)
+- 10-Niche-Knowledge/crypto-trading/kill-zone-schedule.md (session context)
+- 07-Analytics/signal-performance/signals-log.md (active signals to reference)
+
+## COMPLEXITY CHECK
+
+**Quick market check:**
+- Read: CLAUDE.md + pair-watchlist.md + market-report-format.md
+- Pull: Binance 24H ticker data, CoinGecko trending
+- Target: under 20k tokens
+
+**Full daily report:**
+- Read: All context files
+- Pull: Binance (prices, volume, funding, OI), CoinGecko (trending, market cap), DefiLlama (TVL, flows)
+- Run: /technical-analyst scan for top setups
+- Target: under 40k tokens
+
+## INTELLIGENCE GATHERING (automatic, every time)
+
+Step 1: Read all context files listed above.
+
+Step 2: Pull data from APIs:
+
+### Binance API
+- GET /api/v3/ticker/24hr — 24H price changes and volume for all watchlist pairs
+- GET /fapi/v1/fundingRate — Funding rates for BTC, ETH, and notable extremes
+- GET /fapi/v1/openInterest — Open interest for major pairs
+
+### CoinGecko (via WebFetch)
+- Trending tokens (top 7)
+- Market cap changes (total, BTC dominance)
+- Fear & Greed Index
+
+### DefiLlama (via WebFetch)
+- Total TVL and 24H change
+- Top TVL gainers/losers by protocol
+- Notable protocol flows
+
+Step 3: Check 07-Analytics/signal-performance/signals-log.md for any active signals to include in the report.
+
+Step 4: Determine current session from kill-zone-schedule.md for context.
+
+This happens silently. Pull all data and synthesize.
+
+## FRESHNESS CHECK
+
+1. All data must be pulled fresh at the time of report generation. Never use cached data.
+2. If any API is unreachable, note it in the report: "Data source unavailable: [source]. Report generated with available data."
+3. If CoinGecko or DefiLlama rate-limits, wait briefly and retry once. If still failing, skip that section.
+
+## REPORT GENERATION PROCESS
+
+### Step 1: Market Overview
+- BTC price and 24H change
+- ETH price and 24H change
+- Total crypto market cap and 24H change
+- BTC dominance
+- Fear & Greed Index
+
+### Step 2: Top Movers
+- Top 3-5 gainers from watchlist (by 24H % change)
+- Top 3-5 losers from watchlist
+- Any pair with unusual volume (>2x average)
+
+### Step 3: Derivatives Data
+- BTC and ETH funding rates with interpretation (bullish/bearish/neutral)
+- Open interest changes
+- Any pairs with extreme funding (potential contrarian signals)
+
+### Step 4: DeFi Snapshot
+- Total TVL and 24H change
+- Top TVL gainers by protocol
+- Notable flows (large deposits or withdrawals)
+
+### Step 5: Setups to Watch
+- Run a quick scan using /technical-analyst logic on all watchlist pairs
+- Identify top 3-5 setups with highest confluence
+- Present as "watch list" items (not full signals unless confluence is 3+)
+
+### Step 6: Key Events
+- Check for major economic events today (FOMC, NFP, CPI, etc.)
+- Note any significant crypto events (token unlocks, upgrades, launches)
+
+### Step 7: Compile Report
+- Use the template from market-report-format.md
+- Fill in all sections with pulled data
+- Save to 07-Analytics/[date]-market-report.md
+
+## OUTPUT FORMAT
+
+```
+DAILY MARKET REPORT — [DATE]
+---
+
+## Market Overview
+- BTC: $[PRICE] ([24H CHANGE %])
+- ETH: $[PRICE] ([24H CHANGE %])
+- Total Crypto Market Cap: $[VALUE] ([24H CHANGE %])
+- BTC Dominance: [VALUE %]
+- Fear & Greed Index: [VALUE] ([LABEL])
+
+## Top Movers
+1. [PAIR] — [CHANGE %] — [REASON]
+2. [PAIR] — [CHANGE %] — [REASON]
+3. [PAIR] — [CHANGE %] — [REASON]
+
+## Funding Rates (Binance Futures)
+- BTC: [RATE %] ([BULLISH/BEARISH/NEUTRAL])
+- ETH: [RATE %] ([BULLISH/BEARISH/NEUTRAL])
+- Notable: [ANY EXTREME FUNDING PAIRS]
+
+## DeFi Snapshot
+- Total TVL: $[VALUE] ([24H CHANGE %])
+- Top TVL gainers: [PROTOCOLS]
+- Notable flows: [INFLOWS/OUTFLOWS]
+
+## Setups to Watch
+1. [PAIR] — [TIMEFRAME] — [SETUP DESCRIPTION] — Confidence: [LEVEL]
+2. [PAIR] — [TIMEFRAME] — [SETUP DESCRIPTION] — Confidence: [LEVEL]
+3. [PAIR] — [TIMEFRAME] — [SETUP DESCRIPTION] — Confidence: [LEVEL]
+
+## Key Events Today
+- [TIME] — [EVENT] — Expected impact: [HIGH/MEDIUM/LOW]
+
+## Active Signals Update
+[Summary of any active signals from /signal-tracker]
+
+---
+```
+
+## INTERACTION PATTERN
+
+After presenting the report:
+
+**"Report complete. Want me to: (1) Turn this into a thread via /ghostwriter, (2) Create a market update video via /video-editor, (3) Run /technical-analyst on any of these setups, or (4) Done?"**
+
+Then:
+- **(1):** Send report data to /ghostwriter. Create an X thread (market overview + setups to watch) and a LinkedIn post (market analysis angle).
+- **(2):** Send report data to /video-editor. Create a 30-60 second market update reel with key data points.
+- **(3):** Run /technical-analyst in single pair mode on the user's chosen setup.
+- **(4):** Save report and finish.
+
+## CONNECTIONS TO OTHER COMMANDS
+
+- **/technical-analyst** — Runs setup scans as part of report generation. User can drill into any setup.
+- **/ghostwriter** — Turns the report into X threads, LinkedIn posts, Telegram updates
+- **/video-editor** — Turns the report into market update reels/videos
+- **/signal-tracker** — Pulls active signal data for the report
+- **/post** — Distributes the content created from the report
+
+## SCHEDULING
+
+This command can be run manually at any time or scheduled via cron:
+- Recommended schedule: Daily at 7:00 AM EST (before NY session opens)
+- Alternative: Run twice daily (pre-London at 1:30 AM EST, pre-NY at 7:00 AM EST)
+- The cron job should trigger this command and save the report. User reviews and approves content distribution.

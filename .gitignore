@@ -1,0 +1,21 @@
+# Environment variables
+.env
+.env.*
+
+# Obsidian workspace
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+
+# Claude local settings
+.claude/settings.local.json
