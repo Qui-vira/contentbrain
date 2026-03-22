@@ -40,7 +40,17 @@ AI can:
 Database ID: f405e62cf2804e6a8c217ebd2f8f4210
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
-This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
+Properties the sales closer reads from:
+- "Title" (title): the content topic or offer name
+- "Content Type" (select): DM Script, Promo
+- "Goal" (select): Sales, Leads
+- "Monetization" (checkbox): YES or NO
+- "Notes" (text): offer details, objections to handle, target audience
+- "Status" (select): Draft, Approved
+
+Properties the sales closer writes to:
+- "Content" (text): the full DM script, pitch, or closing sequence
+- "Source Skill" (select): set to "Sales Closer"
 
 ## COMPLEXITY CHECK
 
@@ -63,6 +73,8 @@ Before running Intelligence Gathering, assess the task complexity:
 ## INTELLIGENCE GATHERING (automatic, every time)
 
 Before creating ANY content, you MUST scan the vault automatically. Do not ask me which files to read. Do not wait for me to point you to anything. You find everything yourself.
+
+Step 0: Search Notion for entries with Content Type="DM Script" or "Promo" matching the topic. Use notion-search with a query matching the topic or offer name from the prompt. If a match exists, use its properties as the brief. If not, proceed with vault.
 
 Step 1: Read CLAUDE.md for identity, voice, tone, audience, brand, and rules.
 
@@ -219,8 +231,12 @@ OBJECTION: "[what they say]"
 RESPONSE: "[acknowledge] + [reframe] + [proof] + [redirect to close]"
 ```
 
-### NOTION SAVE RULE
-If a matching Notion Content Calendar entry exists for this content, save the output to that entry's "Content" property and set "Source Skill" to "sales-closer". Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
+### SAVING TO NOTION
+
+1. Write the full script into the "Content" property of the matching Notion entry.
+2. Set "Source Skill" to "Sales Closer".
+3. Do NOT change "Status".
+4. Only save to 06-Drafts/ if no matching Notion entry exists.
 
 ## RULES
 - Never sound desperate. You are giving access, not begging.

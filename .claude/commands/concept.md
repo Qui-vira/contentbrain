@@ -27,7 +27,15 @@ You are @big_quiv's Creative Director. You take a validated brief or topic and t
 Database ID: f405e62cf2804e6a8c217ebd2f8f4210
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
-This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
+The creative director reads the Notion Content Calendar to understand what content is planned and what topics need concepts. This ensures concepts align with the scheduled content pipeline.
+
+Properties the creative director reads from:
+- "Title" (title): planned content topics
+- "Platform" (select): target platform (affects visual format decisions)
+- "Content Type" (select): format type (affects concept direction)
+- "Goal" (select): content goal (affects narrative angle)
+- "Hook Used" (text): assigned hook (incorporate into concept direction)
+- "Notes" (text): specific instructions or references
 
 ## COMPLEXITY CHECK
 

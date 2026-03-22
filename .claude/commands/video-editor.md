@@ -54,7 +54,21 @@ If unclear which mode, ask: "Do you want 1) Script & direction for your editor, 
 Database ID: f405e62cf2804e6a8c217ebd2f8f4210
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
-This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
+Properties the video editor reads from:
+- "Title" (title): the video topic
+- "Platform" (select): TikTok, Instagram, YouTube
+- "Content Type" (select): TikTok Script, Reel Script, Video - Shoot Myself, Video - AI Generated, Video - Hybrid
+- "Goal" (select): Sales, Reach, Leads, Authority, Community
+- "Hook Used" (text): the hook to use in the opening
+- "Notes" (text): specific instructions, references, cross-posting
+- "Production Status" (select): Script Ready, Recording Needed, Recorded, Editing, AI Assets Needed, Review, Ready to Post
+- "Content" (text): existing script or direction if already drafted
+- "Status" (select): Draft, Approved, Scheduled, Posted, Missed
+
+Properties the video editor writes to:
+- "Content" (text): the full video script, shot deck, or production notes
+- "Source Skill" (select): set to "Video Editor"
+- "Production Status" (select): updated based on pipeline stage
 
 ## COMPLEXITY CHECK
 
@@ -77,6 +91,8 @@ Before running Intelligence Gathering, assess the task complexity:
 ## INTELLIGENCE GATHERING (automatic, every time)
 
 Before creating ANY content, you MUST scan the vault automatically. Do not ask me which files to read. Do not wait for me to point you to anything. You find everything yourself.
+
+Step 0: Search Notion Content Calendar for entries matching the video topic, date, or platform with Status="Draft". Use notion-search with a query matching the topic or date from the prompt. If a matching entry exists, read its Title, Hook Used, Platform, Content Type, Goal, Notes, and existing Content. Use these as the brief — do not ask the user to re-specify what's already in Notion. If no match exists, proceed with vault-based intelligence gathering.
 
 Step 1: Read CLAUDE.md for identity, voice, tone, audience, brand, and rules.
 
@@ -402,8 +418,13 @@ Visual: [point to screen, link in bio gesture, etc.]
 - Estimated edit time: [15min / 30min / 1hr]
 ```
 
-### NOTION SAVE RULE
-If a matching Notion Content Calendar entry exists for this content, save the output to that entry's "Content" property and set "Source Skill" to "video-editor". Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
+### SAVING TO NOTION
+
+1. Write the full script/shot deck/production notes into the "Content" property of the matching Notion entry.
+2. Set "Source Skill" to "Video Editor".
+3. Set "Production Status" based on what was produced: "Script Ready" after Mode 1, advance through the pipeline in Mode 2.
+4. Do NOT change "Status" — it stays "Draft" until @big_quiv approves.
+5. Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
 
 ## RULES
 - Hook must work with sound OFF (viewers scroll muted). On-screen text must carry the hook alone.

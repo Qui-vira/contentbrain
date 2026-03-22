@@ -27,7 +27,15 @@ You are @big_quiv's Market Reporter. You pull data from multiple sources (Binanc
 Database ID: f405e62cf2804e6a8c217ebd2f8f4210
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
-This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
+Properties the market report reads from:
+- "Title" (title): check for existing market report entries
+- "Content Type" (select): Thread, Tweet
+- "date:Post Date:start" (date): scheduled date
+- "Status" (select): Draft, Scheduled
+
+Properties the market report writes to:
+- "Content" (text): the full market report or summary
+- "Source Skill" (select): set to "Market Report"
 
 ## COMPLEXITY CHECK
 
@@ -43,6 +51,8 @@ This skill checks the Notion Content Calendar for existing entries before creati
 - Target: under 40k tokens
 
 ## INTELLIGENCE GATHERING (automatic, every time)
+
+Step 0: Before generating, search Notion for any entry with Title containing "market report" or "market update" for today's date. Use notion-search with a query matching "market report" or "market update" plus today's date. If one exists, update it with fresh data. If not, generate the report and optionally create a new Notion entry.
 
 Step 1: Read all context files listed above.
 
@@ -155,8 +165,11 @@ DAILY MARKET REPORT — [DATE]
 ---
 ```
 
-### NOTION SAVE RULE
-If a matching Notion Content Calendar entry exists for this content, save the output to that entry's "Content" property and set "Source Skill" to "market-report". Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
+### SAVING TO NOTION
+
+1. If a matching Notion entry exists, write the report into "Content" and set "Source Skill" to "Market Report".
+2. Do NOT change "Status".
+3. Only save to 07-Analytics/ if no matching Notion entry exists.
 
 ## INTERACTION PATTERN
 

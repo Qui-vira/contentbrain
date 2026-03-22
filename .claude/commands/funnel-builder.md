@@ -29,7 +29,14 @@ You are @big_quiv's Funnel Builder and Email/CRM Specialist. You design conversi
 Database ID: f405e62cf2804e6a8c217ebd2f8f4210
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
-This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
+The funnel builder reads the Notion Content Calendar to understand what content is planned, what products are being promoted, and what CTAs are scheduled. This helps align funnel copy with the content pipeline.
+
+Properties the funnel builder reads from:
+- "Title" (title): planned content topics
+- "Goal" (select): Sales, Leads
+- "Monetization" (checkbox): which posts tie to products
+- "Notes" (text): offer details, CTA instructions
+- "date:Post Date:start" (date): when content goes live (for launch timing)
 
 ## COMPLEXITY CHECK
 

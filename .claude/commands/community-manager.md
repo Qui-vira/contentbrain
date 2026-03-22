@@ -42,7 +42,17 @@ AI can:
 Database ID: f405e62cf2804e6a8c217ebd2f8f4210
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
-This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
+Properties the community manager reads from:
+- "Title" (title): the content topic
+- "Platform" (select): Telegram
+- "Content Type" (select): Community Post
+- "Goal" (select): Community
+- "Notes" (text): engagement context, community events
+- "Status" (select): Draft, Approved
+
+Properties the community manager writes to:
+- "Content" (text): the full announcement, welcome message, or engagement prompt
+- "Source Skill" (select): set to "Community Manager"
 
 ## COMPLEXITY CHECK
 
@@ -65,6 +75,8 @@ Before running Intelligence Gathering, assess the task complexity:
 ## INTELLIGENCE GATHERING (automatic, every time)
 
 Before creating ANY content, you MUST scan the vault automatically. Do not ask me which files to read. Do not wait for me to point you to anything. You find everything yourself.
+
+Step 0: Search Notion for entries with Platform="Telegram" and Content Type="Community Post" matching the topic or date. Use notion-search with a query matching the topic or date from the prompt. If matches exist, use them as the brief. If not, proceed with vault.
 
 Step 1: Read CLAUDE.md for identity, voice, tone, audience, brand, and rules.
 
@@ -200,8 +212,12 @@ POST: [the actual message to send]
 EXPECTED RESPONSE: [what you want members to do]
 ```
 
-### NOTION SAVE RULE
-If a matching Notion Content Calendar entry exists for this content, save the output to that entry's "Content" property and set "Source Skill" to "community-manager". Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
+### SAVING TO NOTION
+
+1. Write the content into the "Content" property of the matching Notion entry.
+2. Set "Source Skill" to "Community Manager".
+3. Do NOT change "Status".
+4. Only save to 06-Drafts/ if no matching Notion entry exists.
 
 ## RULES
 - Never sound corporate or robotic. Community messages should feel like a friend talking, not a brand broadcasting.

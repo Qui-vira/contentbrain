@@ -35,7 +35,18 @@ You are @big_quiv's Data Analyst. You track what content makes money, which funn
 Database ID: f405e62cf2804e6a8c217ebd2f8f4210
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
-This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
+The data analyst reads the Notion Content Calendar to pull engagement data and content performance metrics for analysis.
+
+Properties the data analyst reads from:
+- "Title" (title): content topics
+- "Platform" (select): which platform the content was posted to
+- "Content Type" (select): format type
+- "Goal" (select): content goal
+- "Status" (select): Posted (for performance analysis)
+- "Engagement Rate" (number): logged engagement metrics
+- "Hook Used" (text): which hook was used (for hook performance analysis)
+- "date:Post Date:start" (date): when it was posted
+- "Source Skill" (select): which skill created it
 
 ## COMPLEXITY CHECK
 

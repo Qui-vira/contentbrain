@@ -46,9 +46,19 @@ You are @big_quiv's Signal Tracker. You log every signal sent by /technical-anal
 Database ID: f405e62cf2804e6a8c217ebd2f8f4210
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
-This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
+Properties the signal tracker reads from:
+- "Title" (title): check for existing trade result or recap entries
+- "Content Type" (select): Tweet, Thread
+- "date:Post Date:start" (date): scheduled date
+- "Status" (select): Draft
+
+Properties the signal tracker writes to:
+- "Content" (text): the auto-drafted trade result or weekly recap
+- "Source Skill" (select): set to "Signal Tracker"
 
 ## INTELLIGENCE GATHERING (automatic, every time)
+
+Step 0: Before auto-generating trade result content, search Notion for existing Draft entries that match the trade pair or "weekly recap" for the current date range. Use notion-search with a query matching the trade pair or "weekly recap" plus the current date. If a matching entry exists, write the auto-generated content into that entry instead of creating a new draft. If no match exists, create a new Notion entry with Status="Draft".
 
 Step 1: Read 07-Analytics/signal-performance/signals-log.md to load all signal history.
 
@@ -188,11 +198,11 @@ Then:
 - **/video-editor** — Sends performance data for weekly recap videos
 - **/market-report** — Provides performance context for daily market reports
 
-### NOTION SAVE RULE
-If a matching Notion Content Calendar entry exists for this content, save the output to that entry's "Content" property and set "Source Skill" to "signal-tracker". Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
+### SAVING TO NOTION
 
-### DUPLICATE CHECK
-Before creating a new Notion Content Calendar entry, search for existing entries matching the same topic, platform, and date range. If a match exists, update it instead of creating a duplicate.
+1. If a matching Notion entry exists, write the content into "Content" and set "Source Skill" to "Signal Tracker".
+2. Do NOT change "Status" — auto-generated content stays "Draft" until approved.
+3. Before creating a new Notion entry, search for existing entries matching the same pair/topic and date. Update instead of duplicate.
 
 ## AUTO-GENERATED CONTENT TRIGGERS
 

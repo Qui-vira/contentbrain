@@ -55,7 +55,28 @@ If unclear which mode, ask: "What do you need? 1) Weekly content plan 2) Creativ
 Database ID: f405e62cf2804e6a8c217ebd2f8f4210
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
-This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
+Properties the content strategist reads from:
+- "Title" (title): the content topic
+- "Platform" (select): X/Twitter, LinkedIn, TikTok, Instagram, YouTube, Telegram
+- "Content Type" (select): Tweet, Thread, LinkedIn Post, TikTok Script, Reel Script, Carousel, Video, Promo, Community Post
+- "Goal" (select): Sales, Reach, Leads, Authority, Community
+- "Status" (select): Draft, Approved, Scheduled, Posted, Missed
+- "date:Post Date:start" (date): when the content should go live
+- "Hook Used" (text): assigned hook
+- "Monetization" (checkbox): YES or NO
+- "Notes" (text): cross-posting instructions, CTA notes
+
+Properties the content strategist writes to:
+- "Title" (title): content topic when creating new entries
+- "Platform" (select): target platform
+- "Content Type" (select): format type
+- "Goal" (select): content goal
+- "date:Post Date:start" (date): scheduled date
+- "Hook Used" (text): assigned hook
+- "Monetization" (checkbox): whether monetization is tied in
+- "Status" (select): set to "Draft" when creating new entries
+- "Source Skill" (select): set to "Content Strategist"
+- "Notes" (text): cross-posting instructions, formatting rules
 
 ## COMPLEXITY CHECK
 
@@ -78,6 +99,8 @@ Before running Intelligence Gathering, assess the task complexity:
 ## INTELLIGENCE GATHERING (automatic, every time)
 
 Before creating ANY content, you MUST scan the vault automatically. Do not ask me which files to read. Do not wait for me to point you to anything. You find everything yourself.
+
+Step 0: Search Notion Content Calendar for ALL entries in the requested date range (e.g., the coming week). Use notion-search with a query matching the topic or date from the prompt. If entries already exist for that week, use them as the content plan foundation — do not create a new plan from scratch. Only add entries for gaps (missing days, missing platforms, missing content types). If no entries exist, create the full plan and push each planned post as a new Notion entry with Status="Draft".
 
 Step 1: Read CLAUDE.md for identity, voice, tone, audience, brand, and rules.
 
@@ -248,14 +271,14 @@ Content goal: [which of the 5 goals this trend serves]
 - TikTok: Tue, Thu, Sat (scripts only, editor handles production)
 ```
 
-### NOTION SAVE RULE
-If a matching Notion Content Calendar entry exists for this content, save the output to that entry's "Content" property and set "Source Skill" to "content-strategist". Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
+### SAVING TO NOTION
 
-### DUPLICATE CHECK
-Before creating a new Notion Content Calendar entry, search for existing entries matching the same topic, platform, and date range. If a match exists, update it instead of creating a duplicate.
-
-### WEEKLY PLAN NOTION RULE
-When creating a weekly content plan, create Notion Content Calendar entries for each planned post. Set the Date, Platform, Hook, Format, Goal, and Monetization fields from the plan. Check for duplicates before creating each entry.
+When creating a weekly content plan:
+1. Check Notion first (Step 0). If entries exist for that date range, present them as the current plan and suggest additions/changes only.
+2. When creating NEW entries, set Status="Draft" and Source Skill="Content Strategist".
+3. Never duplicate an entry that already exists — search before creating each one.
+4. Set Title, Platform, Content Type, Goal, date:Post Date:start, Hook Used, Monetization, and Notes from the plan for each new entry.
+5. Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
 
 ## RULES
 - Never suggest topics outside the niche (Web3, crypto, AI, trading, personal brand, education).
