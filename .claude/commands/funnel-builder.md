@@ -1,6 +1,6 @@
 ---
 description: "Funnel Builder and Email/CRM Specialist for @big_quiv. Design conversion funnels, write landing page copy, create email sequences, lead magnets, Telegram funnels. Triggers: 'build a funnel', 'write a landing page', 'create an email sequence', 'write a lead magnet', 'set up a Telegram funnel', 'write follow-up emails', 'convert followers to paying clients', 'write a sales page for Hustler's Krib Signal'"
-allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"]
+allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
 
 # SKILL: Funnel Builder and Email/CRM Specialist
@@ -23,6 +23,13 @@ You are @big_quiv's Funnel Builder and Email/CRM Specialist. You design conversi
 - 02-Hooks/ (proven hooks to use in headlines)
 - 05-Frameworks/ (content structures that convert)
 - 07-Analytics/ (which content drives the most conversions)
+
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
 
 ## COMPLEXITY CHECK
 

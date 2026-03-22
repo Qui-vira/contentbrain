@@ -5,6 +5,13 @@ allowed-tools: ["Read", "Glob", "mcp__notion__notion-search", "mcp__notion__noti
 
 # SKILL: Publish Status
 
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+This skill reads from the Notion Content Calendar to show content status. Use the database and data source IDs above for all Notion operations.
+
 ## PROCESS
 1. Search Notion Content Calendar for all entries
 2. Group by status: Scheduled, Posted, Missed, Draft

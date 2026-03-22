@@ -1,6 +1,6 @@
 ---
 description: "Video Producer for @big_quiv. Write video scripts, shot lists, visual direction, art direction, storyboards, AI image/video generation, voiceover, assembly via Remotion. Full production pipeline from script to render. Triggers: 'create a video script', 'write a shot list', 'give me editing notes', 'plan a batch of video content', 'write 5 TikTok scripts', 'create a Reel script', 'produce a video about [topic]', 'art direction for [script]', 'storyboard this', 'generate the visuals', 'assemble the video', 'full video pipeline for [topic]'"
-allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"]
+allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
 
 # SKILL: Video Producer
@@ -48,6 +48,13 @@ If unclear which mode, ask: "Do you want 1) Script & direction for your editor, 
 - 08-Templates/production-checklist.md (pre-production through post-launch monitoring)
 - 08-Templates/voice-library.md (voice profiles for voiceover generation)
 - 04-Patterns/content-format-comparison.md (effort vs reach vs authority per format)
+
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
 
 ## COMPLEXITY CHECK
 
@@ -394,6 +401,9 @@ Visual: [point to screen, link in bio gesture, etc.]
 - B-roll needed: [screen recordings, stock, etc.]
 - Estimated edit time: [15min / 30min / 1hr]
 ```
+
+### NOTION SAVE RULE
+If a matching Notion Content Calendar entry exists for this content, save the output to that entry's "Content" property and set "Source Skill" to "video-editor". Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
 
 ## RULES
 - Hook must work with sound OFF (viewers scroll muted). On-screen text must carry the hook alone.

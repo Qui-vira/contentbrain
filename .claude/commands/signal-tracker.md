@@ -1,6 +1,6 @@
 ---
 description: "Performance logger and win rate calculator for @big_quiv's trading signals. Logs every signal, monitors for SL/TP hits, calculates running win rate, generates weekly/monthly performance reports. Triggers: 'show performance', 'signal tracker', 'what's my win rate', 'update signal status', 'weekly report', 'monthly report', 'how are my signals doing', 'log this trade result'"
-allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"]
+allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
 
 # SKILL: Signal Tracker
@@ -40,6 +40,13 @@ You are @big_quiv's Signal Tracker. You log every signal sent by /technical-anal
 **Weekly/Monthly report:**
 - Read: signals-log.md + all reports in the relevant period + risk-management-rules.md
 - Target: under 25k tokens
+
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
 
 ## INTELLIGENCE GATHERING (automatic, every time)
 
@@ -180,6 +187,12 @@ Then:
 - **/ghostwriter** — Sends winning trade data for "why this trade worked" threads, weekly alpha recaps, trade result posts
 - **/video-editor** — Sends performance data for weekly recap videos
 - **/market-report** — Provides performance context for daily market reports
+
+### NOTION SAVE RULE
+If a matching Notion Content Calendar entry exists for this content, save the output to that entry's "Content" property and set "Source Skill" to "signal-tracker". Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
+
+### DUPLICATE CHECK
+Before creating a new Notion Content Calendar entry, search for existing entries matching the same topic, platform, and date range. If a match exists, update it instead of creating a duplicate.
 
 ## AUTO-GENERATED CONTENT TRIGGERS
 

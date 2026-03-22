@@ -1,6 +1,6 @@
 ---
 description: "Sales Closer for @big_quiv. Write DM scripts, objection handling responses, brand deal pitch templates, follow-up sequences, closing scripts. Triggers: 'write a DM script', 'handle the objection', 'write a pitch to [brand]', 'create a follow-up sequence', 'write a closing script', 'write an upsell script'"
-allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"]
+allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
 
 # SKILL: Sales Closer
@@ -34,6 +34,13 @@ AI can:
 - CLAUDE.md (offers, pricing, value propositions)
 - 05-Frameworks/ (sales frameworks if any exist)
 - 02-Hooks/ (hooks that work in outbound messaging)
+
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
 
 ## COMPLEXITY CHECK
 
@@ -211,6 +218,9 @@ If they answer [Y]: "[response, they may not be the right fit]"
 OBJECTION: "[what they say]"
 RESPONSE: "[acknowledge] + [reframe] + [proof] + [redirect to close]"
 ```
+
+### NOTION SAVE RULE
+If a matching Notion Content Calendar entry exists for this content, save the output to that entry's "Content" property and set "Source Skill" to "sales-closer". Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
 
 ## RULES
 - Never sound desperate. You are giving access, not begging.

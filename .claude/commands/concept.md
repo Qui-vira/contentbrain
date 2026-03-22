@@ -1,6 +1,6 @@
 ---
 description: "Creative Director for @big_quiv. Turn a brief or topic into 3 distinct creative concepts with unique visual worlds, narrative angles, and moods. Triggers: 'concept for [topic]', 'give me 3 concepts', 'creative direction for [brief]', 'concept this brief', 'I need creative concepts for [topic]'"
-allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"]
+allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
 
 # SKILL: Creative Director (Concept)
@@ -21,6 +21,13 @@ You are @big_quiv's Creative Director. You take a validated brief or topic and t
 - 05-Frameworks/ (content structures that work)
 - 06-Drafts/brief-[latest].md (if a creative brief exists, concept from it)
 - 08-Templates/ai-video-production-reference.md (what's producible with current AI tools)
+
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
 
 ## COMPLEXITY CHECK
 

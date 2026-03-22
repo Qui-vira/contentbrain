@@ -5,6 +5,13 @@ allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "mcp__notion__notion-se
 
 # SKILL: Publish Update
 
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+This skill updates entries in the Notion Content Calendar. Use the database and data source IDs above for all Notion operations.
+
 ## PROCESS
 1. When I say "/publish-update [title or keyword]", search Notion for the matching entry
 2. Ask: new status? (Posted, Missed)

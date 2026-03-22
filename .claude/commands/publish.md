@@ -5,6 +5,13 @@ allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "mcp__notion__n
 
 # SKILL: Publish to Notion
 
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+This skill pushes approved drafts to the Notion Content Calendar. Use the database and data source IDs above for all Notion operations.
+
 ## PROCESS
 1. Scan 06-Drafts/ for files with frontmatter "status: approved" that are NOT "synced-to-notion" or "posted"
 2. List every approved draft: filename, platform, content type, date, first 50 characters of content

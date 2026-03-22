@@ -1,6 +1,6 @@
 ---
 description: "Community Manager for @big_quiv. Write Telegram/Discord announcements, welcome messages, engagement prompts, community rules, FAQ banks, churn prevention sequences. Triggers: 'write a Telegram announcement', 'create a welcome message', 'write engagement prompts', 'create community rules', 'draft responses to common questions', 'plan a community engagement calendar', 'reduce churn in my group'"
-allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"]
+allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
 
 # SKILL: Community Manager
@@ -36,6 +36,13 @@ AI can:
 - CLAUDE.md (offers, community names, pricing tiers)
 - 03-Trends/ (trending topics to create discussion around)
 - 07-Analytics/ (member feedback, churn data if logged)
+
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
 
 ## COMPLEXITY CHECK
 
@@ -192,6 +199,9 @@ TYPE: [discussion / poll / quiz / spotlight]
 POST: [the actual message to send]
 EXPECTED RESPONSE: [what you want members to do]
 ```
+
+### NOTION SAVE RULE
+If a matching Notion Content Calendar entry exists for this content, save the output to that entry's "Content" property and set "Source Skill" to "community-manager". Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
 
 ## RULES
 - Never sound corporate or robotic. Community messages should feel like a friend talking, not a brand broadcasting.

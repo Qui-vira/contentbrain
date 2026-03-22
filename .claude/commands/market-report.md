@@ -1,6 +1,6 @@
 ---
 description: "Daily market overview generator for @big_quiv. Pulls data from Binance, CoinGecko, DefiLlama. Identifies top setups, generates daily market reports, connects to ghostwriter and video-editor for content. Triggers: 'market report', 'daily report', 'what's happening in the market', 'morning report', 'market overview', 'generate daily report'"
-allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"]
+allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
 
 # SKILL: Market Report
@@ -21,6 +21,13 @@ You are @big_quiv's Market Reporter. You pull data from multiple sources (Binanc
 - 10-Niche-Knowledge/crypto-trading/pair-watchlist.md (which pairs to cover)
 - 10-Niche-Knowledge/crypto-trading/kill-zone-schedule.md (session context)
 - 07-Analytics/signal-performance/signals-log.md (active signals to reference)
+
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
 
 ## COMPLEXITY CHECK
 
@@ -147,6 +154,9 @@ DAILY MARKET REPORT — [DATE]
 
 ---
 ```
+
+### NOTION SAVE RULE
+If a matching Notion Content Calendar entry exists for this content, save the output to that entry's "Content" property and set "Source Skill" to "market-report". Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
 
 ## INTERACTION PATTERN
 

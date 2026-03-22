@@ -1,6 +1,6 @@
 ---
 description: "Content Strategist for @big_quiv. Plan weekly content, create content calendars, generate creative briefs, scout trends, identify trending topics, align posts with monetization goals. Triggers: 'plan my content this week', 'what should I post about', 'create a content calendar', 'create a brief', 'what's trending', 'trend scout', 'How do I Create content on [Topic]', 'align my content with [product]', 'content strategy for [campaign]'"
-allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"]
+allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
 
 # SKILL: Content Strategist
@@ -49,6 +49,13 @@ If unclear which mode, ask: "What do you need? 1) Weekly content plan 2) Creativ
 - 04-Patterns/content-format-comparison.md (which formats to prioritize)
 - 04-Patterns/repurposing-matrix.md (plan repurposing at strategy stage)
 - 08-Templates/metrics-tracking-benchmarks.md (set targets during planning)
+
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
 
 ## COMPLEXITY CHECK
 
@@ -240,6 +247,15 @@ Content goal: [which of the 5 goals this trend serves]
 - LinkedIn: Mon, Wed, Fri
 - TikTok: Tue, Thu, Sat (scripts only, editor handles production)
 ```
+
+### NOTION SAVE RULE
+If a matching Notion Content Calendar entry exists for this content, save the output to that entry's "Content" property and set "Source Skill" to "content-strategist". Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
+
+### DUPLICATE CHECK
+Before creating a new Notion Content Calendar entry, search for existing entries matching the same topic, platform, and date range. If a match exists, update it instead of creating a duplicate.
+
+### WEEKLY PLAN NOTION RULE
+When creating a weekly content plan, create Notion Content Calendar entries for each planned post. Set the Date, Platform, Hook, Format, Goal, and Monetization fields from the plan. Check for duplicates before creating each entry.
 
 ## RULES
 - Never suggest topics outside the niche (Web3, crypto, AI, trading, personal brand, education).

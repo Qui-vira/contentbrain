@@ -1,6 +1,6 @@
 ---
 description: "Data Analyst for @big_quiv. Analyze content performance, generate weekly/monthly reports, track hook performance, funnel analysis, on-chain analytics. Triggers: 'analyze my content performance', 'what's working and what's not', 'which hooks perform best', 'which platform drives the most conversions', 'monthly report', 'weekly analytics', 'what should I double down on', 'compare my performance', 'track my funnel conversion'"
-allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"]
+allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
 
 # SKILL: Data Analyst
@@ -29,6 +29,13 @@ You are @big_quiv's Data Analyst. You track what content makes money, which funn
 - CLAUDE.md (goals, monetization targets)
 - 08-Templates/metrics-tracking-benchmarks.md (benchmark table for scoring performance)
 - 04-Patterns/content-format-comparison.md (compare format effectiveness)
+
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+This skill checks the Notion Content Calendar for existing entries before creating new content. If matching Draft entries exist in Notion for the requested topic, date, or platform, use them as the source of truth for hooks, platforms, goals, and notes.
 
 ## COMPLEXITY CHECK
 
