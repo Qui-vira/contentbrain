@@ -44,6 +44,9 @@ If unclear which mode, ask: "Do you want 1) Script & direction for your editor, 
 - 03-Trends/ (trending topics, sounds, formats)
 - 06-Drafts/content-plan-[latest].md (which video content is scheduled)
 - 08-Templates/ai-video-production-reference.md (prompts for Nano Banana, Kling, MiniMax, Remotion)
+- 08-Templates/prompt-library.md (reusable prompt blocks: camera angles, lighting, moods, environments, style modifiers, negative prompts)
+- 08-Templates/character-library.md (character descriptions, reference image paths, fal.ai model assignments, consistency rules)
+- 08-Templates/reference-image-guide.md (how to search Pexels/Unsplash for scene references, how to feed references to fal.ai models)
 - 08-Templates/video-format-structures.md (studio reel, cell phone reel, green screen specs and frameworks)
 - 08-Templates/production-checklist.md (pre-production through post-launch monitoring)
 - 08-Templates/voice-library.md (voice profiles for voiceover generation)
@@ -270,22 +273,57 @@ Rules:
 
 #### Step 3: Generate Visuals
 
-Generate AI images and videos for each shot in the deck.
+Generate AI images and videos for each shot in the deck using the prompt library, character library, and reference images.
 
-1. Read the art direction for palette, mood, and lighting specs.
-2. For each AI shot in the deck, write an optimized prompt.
-3. Present all prompts for approval before generating.
-4. Generate images via fal.ai (Nano Banana 2, model: fal-ai/nano-banana-pro).
-5. For video shots, generate via fal.ai Kling 3.0 Pro (model: fal-ai/kling-video/v3/pro/image-to-video).
-6. Save outputs to 06-Drafts/visuals/[project-name]/ with shot numbers as filenames.
+**3A. Load prompt building blocks:**
+1. Read 08-Templates/prompt-library.md — load camera angle, lighting, mood, environment, and style modifier blocks.
+2. Read 08-Templates/character-library.md — load character descriptions, reference image paths, and assigned fal.ai models for any characters in the shot deck.
+3. Read the art direction (from Step 1) for palette, mood, and lighting specs.
+
+**3B. For each shot in the deck, build the prompt:**
+1. Start with the character description (from character-library.md) if the shot includes a character.
+2. Add the action/pose from the shot deck description.
+3. Add the environment block (from prompt-library.md) matching the scene.
+4. Add the lighting block (from prompt-library.md) matching the art direction.
+5. Add the camera angle block (from prompt-library.md) matching the shot deck.
+6. Add style modifiers and Quivira brand tags (from prompt-library.md).
+7. Add the mood block (from prompt-library.md).
+8. Build the negative prompt from prompt-library.md defaults + shot-specific exclusions.
+
+**3C. Search for reference images (if needed):**
+1. If a shot requires real-world accuracy (specific environment, object, or style), search Pexels API for reference images per reference-image-guide.md.
+2. Check 08-Media/references/ first — reuse cached references before downloading new ones.
+3. Download top 1-3 results to 08-Media/references/[category]/.
+
+**3D. Select the right fal.ai model per shot:**
+
+| Shot Type | Model | Model ID |
+|-----------|-------|----------|
+| Text-only scene (no character) | Nano Banana 2 | `fal-ai/nano-banana-pro` |
+| Scene with reference images | Nano Banana 2 Edit | `fal-ai/nano-banana-pro/edit` (up to 14 refs) |
+| Scene with character (face consistency) | IP-Adapter Face ID | `fal-ai/ip-adapter-face-id` |
+| Scene with character (full body/pose) | Instant Character | `fal-ai/instant-character` |
+| Edit existing shot (keep character, change scene) | FLUX Kontext | `fal-ai/flux-pro/kontext` |
+| Fix face on generated image | Face Swap | `fal-ai/face-swap` (post-process) |
+| Animate still image to video | Kling 3.0 Pro | `fal-ai/kling-video/v3/pro/image-to-video` |
+
+**3E. Present all prompts for approval before generating.**
+
+**3F. Generate and save:**
+1. Generate images/videos via the selected fal.ai model.
+2. For video shots, first generate the keyframe image, then animate via Kling 3.0 Pro.
+3. If a character's face is inconsistent, post-process with `fal-ai/face-swap` using the character's reference image.
+4. Save outputs to 06-Drafts/visuals/[project-name]/ with shot numbers as filenames.
 
 Output per shot:
 ```
 SHOT [n]
 ---
-Prompt: [the full generation prompt]
-Negative prompt: [what to avoid]
-Model: [fal-ai/nano-banana-pro or fal-ai/kling-video/v3/pro/image-to-video]
+Prompt: [the full assembled prompt from prompt-library blocks]
+Negative prompt: [from prompt-library.md defaults + shot-specific]
+Model: [selected model ID from 3D table]
+Character: [character name from character-library.md or "none"]
+Reference images: [paths to any reference images used, or "none"]
 Settings: [aspect ratio: 9:16, guidance scale, steps]
 Output: [file path]
 ---
@@ -293,12 +331,13 @@ Output: [file path]
 
 Rules:
 - Default aspect ratio: 9:16 (1080x1920)
-- Write specific, technical prompts. Include lighting, camera angle, lens, composition
-- Always add "photograph, ultra realistic, editorial quality" for photorealistic shots
-- Include negative prompts: no blurry, no distorted faces, no watermarks, no cartoon style
-- Maintain visual consistency across all shots: same subject description, same lighting setup, same style tags
+- ALWAYS read prompt-library.md and character-library.md before building prompts. Never write prompts from scratch.
+- Assemble prompts by combining blocks from the library — do not invent new camera angle or lighting descriptions when a matching block exists.
+- For character shots: ALWAYS load the character's reference image and use the assigned model from character-library.md. Never generate a character from text description alone.
+- If the user provides a face/character photo during the conversation, save it to 08-Media/characters/ and update character-library.md before generating.
+- Maintain visual consistency: same character description, same lighting block, same style tags across ALL shots in the project.
 - Name files by shot number: shot-01.png, shot-02.png
-- If a generation fails or looks wrong, iterate on the prompt
+- If a generation fails or the face looks wrong, first try `fal-ai/face-swap` as post-processing. Only re-generate from scratch if face swap also fails.
 
 **Ask: "Approve, adjust, or give me specific instructions for the voice step?"**
 
@@ -335,15 +374,20 @@ Rules:
 
 #### Step 5: Assemble
 
-Assemble all assets into the final video via Remotion.
+Assemble all assets into the final video via Remotion. This includes clipping, concatenation, and compositing.
 
 1. Read the shot deck for exact timing and order.
 2. Map each generated image/video to its slot in the timeline.
-3. Sync to voiceover audio.
-4. Add text overlays if specified in the shot deck.
-5. Add Ken Burns effect (slow zoom/pan) on static images for motion.
-6. Write the Remotion composition code at content-studio/ (outside the vault).
-7. Render a draft preview (720p fast render).
+3. **Clip existing footage** if the shot deck references real video files:
+   - Use Remotion's `<OffthreadVideo>` with `startFrom` and `endAt` props to extract specific time ranges.
+   - Example: `<OffthreadVideo src="raw-footage.mp4" startFrom={300} endAt={600} />` extracts frames 300-600.
+4. **Concatenate clips** using Remotion's `<Series>` component to play clips sequentially.
+5. Sync to voiceover audio.
+6. Add text overlays if specified in the shot deck.
+7. Add Ken Burns effect (slow zoom/pan) on static images for motion using `interpolate()` and `useCurrentFrame()`.
+8. Add transitions between clips if requested using `@remotion/transitions` (`fade`, `slide`, `wipe`).
+9. Write the Remotion composition code at content-studio/ (outside the vault).
+10. Render a draft preview (720p fast render).
 
 Output:
 ```
@@ -351,20 +395,23 @@ ASSEMBLY
 ---
 Timeline: [total duration]
 Shots mapped: [number]
+Clips extracted: [number of clips cut from existing footage]
 Voiceover synced: [yes/no]
 Text overlays: [number]
+Transitions: [number and types used]
 Remotion project: content-studio/src/[project-name]/
 Draft render: content-studio/out/[project-name]-draft.mp4
 ---
 ```
 
 Rules:
-- Hard cuts only. No fades, dissolves, or transitions unless explicitly requested
-- Every image must fill the full frame. No letterboxing, no padding
-- Sync cuts to voiceover beats. Each new sentence = a new shot
-- Text overlays: bold, high contrast, readable on mobile, never in top-right corner
-- Export both draft (720p) and final (1080p) versions
-- Save the Remotion project file for future edits
+- Hard cuts only by default. Use `@remotion/transitions` (fade, slide, wipe) ONLY when explicitly requested.
+- Every image must fill the full frame. No letterboxing, no padding.
+- Sync cuts to voiceover beats. Each new sentence = a new shot.
+- Text overlays: bold, high contrast, readable on mobile, never in top-right corner.
+- For clipping: use `startFrom`/`endAt` on `<OffthreadVideo>` — never re-encode source files manually.
+- Export both draft (720p) and final (1080p) versions.
+- Save the Remotion project file for future edits.
 
 **Ask: "Approve, adjust, or ready to render final?"**
 
