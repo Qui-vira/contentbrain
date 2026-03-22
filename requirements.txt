@@ -7,3 +7,4 @@ pandas
 numpy
 python-binance
 ta
+supabase

@@ -34,6 +34,14 @@ except ImportError:
     schedule = None
 
 import subprocess
+
+try:
+    from supabase import create_client as _supabase_create_client
+    _SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+    _SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY", "")
+    _supabase = _supabase_create_client(_SUPABASE_URL, _SUPABASE_KEY) if _SUPABASE_URL and _SUPABASE_KEY else None
+except ImportError:
+    _supabase = None
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -548,40 +556,62 @@ def create_trading_twitter_draft(signal):
     return filepath, tweet
 
 
+def _safe_float(val):
+    """Convert value to float, return None if not possible."""
+    if val is None or val == '':
+        return None
+    try:
+        return float(val)
+    except (ValueError, TypeError):
+        return None
+
+
 def log_trading_to_tracker(signal):
-    """Log approved trading signal to trading-signals-log.md."""
+    """Log approved trading signal to Supabase trading_signals table."""
+    row = {
+        'pair': signal.get('pair', ''),
+        'timeframe': signal.get('timeframe', ''),
+        'direction': signal.get('direction', ''),
+        'entry_price': _safe_float(signal.get('entry')),
+        'stop_loss': _safe_float(signal.get('stop_loss')),
+        'tp1': _safe_float(signal.get('tp1')),
+        'tp2': _safe_float(signal.get('tp2')),
+        'tp3': _safe_float(signal.get('tp3')),
+        'strength_score': _safe_float(signal.get('strength_score')),
+        'confluence_count': int(signal.get('confluence_count', 0)) if signal.get('confluence_count') else None,
+        'confluences': ', '.join(signal.get('confluences', [])) if isinstance(signal.get('confluences'), list) else signal.get('confluences', ''),
+        'trend': signal.get('trend', ''),
+        'source': signal.get('source', 'manual'),
+        'status': 'ACTIVE',
+    }
+
+    if _supabase:
+        try:
+            _supabase.table('trading_signals').insert(row).execute()
+            print(f"  Supabase: LOGGED ({row['pair']} {row['direction']})")
+            return
+        except Exception as e:
+            print(f"  Supabase log error: {e}")
+
+    # Fallback to local markdown if Supabase unavailable
     log_dir = os.path.dirname(TRADING_LOG_PATH)
     os.makedirs(log_dir, exist_ok=True)
-
-    # Create log file with header if it doesn't exist
     if not os.path.exists(TRADING_LOG_PATH):
         header = (
             "# Trading Signals Log\n\n"
-            "| # | Date | Pair | TF | Direction | Entry | SL | TP1 | TP2 | TP3 | Strength | Confluences | Status | Result |\n"
-            "|---|------|------|----|-----------|-------|----|-----|-----|-----|----------|-------------|--------|--------|\n"
+            "| # | Date | Pair | TF | Direction | Entry | SL | TP1 | TP2 | TP3 | Strength | Confluences | Status |\n"
+            "|---|------|------|----|-----------|-------|----|-----|-----|-----|----------|-------------|--------|\n"
         )
         with open(TRADING_LOG_PATH, "w", encoding="utf-8") as f:
             f.write(header)
-
-    # Read current log to get next signal number
-    with open(TRADING_LOG_PATH, "r", encoding="utf-8") as f:
-        content = f.read()
-
-    lines = content.strip().split("\n")
-    signal_count = sum(1 for line in lines if line.startswith("|") and line[1:2].strip().isdigit())
-    next_num = signal_count + 1
-
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    source = signal.get('source', 'manual')
-    row = (
-        f"| {next_num} | {now} | {signal.get('pair', '')} | {signal.get('timeframe', '')} | "
-        f"{signal.get('direction', '')} | {signal.get('entry', '')} | {signal.get('stop_loss', '')} | "
-        f"{signal.get('tp1', '')} | {signal.get('tp2', '')} | {signal.get('tp3', '')} | "
-        f"{signal.get('strength_score', '')}/10 | {signal.get('confluence_count', '')} | {source} | ACTIVE | — |\n"
+    md_row = (
+        f"| — | {now} | {row['pair']} | {row['timeframe']} | {row['direction']} | "
+        f"{row['entry_price']} | {row['stop_loss']} | {row['tp1']} | {row['tp2']} | {row['tp3']} | "
+        f"{row['strength_score']}/10 | {row['confluence_count']} | ACTIVE |\n"
     )
-
     with open(TRADING_LOG_PATH, "a", encoding="utf-8") as f:
-        f.write(row)
+        f.write(md_row)
 
 
 # --- Approval Polling ---
@@ -839,13 +869,61 @@ def handle_status(chat_id):
 
 
 def handle_performance(chat_id):
-    """Handle /performance — show metrics."""
+    """Handle /performance — show trading + polymarket metrics."""
+    parts = []
+
+    # --- Trading signals from Supabase ---
+    if _supabase:
+        try:
+            resp = _supabase.table('trading_signals').select('*').execute()
+            rows = resp.data or []
+            total = len(rows)
+            active = sum(1 for r in rows if r.get('status') == 'ACTIVE')
+            wins = sum(1 for r in rows if r.get('result') == 'WIN')
+            losses = sum(1 for r in rows if r.get('result') == 'LOSS')
+            closed = wins + losses
+            win_rate = round(wins / closed * 100, 1) if closed > 0 else 0
+            avg_strength = round(sum(r.get('strength_score', 0) or 0 for r in rows) / total, 1) if total > 0 else 0
+
+            parts.append(
+                f"*Trading Signal Performance*\n\n"
+                f"Total Signals: {total}\n"
+                f"Active: {active}\n"
+                f"Closed: {closed}\n"
+                f"Win Rate: {win_rate}%\n"
+                f"Record: {wins}W / {losses}L\n"
+                f"Avg Strength: {avg_strength}/10"
+            )
+
+            # Per-pair breakdown (top 5 by count)
+            pair_counts = {}
+            for r in rows:
+                p = r.get('pair', '?')
+                if p not in pair_counts:
+                    pair_counts[p] = {'total': 0, 'wins': 0, 'losses': 0}
+                pair_counts[p]['total'] += 1
+                if r.get('result') == 'WIN':
+                    pair_counts[p]['wins'] += 1
+                elif r.get('result') == 'LOSS':
+                    pair_counts[p]['losses'] += 1
+
+            top_pairs = sorted(pair_counts.items(), key=lambda x: x[1]['total'], reverse=True)[:5]
+            if top_pairs:
+                parts[-1] += "\n\n*By Pair (top 5):*"
+                for pair, d in top_pairs:
+                    pc = d['wins'] + d['losses']
+                    wr = round(d['wins'] / pc * 100) if pc > 0 else 0
+                    parts[-1] += f"\n  {pair}: {d['total']} signals, {d['wins']}W/{d['losses']}L ({wr}%)"
+
+        except Exception as e:
+            parts.append(f"Trading signals error: {e}")
+
+    # --- Polymarket signals ---
     try:
         from polymarket_tracker import calculate_performance
-
         m = calculate_performance()
-        text = (
-            "*Polymarket Signal Performance*\n\n"
+        parts.append(
+            f"*Polymarket Signal Performance*\n\n"
             f"Total Signals: {m['total_signals']}\n"
             f"Active: {m['active']}\n"
             f"Resolved: {m['resolved']}\n"
@@ -854,18 +932,16 @@ def handle_performance(chat_id):
             f"Avg Confidence: {m['avg_confidence']}\n"
             f"Avg Edge: +{m['avg_edge']}%"
         )
-
         if m["categories"]:
-            text += "\n\n*By Category:*"
+            parts[-1] += "\n\n*By Category:*"
             for cat, data in m["categories"].items():
                 total = data["wins"] + data["losses"]
                 wr = data["wins"] / total * 100 if total > 0 else 0
-                text += f"\n  {cat.upper()}: {data['wins']}W/{data['losses']}L ({wr:.0f}%)"
-
-        send_message(chat_id, text)
-
+                parts[-1] += f"\n  {cat.upper()}: {data['wins']}W/{data['losses']}L ({wr:.0f}%)"
     except Exception as e:
-        send_message(chat_id, f"Error: {e}")
+        parts.append(f"Polymarket error: {e}")
+
+    send_message(chat_id, "\n\n---\n\n".join(parts) if parts else "No performance data yet.")
 
 
 def handle_resolve(chat_id):
