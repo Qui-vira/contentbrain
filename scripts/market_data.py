@@ -69,6 +69,18 @@ def fetch_binance_24h(client, symbol=None):
     return client.get_all_tickers()
 
 
+def fetch_binance_spot_price(symbol):
+    """Get current spot price from Binance. Returns float or None."""
+    client = get_binance_client()
+    if not client:
+        return None
+    try:
+        ticker = client.get_ticker(symbol=symbol)
+        return float(ticker['lastPrice'])
+    except Exception:
+        return None
+
+
 def fetch_binance_funding(client, symbol='BTCUSDT'):
     """Fetch funding rate from Binance Futures."""
     try:

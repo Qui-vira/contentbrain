@@ -154,14 +154,16 @@ def _get_typefully_social_set_id():
     return None
 
 
-def push_to_typefully(tweet_text):
-    """Push a tweet draft to Typefully. Returns draft ID or None."""
+def push_to_typefully(tweet_text, publish=False):
+    """Push a tweet to Typefully. If publish=True, publishes immediately via publish_at='now'.
+    Returns draft ID or None."""
     if not TYPEFULLY_API_KEY:
+        print("[Typefully] SKIP: TYPEFULLY_API_KEY not set.")
         return None
 
     social_set_id = _get_typefully_social_set_id()
     if not social_set_id:
-        print("Typefully: no social set ID available. Set TYPEFULLY_SOCIAL_SET_ID in .env or check API key.")
+        print("[Typefully] FAIL: no social set ID available. Set TYPEFULLY_SOCIAL_SET_ID in .env or check API key.")
         return None
 
     payload = {
@@ -172,6 +174,12 @@ def push_to_typefully(tweet_text):
             }
         }
     }
+
+    if publish:
+        payload["publish_at"] = "now"
+
+    action = "publish" if publish else "draft"
+    print(f"[Typefully] Sending {action}: {tweet_text[:60]}...")
 
     try:
         resp = _session.post(
@@ -186,12 +194,13 @@ def push_to_typefully(tweet_text):
         if resp.status_code == 201:
             draft = resp.json()
             draft_id = draft.get("id", "unknown")
+            print(f"[Typefully] OK: {action} created (id: {draft_id})")
             return draft_id
         else:
-            body = resp.text[:200]
-            print(f"Typefully: draft creation failed (HTTP {resp.status_code}): {body}")
+            body = resp.text[:300]
+            print(f"[Typefully] FAIL: {action} creation failed (HTTP {resp.status_code}): {body}")
     except Exception as e:
-        print(f"Typefully: error pushing draft: {e}")
+        print(f"[Typefully] ERROR: {action} failed: {e}")
 
     return None
 
@@ -372,14 +381,14 @@ def distribute_signal(signal):
         results["twitter_draft"] = "QUEUED"
         print(f"  X/Twitter Draft: QUEUED at {draft_path}")
 
-        # Push to Typefully as draft (no auto-publish)
-        typefully_id = push_to_typefully(tweet_text)
+        # Publish to X/Twitter via Typefully (publish immediately on approval)
+        typefully_id = push_to_typefully(tweet_text, publish=True)
         if typefully_id:
-            results["typefully"] = "DRAFTED"
-            print(f"  Typefully: DRAFTED (id: {typefully_id})")
+            results["typefully"] = "PUBLISHED"
+            print(f"  Typefully: PUBLISHED (id: {typefully_id})")
         elif TYPEFULLY_API_KEY:
             results["typefully"] = "FAIL"
-            print(f"  Typefully: FAIL")
+            print(f"  Typefully: FAIL — check logs above for details")
 
     # 4. Log to tracker
     if is_trading:
@@ -612,6 +621,246 @@ def log_trading_to_tracker(signal):
     )
     with open(TRADING_LOG_PATH, "a", encoding="utf-8") as f:
         f.write(md_row)
+
+
+# --- Signal Monitor (Auto TP/SL Detection) ---
+
+def _update_trading_signal_supabase(signal_id, updates):
+    """Update a trading signal row in Supabase. Returns True/False."""
+    if not _supabase:
+        return False
+    try:
+        _supabase.table('trading_signals').update(updates).eq('id', signal_id).execute()
+        return True
+    except Exception as e:
+        print(f"[MONITOR] Supabase update error for id={signal_id}: {e}")
+        return False
+
+
+def _check_signal_levels(signal, current_price):
+    """
+    Check if a Supabase trading_signals row has hit TP or SL levels.
+    Returns dict with hits, recommended_status, pnl_pct.
+    """
+    direction = (signal.get('direction') or '').upper()
+    entry = signal.get('entry_price')
+    sl = signal.get('stop_loss')
+    tp1 = signal.get('tp1')
+    tp2 = signal.get('tp2')
+    tp3 = signal.get('tp3')
+
+    if entry is None or current_price is None:
+        return {'hits': [], 'recommended_status': signal.get('status', 'ACTIVE'), 'pnl_pct': 0}
+
+    hits = []
+
+    if direction == 'LONG':
+        if sl and current_price <= sl:
+            hits.append('SL HIT')
+        if tp1 and current_price >= tp1:
+            hits.append('TP1 HIT')
+        if tp2 and current_price >= tp2:
+            hits.append('TP2 HIT')
+        if tp3 and current_price >= tp3:
+            hits.append('TP3 HIT')
+        pnl_pct = ((current_price - entry) / entry) * 100
+    elif direction == 'SHORT':
+        if sl and current_price >= sl:
+            hits.append('SL HIT')
+        if tp1 and current_price <= tp1:
+            hits.append('TP1 HIT')
+        if tp2 and current_price <= tp2:
+            hits.append('TP2 HIT')
+        if tp3 and current_price <= tp3:
+            hits.append('TP3 HIT')
+        pnl_pct = ((entry - current_price) / entry) * 100
+    else:
+        pnl_pct = 0
+
+    # Determine recommended status (SL overrides everything)
+    if 'SL HIT' in hits:
+        recommended = 'STOPPED OUT'
+    elif 'TP3 HIT' in hits:
+        recommended = 'TP3 HIT'
+    elif 'TP2 HIT' in hits:
+        recommended = 'TP2 HIT'
+    elif 'TP1 HIT' in hits:
+        recommended = 'TP1 HIT'
+    else:
+        recommended = signal.get('status', 'ACTIVE')
+
+    return {'hits': hits, 'recommended_status': recommended, 'pnl_pct': pnl_pct}
+
+
+def _format_hit_notification(signal, current_price, new_status, check_result):
+    """Format a Telegram notification card for a TP/SL hit."""
+    pair = signal.get('pair', 'UNKNOWN')
+    direction = signal.get('direction', '')
+    entry = signal.get('entry_price', 0)
+    pnl = check_result.get('pnl_pct', 0)
+    pnl_str = f"+{pnl:.2f}%" if pnl >= 0 else f"{pnl:.2f}%"
+
+    if new_status == 'STOPPED OUT':
+        header = "STOPPED OUT"
+        status_line = "Signal closed at stop loss."
+    elif new_status == 'TP3 HIT':
+        header = "TP3 HIT — FULL WIN"
+        status_line = "All targets hit. Signal closed."
+    elif new_status == 'TP2 HIT':
+        header = "TP2 HIT"
+        status_line = "TP3 still active."
+    elif new_status == 'TP1 HIT':
+        header = "TP1 HIT"
+        remaining = []
+        if signal.get('tp2'):
+            remaining.append('TP2')
+        if signal.get('tp3'):
+            remaining.append('TP3')
+        status_line = f"{'/'.join(remaining)} still active." if remaining else "Signal still active."
+    else:
+        header = "SIGNAL UPDATE"
+        status_line = ""
+
+    # Format price display
+    is_forex = '/' in pair
+    if is_forex:
+        price_fmt = lambda p: f"{p:.5f}" if p else "—"
+    elif entry and entry < 1:
+        price_fmt = lambda p: f"{p:.6f}" if p else "—"
+    else:
+        price_fmt = lambda p: f"{p:,.2f}" if p else "—"
+
+    lines = [
+        f"*SIGNAL UPDATE*\n",
+        f"*{header}*\n",
+        f"*Pair:* {pair}",
+        f"*Direction:* {direction}",
+        f"*Entry:* {price_fmt(entry)}",
+        f"*Current:* {price_fmt(current_price)}",
+        f"*P&L:* {pnl_str}",
+    ]
+
+    if status_line:
+        lines.append(f"\n{status_line}")
+
+    return "\n".join(lines)
+
+
+def _signal_monitor_cycle():
+    """Check all active signals against live prices and notify on TP/SL hits."""
+    if not _supabase:
+        print("[MONITOR] Supabase unavailable, skipping monitor cycle.")
+        return
+
+    try:
+        resp = _supabase.table('trading_signals').select('*').in_(
+            'status', ['ACTIVE', 'TP1 HIT', 'TP2 HIT']
+        ).execute()
+        signals = resp.data or []
+    except Exception as e:
+        print(f"[MONITOR] Error querying active signals: {e}")
+        return
+
+    if not signals:
+        print("[MONITOR] No active signals to check.")
+        return
+
+    print(f"[MONITOR] Checking {len(signals)} active signal(s)...")
+
+    from market_data import (
+        fetch_binance_spot_price, is_forex_pair, normalize_forex_symbol,
+        fetch_twelvedata_price, fetch_coingecko_price, SYMBOL_TO_COINGECKO
+    )
+
+    for signal in signals:
+        pair = signal.get('pair', '')
+        current_price = None
+
+        try:
+            if is_forex_pair(pair):
+                current_price = fetch_twelvedata_price(pair)
+            else:
+                # Crypto: try Binance first, fallback to CoinGecko
+                binance_symbol = pair.upper().replace('/', '')
+                current_price = fetch_binance_spot_price(binance_symbol)
+                if current_price is None:
+                    coin_id = SYMBOL_TO_COINGECKO.get(binance_symbol)
+                    if coin_id:
+                        price_data = fetch_coingecko_price(coin_id)
+                        current_price = price_data.get(coin_id, {}).get('usd')
+        except Exception as e:
+            print(f"[MONITOR] Price fetch failed for {pair}: {e}")
+            continue
+
+        if current_price is None:
+            print(f"[MONITOR] No price for {pair}, skipping.")
+            continue
+
+        check = _check_signal_levels(signal, current_price)
+        old_status = signal.get('status', 'ACTIVE')
+        new_status = check['recommended_status']
+
+        # Skip if no status change (prevents duplicate notifications)
+        if new_status == old_status:
+            continue
+
+        print(f"[MONITOR] {pair}: {old_status} -> {new_status} (P&L: {check['pnl_pct']:+.2f}%)")
+
+        # Build Supabase update
+        updates = {'status': new_status}
+        now_iso = datetime.now(timezone.utc).isoformat()
+
+        if 'TP1 HIT' in check['hits']:
+            updates['hit_tp1'] = True
+        if 'TP2 HIT' in check['hits']:
+            updates['hit_tp2'] = True
+        if 'TP3 HIT' in check['hits']:
+            updates['hit_tp3'] = True
+        if 'SL HIT' in check['hits']:
+            updates['hit_sl'] = True
+
+        if new_status == 'TP3 HIT':
+            updates['result'] = 'WIN'
+            updates['pnl_percent'] = check['pnl_pct']
+            updates['closed_at'] = now_iso
+        elif new_status == 'STOPPED OUT':
+            updates['result'] = 'LOSS'
+            updates['pnl_percent'] = check['pnl_pct']
+            updates['closed_at'] = now_iso
+
+        # Update Supabase
+        signal_id = signal.get('id')
+        if not _update_trading_signal_supabase(signal_id, updates):
+            continue
+
+        # Send notification to Krib and Poly channel
+        notification = _format_hit_notification(signal, current_price, new_status, check)
+
+        if KRIB_CHAT_ID:
+            send_message(KRIB_CHAT_ID, notification)
+        if POLY_CHANNEL_ID:
+            send_message(POLY_CHANNEL_ID, notification)
+
+    # Also auto-resolve Polymarket signals
+    try:
+        from polymarket_tracker import auto_resolve
+        resolved = auto_resolve()
+        if resolved:
+            lines = [f"*{len(resolved)} Polymarket signal(s) resolved:*\n"]
+            for u in resolved:
+                lines.append(f"#{u['signal']} {u['market'][:30]} — *{u['new_status']}* ({u['pnl']})")
+            msg = "\n".join(lines)
+            if KRIB_CHAT_ID:
+                send_message(KRIB_CHAT_ID, msg)
+            if POLY_CHANNEL_ID:
+                send_message(POLY_CHANNEL_ID, msg)
+            print(f"[MONITOR] {len(resolved)} Polymarket signal(s) auto-resolved.")
+    except ImportError:
+        pass
+    except Exception as e:
+        print(f"[MONITOR] Polymarket auto-resolve error: {e}")
+
+    print("[MONITOR] Cycle complete.")
 
 
 # --- Approval Polling ---
@@ -1323,6 +1572,16 @@ def _cron_loop():
     # Single schedule: unified scanner every N hours (crypto + forex + polymarket)
     schedule.every(scan_interval).hours.do(_unified_cron_cycle)
     print(f"[CRON] Unified auto-scan scheduled every {scan_interval} hours.")
+
+    # Signal monitor: check TP/SL hits every 30 minutes
+    schedule.every(30).minutes.do(_signal_monitor_cycle)
+    print("[CRON] Signal monitor scheduled every 30 minutes.")
+
+    # Run initial monitor check after first scan
+    try:
+        _signal_monitor_cycle()
+    except Exception as e:
+        print(f"[CRON] Initial monitor check error: {e}")
 
     while True:
         schedule.run_pending()
