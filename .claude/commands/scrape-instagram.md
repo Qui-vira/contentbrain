@@ -1,7 +1,7 @@
 ---
 name: scrape-instagram
-description: "Scrape competitor posts from ANY social media platform via Apify (Instagram, X/Twitter, TikTok, YouTube, LinkedIn, Facebook, Reddit, Pinterest, Threads). Analyzes for patterns/frameworks/knowledge, distributes insights to vault folders. Triggers: 'scrape instagram', 'scrape @username', 'scrape tiktok', 'scrape twitter', 'scrape youtube', 'scrape linkedin', 'scrape facebook', 'scrape reddit', 'scrape pinterest', 'scrape threads', 'update competitors', 'pull posts from [platform]'"
-allowed-tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep"]
+description: "Scrape competitor posts from ANY social media platform via Apify (Instagram, X/Twitter, TikTok, YouTube, LinkedIn, Facebook, Reddit, Pinterest, Threads). Analyzes for patterns/frameworks/knowledge, distributes insights to vault folders. Triggers: 'scrape instagram', 'scrape @username', 'scrape tiktok', 'scrape twitter', 'scrape youtube', 'scrape linkedin', 'scrape facebook', 'scrape reddit', 'scrape pinterest', 'scrape threads', 'update competitors', 'pull posts from [platform]', 'learn about [topic]', 'research [topic] videos', 'study 50 videos about [topic]', 'scrape videos about [topic]', 'what are the best [topic] videos', 'educate yourself on [topic]', 'research how to [topic]'"
+allowed-tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep", "WebFetch", "WebSearch"]
 ---
 
 # Multi-Platform Scraper & Intelligence Extractor
@@ -24,6 +24,20 @@ You scrape posts from competitor accounts on ANY social media platform using Api
 | Pinterest | `epctex/pinterest-scraper` | `startUrls` | `description` |
 | Threads | `curious_coder/threads-scraper` | `usernames` | `text` |
 
+## MODE SELECTION
+
+**Mode 1: Profile Scrape** (existing behavior)
+Triggered by: "scrape @username", "scrape [platform] @username", "update competitors"
+Scrapes a specific account's posts. Analyzes for patterns, hooks, frameworks. Saves to competitor folders.
+
+**Mode 2: Topic Research** (new)
+Triggered by: "learn about [topic]", "research [topic]", "study videos about [topic]", "scrape videos about [topic]", "educate yourself on [topic]", "research how to [topic]"
+Searches across platforms by KEYWORD or HASHTAG (no username needed). Pulls up to 50 results per platform. Extracts learnings and distributes them to vault skill files (prompt-library, hooks, frameworks, patterns, niche knowledge). This mode makes your skills smarter.
+
+If the user provides a @username → Mode 1.
+If the user provides a topic/keyword without a username → Mode 2.
+If unclear, ask: "Do you want to (1) scrape a specific account, or (2) research a topic across platforms?"
+
 ## WHEN TO USE
 - "Scrape @username" — Instagram by default (backward compatible)
 - "Scrape @username on tiktok" — specific platform
@@ -32,6 +46,12 @@ You scrape posts from competitor accounts on ANY social media platform using Api
 - "Scrape youtube [channel]" — YouTube
 - "Update my competitor posts" — scrape watchlist + analysis
 - "Pull latest posts from [platform]" — full pipeline
+- "Learn about [topic]" — Mode 2 topic research
+- "Research [topic] videos" — Mode 2 across YouTube, TikTok, Instagram
+- "Study 50 videos about [topic]" — Mode 2 with high volume
+- "Educate yourself on [topic]" — Mode 2 skill education
+- "Research how to [topic]" — Mode 2 skill education
+- "What are the best [topic] videos" — Mode 2 topic search
 
 ## PLATFORM DETECTION
 
@@ -167,6 +187,48 @@ PAYLOAD: {"usernames": ["USERNAME"], "maxPosts": LIMIT}
 
 Replace `USERNAME` with the target (no @ symbol) and `LIMIT` with number of posts (default 10).
 
+### Topic/Keyword Search Actors (Mode 2 only)
+
+When searching by TOPIC instead of USERNAME, use these actors and payloads:
+
+#### YouTube Keyword Search
+```
+ACTOR_ID: streamers~youtube-scraper
+PAYLOAD: {"searchKeywords": ["KEYWORD1", "KEYWORD2"], "maxResults": LIMIT, "searchType": "video"}
+```
+
+#### Instagram Hashtag Search
+```
+ACTOR_ID: apify~instagram-hashtag-scraper
+PAYLOAD: {"hashtags": ["HASHTAG1", "HASHTAG2"], "resultsLimit": LIMIT}
+```
+
+#### TikTok Hashtag Search
+```
+ACTOR_ID: clockworks~free-tiktok-scraper
+PAYLOAD: {"hashtags": ["HASHTAG1", "HASHTAG2"], "maxItems": LIMIT}
+```
+
+#### Twitter/X Keyword Search
+```
+ACTOR_ID: apidojo~tweet-scraper
+PAYLOAD: {"searchTerms": ["KEYWORD"], "maxTweets": LIMIT, "sort": "Top"}
+```
+
+#### Reddit Search
+```
+ACTOR_ID: trudax~reddit-scraper
+PAYLOAD: {"startUrls": [{"url": "https://www.reddit.com/search/?q=KEYWORD&sort=top&t=month"}], "maxItems": LIMIT}
+```
+
+Replace `KEYWORD` / `HASHTAG` with the topic (remove spaces for hashtags, e.g., "graphic design" → "graphicdesign"). Replace `LIMIT` with the number of results (default 50 for Mode 2).
+
+**Platform selection for Mode 2:**
+- If user specifies a platform ("research [topic] on youtube") → search that platform only
+- If user says "research [topic] videos" → search YouTube + TikTok + Instagram
+- If user says "learn about [topic]" → search ALL platforms (YouTube, TikTok, Instagram, Twitter, Reddit)
+- Default: YouTube + TikTok + Instagram (video-focused platforms)
+
 ### Step 2B: Extract Instagram Reel Transcripts
 
 **Only for Instagram scrapes.** After the main scrape completes, run a second pass using the `apify/instagram-reel-scraper` actor to extract transcripts from Reels.
@@ -183,6 +245,20 @@ After both scrapes complete, merge transcript data into the main post results by
 - If the post is not a Reel or no transcript is available, set `transcript` to `""` (empty string).
 
 Skip this step entirely for non-Instagram platforms.
+
+### Step 2C: Extract YouTube Transcripts (Mode 2 only)
+
+For YouTube results from Mode 2 topic research, extract video transcripts using yt-dlp:
+
+```bash
+yt-dlp --write-auto-sub --sub-lang en --skip-download --sub-format vtt -o "%(id)s" "VIDEO_URL" 2>/dev/null && cat "%(id)s.en.vtt" 2>/dev/null | grep -v "^$" | grep -v "^[0-9]" | grep -v "\-\->" | sort -u
+```
+
+For each YouTube video in the results:
+1. Attempt to extract the auto-generated English transcript
+2. If successful, attach the transcript to the video result
+3. If yt-dlp fails (private video, no captions), set transcript to "" and continue
+4. Limit transcript extraction to the top 10 videos by view count (to avoid excessive yt-dlp calls)
 
 ## Step 3: Extract Post Data
 
@@ -555,6 +631,172 @@ Top 3 posts by engagement:
 Key insight: [most interesting finding from the analysis]
 ```
 
+**Mode 2 Report (Topic Research):**
+
+```
+Researched [topic] across [X] platforms. Collected [Y] videos/posts.
+
+Saved to:
+- 02-Hooks/topic-research-[date].md — [X] hooks extracted ([Y] bold claim, [Z] question, etc.)
+- 05-Frameworks/topic-research-[topic]-[date].md — [X] frameworks reverse-engineered
+- 08-Templates/topic-research-production-[date].md — production techniques analyzed
+- 10-Niche-Knowledge/[folder]/topic-research-[topic]-[date].md — [X] insights extracted
+
+Top 3 videos by engagement:
+1. [video title] — [platform] — [views/likes]
+2. [video]
+3. [video]
+
+Key learning: [most actionable finding from the research]
+
+Suggested vault updates:
+- [X] new hook formulas ready to add to 02-Hooks/
+- [X] new prompt blocks ready for prompt-library.md
+- [X] new framework(s) ready for 05-Frameworks/
+
+Want me to apply these updates to the vault?
+```
+
+---
+
+## Step 5-ALT: Skill Education Analysis (Mode 2 only)
+
+When running in Mode 2 (Topic Research), replace the standard Step 5 intelligence analysis with this skill education pipeline. The goal is to extract learnings that make your vault skills smarter.
+
+### 5-ALT-A: Extract Hooks → `02-Hooks/topic-research-[date].md`
+
+From all scraped content, extract the opening hooks (first line of caption, first sentence of transcript/spoken content). Group by hook type:
+
+```
+## Topic Research: [topic] — [date]
+
+### Bold Claim Hooks
+| Hook | Platform | Source | Engagement |
+|------|----------|--------|-----------|
+| "[hook text]" | YouTube | @[creator] | [views/likes] |
+
+### Question Hooks
+| Hook | Platform | Source | Engagement |
+...
+
+### Story Hooks
+...
+
+### Data/Number Hooks
+...
+
+### Contrarian Hooks
+...
+
+### Callout Hooks
+...
+```
+
+### 5-ALT-B: Extract Content Frameworks → `05-Frameworks/topic-research-[topic]-[date].md`
+
+Analyze the top-performing content (by engagement) and reverse-engineer the frameworks used:
+
+```
+# Frameworks Learned: [topic]
+
+> Researched [X] videos/posts on [date] | Platforms: [list]
+
+## Framework 1: [Name]
+- **Structure**: [step-by-step breakdown]
+- **Why it works**: [analysis]
+- **Example**: [specific video/post that uses it]
+- **How @big_quiv can use it**: [adaptation]
+
+## Framework 2: [Name]
+...
+```
+
+### 5-ALT-C: Extract Production Techniques → `08-Templates/topic-research-production-[date].md`
+
+For video content, analyze HOW the content was produced:
+
+```
+# Production Techniques: [topic]
+
+> Analyzed [X] videos on [date]
+
+## Visual Patterns
+- **Camera angles most used**: [list with frequency]
+- **Lighting styles**: [what lighting setups appear in top videos]
+- **Scene types**: [environments, backgrounds, settings]
+- **Text overlay styles**: [font size, placement, animation]
+- **Transition patterns**: [cuts, zooms, swipes, etc.]
+
+## Pacing Patterns
+- **Average video length**: [seconds]
+- **Hook duration**: [how long before the main content starts]
+- **Cut frequency**: [cuts per minute average]
+- **Energy arc**: [how energy changes through the video]
+
+## Audio Patterns
+- **Music usage**: [background music style, volume relative to voice]
+- **Voice delivery**: [pace, tone, energy level]
+- **Sound effects**: [if any, what types]
+
+## Thumbnail/Cover Patterns
+- **Style**: [what thumbnails/covers look like]
+- **Text on thumbnail**: [yes/no, what kind]
+- **Colors**: [dominant colors]
+
+## Prompt Library Updates
+Based on these observations, add these new prompt blocks to 08-Templates/prompt-library.md:
+- [any new camera angles, lighting styles, moods, or environments discovered]
+```
+
+### 5-ALT-D: Extract Niche Knowledge → `10-Niche-Knowledge/[relevant-folder]/topic-research-[topic]-[date].md`
+
+Extract domain-specific knowledge shared in the content:
+
+```
+# Topic Research: [topic]
+
+> Extracted from [X] videos/posts on [date]
+
+## Key Insights
+1. [Insight from content — fact, technique, strategy, or tip]
+2. [Insight]
+3. [Insight]
+...
+
+## Expert Opinions Cited
+- [Creator name]: "[what they said]"
+- [Creator name]: "[what they said]"
+
+## Tools/Resources Mentioned
+- [Tool 1]: [what it does, who mentioned it]
+- [Tool 2]: [what it does]
+
+## Common Mistakes Identified
+- [Mistake that multiple creators warn about]
+- [Mistake]
+
+## Step-by-Step Processes Found
+### [Process Name]
+1. [Step]
+2. [Step]
+...
+```
+
+### 5-ALT-E: Update Existing Vault Files (conditional)
+
+After generating the research files above, check if any findings should be appended to existing vault files:
+
+1. **New hook formulas discovered** → Append to `02-Hooks/[platform]-hooks.md` (never overwrite)
+2. **New prompt blocks** (camera angles, lighting, moods not in prompt-library) → Suggest additions to `08-Templates/prompt-library.md` but ASK before modifying
+3. **New frameworks** → Check if similar framework exists in `05-Frameworks/`. If not, save as new. If similar, suggest merging.
+4. **Niche knowledge** → Save to the correct subfolder based on topic:
+   - Trading/crypto → `10-Niche-Knowledge/crypto-trading/`
+   - AI/tools → `10-Niche-Knowledge/artificial-intelligence/`
+   - Personal brand/content → `10-Niche-Knowledge/personal-brand/`
+   - Web3 → `10-Niche-Knowledge/web3-development/`
+
+Always ASK before modifying existing template files (prompt-library.md, character-library.md, etc.). Only auto-save to research-specific files.
+
 ---
 
 ## RULES
@@ -574,3 +816,9 @@ Key insight: [most interesting finding from the analysis]
 - Create platform subfolders under `01-Competitors/` as needed
 - LinkedIn scraping has stricter limits — warn user about max ~500 profiles/day
 - Some platforms (TikTok, YouTube) return view counts — include these in engagement analysis when available
+- **Mode 2 limits:** Maximum 50 results per platform per topic search. Maximum 3 platforms per session.
+- **Mode 2 transcript extraction:** Limit YouTube transcript extraction to top 10 videos by view count
+- **Mode 2 vault updates:** Always ASK before modifying existing template files (prompt-library.md, character-library.md, etc.). Auto-save is only for new research files.
+- **Mode 2 file naming:** Use `topic-research-[topic-slug]-[date].md` format for all Mode 2 output files
+- **Mode 2 keyword conversion:** Convert topic phrases to hashtags by removing spaces (e.g., "graphic design" → "graphicdesign", "video editing tips" → "videoeditingtips")
+- **Mode 2 dedup:** Before saving, check if a topic research file for the same topic already exists from the same day. If yes, append new findings instead of creating a duplicate file.
