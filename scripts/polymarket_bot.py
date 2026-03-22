@@ -99,12 +99,93 @@ ADMIN_CHAT_ID = os.getenv("TELEGRAM_ADMIN_CHAT_ID", "")             # Your perso
 
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
+# Typefully
+TYPEFULLY_API_KEY = os.getenv("TYPEFULLY_API_KEY", "")
+TYPEFULLY_SOCIAL_SET_ID = os.getenv("TYPEFULLY_SOCIAL_SET_ID", "")  # Auto-discovered if blank
+TYPEFULLY_API_BASE = "https://api.typefully.com/v2"
+
 # Pending approvals file
 VAULT_DIR = os.path.join(os.path.dirname(__file__), "..")
 PENDING_FILE = os.path.join(VAULT_DIR, "07-Analytics", "signal-performance", "pending-poly-signals.json")
 
 # Drafts directory for ghostwriter integration
 DRAFTS_DIR = os.path.join(VAULT_DIR, "06-Drafts", "polymarket")
+
+
+# --- Typefully Integration ---
+
+_typefully_social_set_id_cache = None
+
+
+def _get_typefully_social_set_id():
+    """Get the Typefully social set ID (cached). Auto-discovers from API if not in env."""
+    global _typefully_social_set_id_cache
+
+    if TYPEFULLY_SOCIAL_SET_ID:
+        return TYPEFULLY_SOCIAL_SET_ID
+
+    if _typefully_social_set_id_cache:
+        return _typefully_social_set_id_cache
+
+    try:
+        resp = _session.get(
+            f"{TYPEFULLY_API_BASE}/social-sets",
+            headers={"Authorization": f"Bearer {TYPEFULLY_API_KEY}"},
+            timeout=15,
+        )
+        if resp.status_code == 200:
+            data = resp.json()
+            results = data.get("results", [])
+            if results:
+                _typefully_social_set_id_cache = results[0]["id"]
+                return _typefully_social_set_id_cache
+        print(f"Typefully: could not discover social set ID (HTTP {resp.status_code})")
+    except Exception as e:
+        print(f"Typefully: error discovering social set ID: {e}")
+
+    return None
+
+
+def push_to_typefully(tweet_text):
+    """Push a tweet draft to Typefully. Returns draft ID or None."""
+    if not TYPEFULLY_API_KEY:
+        return None
+
+    social_set_id = _get_typefully_social_set_id()
+    if not social_set_id:
+        print("Typefully: no social set ID available. Set TYPEFULLY_SOCIAL_SET_ID in .env or check API key.")
+        return None
+
+    payload = {
+        "platforms": {
+            "x": {
+                "enabled": True,
+                "posts": [{"text": tweet_text}],
+            }
+        }
+    }
+
+    try:
+        resp = _session.post(
+            f"{TYPEFULLY_API_BASE}/social-sets/{social_set_id}/drafts",
+            headers={
+                "Authorization": f"Bearer {TYPEFULLY_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=15,
+        )
+        if resp.status_code == 201:
+            draft = resp.json()
+            draft_id = draft.get("id", "unknown")
+            return draft_id
+        else:
+            body = resp.text[:200]
+            print(f"Typefully: draft creation failed (HTTP {resp.status_code}): {body}")
+    except Exception as e:
+        print(f"Typefully: error pushing draft: {e}")
+
+    return None
 
 
 # --- Telegram Helpers ---
@@ -274,14 +355,23 @@ def distribute_signal(signal):
         results["poly"] = "OK" if result and result.get("ok") else "FAIL"
         print(f"  Poly Channel: {results['poly']}")
 
-    # 3. Queue draft for X/Twitter
+    # 3. Queue draft for X/Twitter + push to Typefully
     if is_trading:
-        draft = create_trading_twitter_draft(signal)
+        draft_path, tweet_text = create_trading_twitter_draft(signal)
     else:
-        draft = create_twitter_draft(signal)
-    if draft:
+        draft_path, tweet_text = create_twitter_draft(signal)
+    if draft_path:
         results["twitter_draft"] = "QUEUED"
-        print(f"  X/Twitter Draft: QUEUED at {draft}")
+        print(f"  X/Twitter Draft: QUEUED at {draft_path}")
+
+        # Push to Typefully as draft (no auto-publish)
+        typefully_id = push_to_typefully(tweet_text)
+        if typefully_id:
+            results["typefully"] = "DRAFTED"
+            print(f"  Typefully: DRAFTED (id: {typefully_id})")
+        elif TYPEFULLY_API_KEY:
+            results["typefully"] = "FAIL"
+            print(f"  Typefully: FAIL")
 
     # 4. Log to tracker
     if is_trading:
@@ -295,7 +385,7 @@ def distribute_signal(signal):
 
 
 def create_twitter_draft(signal):
-    """Create a tweet draft from signal for ghostwriter pickup."""
+    """Create a tweet draft from signal for ghostwriter pickup. Returns (filepath, tweet_text)."""
     os.makedirs(DRAFTS_DIR, exist_ok=True)
 
     yes_pct = round(signal["current_odds"]["yes"] * 100, 1)
@@ -338,7 +428,7 @@ def create_twitter_draft(signal):
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(content)
 
-    return filepath
+    return filepath, tweet
 
 
 def log_to_tracker(signal):
@@ -367,11 +457,12 @@ def log_to_tracker(signal):
     next_num = signal_count + 1
 
     # Append signal row
+    source = signal.get('source', 'manual')
     row = (
         f"| {next_num} | {now} | {signal['market_question'][:40]} | "
         f"{signal['recommendation']} | {yes_pct}%/{no_pct}% | "
         f"{model_pct}% | +{edge_pct}% | {signal['confidence']:.0f} | "
-        f"ACTIVE | — | — |\n"
+        f"{source} | ACTIVE | — | — |\n"
     )
 
     # Insert before the closing --- or at end
@@ -412,7 +503,7 @@ TRADING_LOG_PATH = os.path.join(
 
 
 def create_trading_twitter_draft(signal):
-    """Create a tweet draft from a trading signal for ghostwriter pickup."""
+    """Create a tweet draft from a trading signal for ghostwriter pickup. Returns (filepath, tweet_text)."""
     os.makedirs(TRADING_DRAFTS_DIR, exist_ok=True)
 
     pair = signal.get('pair', 'UNKNOWN')
@@ -454,7 +545,7 @@ def create_trading_twitter_draft(signal):
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(content)
 
-    return filepath
+    return filepath, tweet
 
 
 def log_trading_to_tracker(signal):
@@ -481,11 +572,12 @@ def log_trading_to_tracker(signal):
     next_num = signal_count + 1
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    source = signal.get('source', 'manual')
     row = (
         f"| {next_num} | {now} | {signal.get('pair', '')} | {signal.get('timeframe', '')} | "
         f"{signal.get('direction', '')} | {signal.get('entry', '')} | {signal.get('stop_loss', '')} | "
         f"{signal.get('tp1', '')} | {signal.get('tp2', '')} | {signal.get('tp3', '')} | "
-        f"{signal.get('strength_score', '')}/10 | {signal.get('confluence_count', '')} | ACTIVE | — |\n"
+        f"{signal.get('strength_score', '')}/10 | {signal.get('confluence_count', '')} | {source} | ACTIVE | — |\n"
     )
 
     with open(TRADING_LOG_PATH, "a", encoding="utf-8") as f:
@@ -597,6 +689,7 @@ BOT_COMMANDS = [
     {"command": "status", "description": "Show active signals"},
     {"command": "performance", "description": "Win rate and metrics"},
     {"command": "resolve", "description": "Auto-resolve closed markets"},
+    {"command": "setcap", "description": "Set daily auto-signal cap (e.g. /setcap 5)"},
     {"command": "help", "description": "Show all commands"},
 ]
 
@@ -626,6 +719,7 @@ def handle_start(chat_id):
         "/status — Your active signals\n"
         "/performance — Win rate & metrics\n"
         "/resolve — Check if markets resolved\n"
+        "/setcap N — Set daily auto-signal cap\n"
         "/help — Show this menu\n\n"
         "When I find a signal, I'll send it here with "
         "Approve/Reject buttons. Tap to decide.\n\n"
@@ -806,6 +900,35 @@ def handle_ta(chat_id):
         send_message(chat_id, f"TA signal error: {e}")
 
 
+def handle_setcap(chat_id, text=""):
+    """Handle /setcap — set daily auto-signal cap."""
+    parts = text.strip().split()
+    if len(parts) < 2:
+        send_message(chat_id, "Usage: `/setcap 5` — sets daily auto-signal cap to 5")
+        return
+
+    try:
+        new_cap = int(parts[1])
+        if new_cap < 0 or new_cap > 50:
+            send_message(chat_id, "Cap must be between 0 and 50.")
+            return
+    except ValueError:
+        send_message(chat_id, "Invalid number. Usage: `/setcap 5`")
+        return
+
+    try:
+        from unified_auto_scanner import update_cap, load_state
+        actual_cap = update_cap(new_cap)
+        state = load_state()
+        send_message(
+            chat_id,
+            f"Daily auto-signal cap set to *{actual_cap}*.\n"
+            f"Today's usage: {state['signals_sent']}/{actual_cap}"
+        )
+    except Exception as e:
+        send_message(chat_id, f"Error setting cap: {e}")
+
+
 COMMAND_HANDLERS = {
     "/start": handle_start,
     "/scan": handle_scan,
@@ -814,25 +937,34 @@ COMMAND_HANDLERS = {
     "/performance": handle_performance,
     "/resolve": handle_resolve,
     "/ta": handle_ta,
+    "/setcap": handle_setcap,
     "/help": handle_start,
 }
 
 
-def _cron_loop():
-    """Background thread: runs polymarket_cron.run_full_cycle() on a schedule."""
-    from polymarket_cron import run_full_cycle
+def _unified_cron_cycle():
+    """Run the unified auto-scanner, falling back to polymarket-only."""
+    try:
+        from unified_auto_scanner import run_auto_scan
+        run_auto_scan()
+    except ImportError:
+        from polymarket_cron import run_full_cycle
+        run_full_cycle()
 
+
+def _cron_loop():
+    """Background thread: runs unified auto-scanner on a schedule."""
     # Initial scan 30s after startup
     time.sleep(30)
     print("[CRON] Running initial scan...")
     try:
-        run_full_cycle()
+        _unified_cron_cycle()
     except Exception as e:
         print(f"[CRON] Initial scan error: {e}")
 
     # Schedule hourly scans
-    schedule.every(1).hours.do(lambda: run_full_cycle())
-    print("[CRON] Hourly scan scheduler started.")
+    schedule.every(1).hours.do(_unified_cron_cycle)
+    print("[CRON] Hourly unified scanner started.")
 
     while True:
         schedule.run_pending()
@@ -878,7 +1010,10 @@ def run_bot():
 
                     if cmd in COMMAND_HANDLERS:
                         print(f"[{datetime.now(timezone.utc).strftime('%H:%M')}] {cmd} from {chat_id}")
-                        COMMAND_HANDLERS[cmd](chat_id)
+                        if cmd == "/setcap":
+                            COMMAND_HANDLERS[cmd](chat_id, text)
+                        else:
+                            COMMAND_HANDLERS[cmd](chat_id)
                     elif text.upper() in ("APPROVE", "REJECT"):
                         # Handle reply-based approval
                         reply_to = msg.get("reply_to_message", {})

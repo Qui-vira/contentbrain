@@ -20,15 +20,18 @@
 
 ---
 
-## Forex — Via TradingView Alerts
+## Forex — Via Twelve Data API
 
 | Pair | Session Focus | Notes |
 |------|--------------|-------|
 | EUR/USD | London, NY | Most liquid Forex pair. Clean technicals. |
 | GBP/USD | London, NY | Higher volatility than EUR/USD. News-sensitive. |
-| GBP/JPY | London, NY | "The Beast" — wide ranges, high volatility. Not for small stops. |
 | USD/JPY | Asia, NY | Carry trade pair. BOJ policy sensitive. |
+| GBP/JPY | London, NY | "The Beast" — wide ranges, high volatility. Not for small stops. |
 | XAU/USD (Gold) | London, NY | Safe haven. Trades like a currency with commodity characteristics. |
+| AUD/USD | Asia, London | Risk-on barometer. Correlated with commodities. |
+| USD/CAD | NY | Oil-correlated. Clean trends during NY session. |
+| EUR/JPY | London, NY | Cross pair. Good volatility, trending behavior. |
 
 ---
 
@@ -36,6 +39,6 @@
 
 1. Core crypto pairs are always scanned. No exceptions.
 2. Altcoin list refreshes automatically based on volume ranking.
-3. Forex pairs are monitored via TradingView alerts, not Binance API.
+3. Forex pairs are scanned via `forex_ta_runner.py` using the Twelve Data API.
 4. Add/remove pairs manually by editing this file.
 5. Maximum concurrent signals: 5 (to respect the 5% max open risk rule).
