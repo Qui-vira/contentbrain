@@ -1,9 +1,10 @@
 """
 Polymarket Scanner — Core scanner + multi-factor analysis engine.
 
-Scans Polymarket prediction markets, applies multi-factor analysis
-(odds movement, volume surge, news catalyst, sentiment, historical patterns),
-and generates signal cards for markets with >= 10% edge.
+Scans Polymarket prediction markets, applies 7-factor analysis
+(price momentum, volume analysis, market efficiency, smart money,
+time decay, odds compression, contrarian), and generates signal cards
+for markets with >= 10% edge.
 
 Usage:
     python scripts/polymarket_scanner.py --scan              # Full scan, output signals
@@ -18,6 +19,7 @@ import sys
 import json
 import argparse
 import time
+import math
 import hashlib
 from datetime import datetime, timezone, timedelta
 
@@ -47,14 +49,20 @@ MIN_EDGE = 0.10              # 10% minimum edge
 MIN_CONFIDENCE = 65          # Minimum confidence score
 MIN_LIQUIDITY = 10000        # $10K+ liquidity
 
-# Factor weights for multi-factor scoring
+# Factor weights for 7-factor scoring
 FACTOR_WEIGHTS = {
-    "odds_movement": 0.25,
-    "volume_surge": 0.20,
-    "news_catalyst": 0.20,
-    "sentiment": 0.15,
-    "historical_patterns": 0.20,
+    "price_momentum": 0.20,
+    "volume_analysis": 0.15,
+    "market_efficiency": 0.15,
+    "smart_money": 0.15,
+    "time_decay": 0.10,
+    "odds_compression": 0.10,
+    "contrarian": 0.15,
 }
+
+MAX_SINGLE_FACTOR_SHIFT = 0.08
+MAX_TOTAL_SHIFT = 0.35
+CONFIDENCE_DISAGREEMENT_PENALTY = 0.15
 
 # Category keywords for auto-classification
 CATEGORY_KEYWORDS = {
@@ -73,6 +81,61 @@ CATEGORY_KEYWORDS = {
     "culture": ["oscar", "grammy", "movie", "film", "celebrity", "entertainment",
                 "music", "album", "viral", "tiktok", "social media"],
 }
+
+
+# --- Math Helpers (pure Python, no numpy/pandas) ---
+
+def _mean(values):
+    """Return arithmetic mean of a list of numbers."""
+    if not values:
+        return 0.0
+    return sum(values) / len(values)
+
+
+def _std_dev(values):
+    """Return population standard deviation."""
+    if len(values) < 2:
+        return 0.0
+    m = _mean(values)
+    variance = sum((x - m) ** 2 for x in values) / len(values)
+    return math.sqrt(variance)
+
+
+def _linear_regression(values):
+    """Return (slope, intercept) for y=values indexed by 0..n-1."""
+    n = len(values)
+    if n < 2:
+        return 0.0, (_mean(values) if values else 0.0)
+    x_mean = (n - 1) / 2.0
+    y_mean = _mean(values)
+    numerator = sum((i - x_mean) * (values[i] - y_mean) for i in range(n))
+    denominator = sum((i - x_mean) ** 2 for i in range(n))
+    if denominator == 0:
+        return 0.0, y_mean
+    slope = numerator / denominator
+    intercept = y_mean - slope * x_mean
+    return slope, intercept
+
+
+def _ema(values, span):
+    """Return exponential moving average series."""
+    if not values:
+        return []
+    alpha = 2.0 / (span + 1)
+    result = [values[0]]
+    for v in values[1:]:
+        result.append(alpha * v + (1 - alpha) * result[-1])
+    return result
+
+
+def _extract_prices(price_history):
+    """Extract float price list from price history dicts."""
+    prices = []
+    for point in price_history:
+        p = point.get("p") if isinstance(point, dict) else None
+        if p is not None:
+            prices.append(float(p))
+    return prices
 
 
 # --- API Client ---
@@ -235,65 +298,76 @@ def apply_filters(markets):
 
 # --- Multi-Factor Analysis Engine ---
 
-def analyze_odds_movement(price_history):
-    """Score odds momentum/reversal from price history (0-100)."""
-    if not price_history or len(price_history) < 3:
-        return 50  # Neutral if no data
+def analyze_price_momentum(price_history):
+    """
+    Factor 1: Price momentum from full price history.
+    Returns {"score": 0-100, "direction": -1.0 to 1.0, "slope": float,
+             "acceleration": float, "volatility": float}.
+    """
+    prices = _extract_prices(price_history)
+    neutral = {"score": 50, "direction": 0.0, "slope": 0.0,
+               "acceleration": 0.0, "volatility": 0.0}
+    if len(prices) < 5:
+        return neutral
 
-    prices = []
-    for point in price_history:
-        p = point.get("p") if isinstance(point, dict) else None
-        if p is not None:
-            prices.append(float(p))
+    # Long-term slope (full history)
+    long_slope, _ = _linear_regression(prices)
 
-    if len(prices) < 3:
-        return 50
+    # Short-term slope (last 15 points)
+    short_window = prices[-15:] if len(prices) >= 15 else prices
+    short_slope, _ = _linear_regression(short_window)
 
-    # Use last 7 data points (or all if fewer)
-    recent = prices[-7:]
+    # Acceleration = difference between short and long slope
+    acceleration = short_slope - long_slope
 
-    # Calculate slope (linear regression simplification)
-    n = len(recent)
-    x_mean = (n - 1) / 2
-    y_mean = sum(recent) / n
-    numerator = sum((i - x_mean) * (recent[i] - y_mean) for i in range(n))
-    denominator = sum((i - x_mean) ** 2 for i in range(n))
+    # Volatility
+    volatility = _std_dev(prices)
 
-    if denominator == 0:
-        return 50
+    # Support / resistance from recent window
+    recent = prices[-20:] if len(prices) >= 20 else prices
+    support = min(recent)
+    resistance = max(recent)
+    price_range = resistance - support if resistance > support else 0.001
+    current = prices[-1]
+    position_in_range = (current - support) / price_range  # 0=at support, 1=at resistance
 
-    slope = numerator / denominator
+    # Direction: continuous via tanh — positive slope = bullish
+    direction = math.tanh(short_slope * 20)
 
-    # Strong momentum = higher score
-    # Normalize slope to 0-100 range
-    # Typical slope range: -0.05 to +0.05
-    normalized = (slope + 0.05) / 0.10  # Maps [-0.05, 0.05] to [0, 1]
-    normalized = max(0, min(1, normalized))
+    # Score: stronger slope + acceleration = higher score
+    slope_score = abs(short_slope) * 500  # Normalize: 0.02 slope -> 10 pts
+    accel_score = abs(acceleration) * 300
+    vol_bonus = min(15, volatility * 100)  # Some volatility = opportunity
 
-    # Check for reversal pattern (recent direction change)
-    if len(recent) >= 5:
-        first_half = recent[:len(recent)//2]
-        second_half = recent[len(recent)//2:]
-        first_trend = first_half[-1] - first_half[0]
-        second_trend = second_half[-1] - second_half[0]
-        if (first_trend > 0 and second_trend < 0) or (first_trend < 0 and second_trend > 0):
-            # Reversal detected — boost score for contrarian signal
-            normalized = min(1, normalized + 0.15)
+    raw_score = 50 + slope_score + accel_score + vol_bonus
+    # Boost if price is near support with upward momentum (or near resistance with downward)
+    if direction > 0 and position_in_range < 0.3:
+        raw_score += 10  # Bouncing off support
+    elif direction < 0 and position_in_range > 0.7:
+        raw_score += 10  # Rejecting resistance
 
-    return int(normalized * 100)
+    score = max(0, min(100, int(raw_score)))
+
+    return {"score": score, "direction": direction, "slope": short_slope,
+            "acceleration": acceleration, "volatility": volatility}
 
 
-def analyze_volume_surge(market):
-    """Score volume surge relative to typical (0-100)."""
+def analyze_volume_analysis(market, price_history):
+    """
+    Factor 2: Volume analysis — surge ratio + volume trend proxy.
+    Returns {"score": 0-100, "direction": -1.0 to 1.0, "surge_ratio": float}.
+    """
     vol_24h = float(market.get("volume24hr", 0) or 0)
     total_vol = float(market.get("volume", 0) or 0)
 
-    if total_vol == 0 or vol_24h == 0:
-        return 30  # Low score for no data
+    neutral = {"score": 30, "direction": 0.0, "surge_ratio": 0.0}
 
-    # Estimate 7d average daily volume from total/days active
+    if total_vol == 0 or vol_24h == 0:
+        return neutral
+
+    # Estimate average daily volume
     created = market.get("createdAt") or market.get("startDate", "")
-    days_active = 30  # Default
+    days_active = 30
     if created:
         try:
             created_str = created.replace("Z", "+00:00")
@@ -305,56 +379,49 @@ def analyze_volume_surge(market):
             pass
 
     avg_daily = total_vol / days_active if days_active > 0 else vol_24h
+    surge_ratio = vol_24h / avg_daily if avg_daily > 0 else 0.0
 
-    if avg_daily == 0:
-        return 30
+    # Volume trend proxy: compare volatility of first half vs second half of prices
+    prices = _extract_prices(price_history)
+    vol_trend = 0.0
+    if len(prices) >= 10:
+        mid = len(prices) // 2
+        first_vol = _std_dev(prices[:mid])
+        second_vol = _std_dev(prices[mid:])
+        if first_vol > 0:
+            vol_trend = (second_vol - first_vol) / first_vol  # positive = increasing activity
 
-    surge_ratio = vol_24h / avg_daily
+    # Price drift for direction
+    price_drift = 0.0
+    if len(prices) >= 5:
+        slope, _ = _linear_regression(prices[-10:] if len(prices) >= 10 else prices)
+        price_drift = math.tanh(slope * 20)
 
-    # Score: 1x = 50, 2x = 75, 3x+ = 90+
+    # Combine drift + volume trend for direction
+    direction = math.tanh(price_drift + vol_trend * 0.5)
+
+    # Score from surge ratio
     if surge_ratio >= 3:
-        return 95
+        score = 95
     elif surge_ratio >= 2:
-        return 75 + int((surge_ratio - 2) * 20)
+        score = 75 + int((surge_ratio - 2) * 20)
     elif surge_ratio >= 1:
-        return 50 + int((surge_ratio - 1) * 25)
+        score = 50 + int((surge_ratio - 1) * 25)
     else:
-        return int(surge_ratio * 50)
+        score = max(10, int(surge_ratio * 50))
+
+    # Boost if volume trend is increasing
+    if vol_trend > 0.3:
+        score = min(100, score + 10)
+
+    return {"score": score, "direction": direction, "surge_ratio": round(surge_ratio, 2)}
 
 
-def analyze_news_catalyst(question):
+def analyze_market_efficiency(market):
     """
-    Score news catalyst potential (0-100).
-    Uses keyword heuristics for static analysis.
-    News/web search should be done at the command level for approved signals.
-    """
-    q_lower = question.lower()
-
-    score = 40  # Base score
-
-    # Time-sensitive keywords boost
-    urgent_keywords = ["today", "tomorrow", "this week", "tonight", "by march",
-                       "by april", "deadline", "vote", "decision", "announce",
-                       "ruling", "verdict", "launch", "release"]
-    for kw in urgent_keywords:
-        if kw in q_lower:
-            score += 10
-
-    # High-profile topics boost
-    profile_keywords = ["bitcoin", "ethereum", "trump", "fed", "rate",
-                        "inflation", "war", "election", "spacex", "ai"]
-    for kw in profile_keywords:
-        if kw in q_lower:
-            score += 5
-
-    return min(100, score)
-
-
-def analyze_sentiment(question, market):
-    """
-    Score sentiment from market dynamics (0-100).
-    Proxy: uses odds movement direction + volume as sentiment indicator.
-    Full sentiment analysis should use web search at command level.
+    Factor 3: Market efficiency — spread, liquidity, age.
+    Entirely data-driven, no keyword hacking.
+    Returns {"score": 0-100, "direction": -1.0 to 1.0, "spread_inefficiency": float}.
     """
     outcome_prices = market.get("outcomePrices", "")
     try:
@@ -363,68 +430,259 @@ def analyze_sentiment(question, market):
         else:
             prices = outcome_prices
         yes_odds = float(prices[0]) if prices else 0.5
+        no_odds = float(prices[1]) if len(prices) > 1 else (1 - yes_odds)
     except (json.JSONDecodeError, TypeError, IndexError):
-        yes_odds = 0.5
+        yes_odds, no_odds = 0.5, 0.5
 
-    # Markets with strong lean have clearer sentiment
-    distance_from_center = abs(yes_odds - 0.5)
-    sentiment_clarity = distance_from_center * 2  # 0-1 scale
+    # Spread inefficiency: deviation from perfect pricing (yes + no = 1.0)
+    spread_inefficiency = abs(yes_odds + no_odds - 1.0)
 
-    # Volume adds conviction
-    vol = float(market.get("volume24hr", 0) or 0)
-    vol_factor = min(1.0, vol / 200000)  # Normalize to 200K cap
-
-    score = 40 + int(sentiment_clarity * 30) + int(vol_factor * 30)
-    return min(100, score)
-
-
-def analyze_historical_patterns(market, category):
-    """
-    Score based on historical resolution patterns (0-100).
-    Uses base rates and market characteristics as proxy.
-    """
-    score = 50  # Base
-
-    # Markets with more liquidity tend to be better priced
+    # Liquidity depth ratio
     liquidity = float(market.get("liquidity", 0) or 0)
-    if liquidity > 100000:
-        score += 10  # Well-priced, less edge expected
-    elif liquidity < 30000:
-        score += 15  # Thin markets may have more mispricing
+    vol_24h = float(market.get("volume24hr", 0) or 0)
+    liq_depth = liquidity / vol_24h if vol_24h > 0 else 10.0  # High ratio = deep/stable
 
-    # Category-specific base rates
-    category_bonus = {
-        "crypto": 10,   # Crypto markets often mispriced
-        "politics": 5,  # Political markets reasonably efficient
-        "sports": 0,    # Sports markets very efficient
-        "culture": 10,  # Pop culture can be mispriced
-        "science": 5,
-    }
-    score += category_bonus.get(category, 0)
-
-    # Resolution window factor — closer to resolution = more signal
-    end_date_str = market.get("endDate") or market.get("end_date_iso", "")
-    if end_date_str:
+    # Age: young markets more likely mispriced
+    created = market.get("createdAt") or market.get("startDate", "")
+    days_active = 30
+    if created:
         try:
-            end_date_str = end_date_str.replace("Z", "+00:00")
-            end_date = datetime.fromisoformat(end_date_str)
-            if end_date.tzinfo is None:
-                end_date = end_date.replace(tzinfo=timezone.utc)
-            days_left = (end_date - datetime.now(timezone.utc)).days
-            if days_left <= 7:
-                score += 15  # Close to resolution, patterns clearer
-            elif days_left <= 14:
-                score += 10
+            created_str = created.replace("Z", "+00:00")
+            created_dt = datetime.fromisoformat(created_str)
+            if created_dt.tzinfo is None:
+                created_dt = created_dt.replace(tzinfo=timezone.utc)
+            days_active = max(1, (datetime.now(timezone.utc) - created_dt).days)
         except (ValueError, TypeError):
             pass
 
-    return min(100, score)
+    # Score: higher = more likely mispriced
+    score = 40
+    # Spread inefficiency bonus (> 2% spread = significant)
+    score += min(20, int(spread_inefficiency * 500))
+    # Thin liquidity bonus
+    if liq_depth < 0.5:
+        score += 20  # Very thin — likely mispriced
+    elif liq_depth < 1.0:
+        score += 10
+    # Young market bonus
+    if days_active < 7:
+        score += 15
+    elif days_active < 14:
+        score += 8
+
+    score = max(0, min(100, score))
+
+    # Direction: lean toward the underpriced side
+    # If yes is cheap relative to a fair 50/50, direction is positive
+    direction = math.tanh((0.5 - yes_odds) * 2) if spread_inefficiency > 0.01 else 0.0
+
+    return {"score": score, "direction": direction,
+            "spread_inefficiency": round(spread_inefficiency, 4)}
 
 
-def calculate_model_probability(market, factors):
+def analyze_smart_money(market, price_history):
     """
-    Calculate model's estimated probability based on multi-factor analysis.
-    Adjusts current odds based on factor signals.
+    Factor 4: Smart money detection — sharp moves + divergences.
+    Returns {"score": 0-100, "direction": -1.0 to 1.0, "sharp_moves": int}.
+    """
+    prices = _extract_prices(price_history)
+    neutral = {"score": 40, "direction": 0.0, "sharp_moves": 0}
+
+    if len(prices) < 10:
+        return neutral
+
+    # Calculate period-over-period changes
+    changes = [prices[i] - prices[i - 1] for i in range(1, len(prices))]
+    change_std = _std_dev(changes)
+
+    if change_std == 0:
+        return neutral
+
+    # Sharp move detection: single-period changes > 2 sigma
+    sharp_moves = []
+    for i, c in enumerate(changes):
+        if abs(c) > 2 * change_std:
+            sharp_moves.append((i, c))
+
+    # Direction from most recent sharp move
+    direction = 0.0
+    if sharp_moves:
+        last_sharp = sharp_moves[-1][1]
+        direction = math.tanh(last_sharp / change_std)
+
+    # Price/volume divergence: slope up + volatility down = bearish divergence
+    slope, _ = _linear_regression(prices)
+    recent_vol = _std_dev(prices[-15:] if len(prices) >= 15 else prices)
+    overall_vol = _std_dev(prices)
+
+    divergence = 0.0
+    if overall_vol > 0:
+        vol_ratio = recent_vol / overall_vol
+        if slope > 0 and vol_ratio < 0.7:
+            divergence = -0.5  # Bearish divergence: price up, volatility dropping
+        elif slope < 0 and vol_ratio < 0.7:
+            divergence = 0.5   # Bullish divergence: price down, volatility dropping
+
+    # Blend sharp move direction with divergence
+    if divergence != 0:
+        direction = math.tanh(direction + divergence)
+
+    # Score: more sharp moves + divergence = higher score
+    score = 40 + len(sharp_moves) * 10 + int(abs(divergence) * 30)
+    score = max(0, min(100, score))
+
+    return {"score": score, "direction": direction, "sharp_moves": len(sharp_moves)}
+
+
+def analyze_time_decay(market):
+    """
+    Factor 5: Time decay — phase-based scoring.
+    Returns {"score": 0-100, "direction": -1.0 to 1.0, "days_left": int, "phase": str}.
+    """
+    end_date_str = market.get("endDate") or market.get("end_date_iso", "")
+    days_left = 15  # Default if no end date
+    if end_date_str:
+        try:
+            end_date_str_clean = end_date_str.replace("Z", "+00:00")
+            end_date = datetime.fromisoformat(end_date_str_clean)
+            if end_date.tzinfo is None:
+                end_date = end_date.replace(tzinfo=timezone.utc)
+            days_left = max(0, (end_date - datetime.now(timezone.utc)).days)
+        except (ValueError, TypeError):
+            pass
+
+    # Phase classification
+    if days_left > 21:
+        phase = "early"
+        phase_intensity = 0.3
+    elif days_left > 7:
+        phase = "mid"
+        phase_intensity = 0.5
+    elif days_left > 2:
+        phase = "late"
+        phase_intensity = 0.8
+    else:
+        phase = "terminal"
+        phase_intensity = 1.0
+
+    # Exponential decay factor
+    decay = math.exp(-days_left / 10.0)
+
+    # Direction: trust market lean, scaled by phase intensity
+    outcome_prices = market.get("outcomePrices", "")
+    try:
+        if isinstance(outcome_prices, str):
+            prices = json.loads(outcome_prices)
+        else:
+            prices = outcome_prices
+        yes_odds = float(prices[0]) if prices else 0.5
+    except (json.JSONDecodeError, TypeError, IndexError):
+        yes_odds = 0.5
+
+    market_lean = yes_odds - 0.5  # Positive = YES lean
+    direction = math.tanh(market_lean * 4) * phase_intensity
+
+    # Score: closer to resolution + stronger lean = higher score
+    score = 30 + int(decay * 40) + int(abs(market_lean) * 2 * 30)
+    score = max(0, min(100, score))
+
+    return {"score": score, "direction": direction, "days_left": days_left, "phase": phase}
+
+
+def analyze_odds_compression(price_history):
+    """
+    Factor 6: Odds compression — consensus forming detection.
+    Returns {"score": 0-100, "direction": -1.0 to 1.0, "compressing": bool}.
+    """
+    prices = _extract_prices(price_history)
+    neutral = {"score": 40, "direction": 0.0, "compressing": False}
+
+    if len(prices) < 20:
+        return neutral
+
+    # Check std_dev across 3 windows: early, mid, recent
+    third = len(prices) // 3
+    std_early = _std_dev(prices[:third])
+    std_mid = _std_dev(prices[third:2 * third])
+    std_recent = _std_dev(prices[2 * third:])
+
+    # Compression: std_dev shrinking across windows
+    compressing = std_early > std_mid > std_recent and std_recent < std_early * 0.7
+
+    if not compressing:
+        return neutral
+
+    # Compression target = mean of recent prices
+    recent_mean = _mean(prices[2 * third:])
+    current = prices[-1]
+
+    # Direction toward compression target
+    direction = math.tanh((recent_mean - current) * 10)
+
+    # Score: stronger compression = higher score
+    compression_ratio = std_recent / std_early if std_early > 0 else 1.0
+    score = 50 + int((1 - compression_ratio) * 50)
+    score = max(0, min(100, score))
+
+    return {"score": score, "direction": direction, "compressing": True}
+
+
+def analyze_contrarian(market, price_history):
+    """
+    Factor 7: Contrarian — fires at extreme odds with thinning volume.
+    Returns {"score": 0-100, "direction": -1.0 to 1.0, "extreme": bool}.
+    """
+    outcome_prices = market.get("outcomePrices", "")
+    try:
+        if isinstance(outcome_prices, str):
+            prices_raw = json.loads(outcome_prices)
+        else:
+            prices_raw = outcome_prices
+        yes_odds = float(prices_raw[0]) if prices_raw else 0.5
+    except (json.JSONDecodeError, TypeError, IndexError):
+        yes_odds = 0.5
+
+    neutral = {"score": 30, "direction": 0.0, "extreme": False}
+
+    # Check for extreme odds (>80 or <20)
+    if 0.20 <= yes_odds <= 0.80:
+        return neutral
+
+    prices = _extract_prices(price_history)
+    if len(prices) < 10:
+        return neutral
+
+    # Check for thinning volume (low recent volatility)
+    recent_vol = _std_dev(prices[-10:])
+    overall_vol = _std_dev(prices)
+
+    vol_thinning = recent_vol < overall_vol * 0.6 if overall_vol > 0 else False
+
+    if not vol_thinning:
+        # Not enough contrarian signal without thinning
+        return {"score": 35, "direction": 0.0, "extreme": True}
+
+    # Direction opposes current lean
+    if yes_odds > 0.80:
+        direction = -0.6  # Push against YES
+    else:
+        direction = 0.6   # Push against NO
+
+    # Score: more extreme + thinner = higher contrarian score
+    extremity = abs(yes_odds - 0.5) - 0.3  # 0 at 80%, 0.2 at 100%
+    score = 55 + int(extremity * 200)
+    if vol_thinning:
+        score += 15
+    score = max(0, min(100, score))
+
+    return {"score": score, "direction": direction, "extreme": True}
+
+
+def calculate_model_probability(market, factor_results):
+    """
+    Bayesian-style model probability from 7-factor analysis.
+    Starts from market odds as prior, each factor shifts via weighted direction.
+    Returns (model_prob, confidence, agreement).
     """
     outcome_prices = market.get("outcomePrices", "")
     try:
@@ -436,24 +694,54 @@ def calculate_model_probability(market, factors):
     except (json.JSONDecodeError, TypeError, IndexError):
         yes_odds = 0.5
 
-    # Weighted confidence score
-    confidence = sum(
-        factors[f] * FACTOR_WEIGHTS[f] for f in FACTOR_WEIGHTS
-    )
+    # Start from market odds as prior
+    total_shift = 0.0
+    directions = []
 
-    # Adjust odds based on confidence direction
-    # High confidence (>70) suggests current odds may be wrong
-    # Direction: if odds_movement is high, momentum is positive (YES direction)
-    momentum_direction = 1 if factors["odds_movement"] > 55 else -1
+    for factor_name, weight in FACTOR_WEIGHTS.items():
+        result = factor_results[factor_name]
+        direction = result["direction"]
+        # Strength: how far from neutral (50) the score is, normalized 0-1
+        strength = abs(result["score"] - 50) / 50.0
 
-    # Calculate adjustment — higher confidence = bigger adjustment
-    adjustment_magnitude = (confidence - 50) / 200  # Max ±0.25
-    adjustment = adjustment_magnitude * momentum_direction
+        shift = weight * direction * strength * MAX_SINGLE_FACTOR_SHIFT
+        total_shift += shift
 
-    model_prob = yes_odds + adjustment
+        if abs(direction) > 0.1:
+            directions.append(1 if direction > 0 else -1)
+
+    # Factor agreement analysis
+    if directions:
+        positive_count = sum(1 for d in directions if d > 0)
+        agreement_ratio = max(positive_count, len(directions) - positive_count) / len(directions)
+    else:
+        agreement_ratio = 0.5
+
+    # Adjust shift based on agreement
+    if agreement_ratio > 0.70:
+        # Strong agreement — boost shift by up to 50%
+        boost = 1.0 + (agreement_ratio - 0.70) * 1.67  # Max 1.5x at 100% agreement
+        total_shift *= boost
+    elif agreement_ratio < 0.30:
+        # Strong disagreement — penalize
+        total_shift *= (1.0 - CONFIDENCE_DISAGREEMENT_PENALTY)
+
+    # Clamp total shift
+    total_shift = max(-MAX_TOTAL_SHIFT, min(MAX_TOTAL_SHIFT, total_shift))
+
+    model_prob = yes_odds + total_shift
     model_prob = max(0.05, min(0.95, model_prob))
 
-    return model_prob, confidence
+    # Confidence: weighted average of factor scores, adjusted by agreement
+    confidence = sum(
+        factor_results[f]["score"] * FACTOR_WEIGHTS[f] for f in FACTOR_WEIGHTS
+    )
+    if agreement_ratio < 0.50:
+        confidence *= (1.0 - CONFIDENCE_DISAGREEMENT_PENALTY)
+
+    agreement_str = f"{sum(1 for d in directions if d > 0)}/{len(directions)}" if directions else "0/0"
+
+    return model_prob, confidence, agreement_str
 
 
 def analyze_market(market, price_history=None):
@@ -483,17 +771,23 @@ def analyze_market(market, price_history=None):
     if price_history is None and token_id:
         price_history = fetch_price_history(token_id)
 
-    # Run all 5 factors
-    factors = {
-        "odds_movement": analyze_odds_movement(price_history or []),
-        "volume_surge": analyze_volume_surge(market),
-        "news_catalyst": analyze_news_catalyst(question),
-        "sentiment": analyze_sentiment(question, market),
-        "historical_patterns": analyze_historical_patterns(market, category),
+    # Run all 7 factors (each returns a dict with score, direction, etc.)
+    ph = price_history or []
+    factor_results = {
+        "price_momentum": analyze_price_momentum(ph),
+        "volume_analysis": analyze_volume_analysis(market, ph),
+        "market_efficiency": analyze_market_efficiency(market),
+        "smart_money": analyze_smart_money(market, ph),
+        "time_decay": analyze_time_decay(market),
+        "odds_compression": analyze_odds_compression(ph),
+        "contrarian": analyze_contrarian(market, ph),
     }
 
-    # Calculate model probability and confidence
-    model_prob, confidence = calculate_model_probability(market, factors)
+    # Flat scores for backward compatibility
+    factors = {name: result["score"] for name, result in factor_results.items()}
+
+    # Calculate model probability, confidence, and agreement
+    model_prob, confidence, agreement = calculate_model_probability(market, factor_results)
 
     # Parse current odds
     outcome_prices = market.get("outcomePrices", "")
@@ -528,7 +822,9 @@ def analyze_market(market, price_history=None):
         "edge": round(edge, 4),
         "confidence": round(confidence, 1),
         "factors": factors,
-        "reasoning": generate_reasoning(factors, recommendation, question, edge),
+        "factor_details": factor_results,
+        "factor_agreement": agreement,
+        "reasoning": generate_reasoning(factor_results, recommendation, question, edge, agreement),
         "resolution_date": market.get("endDate", "Unknown"),
         "volume_24h": float(market.get("volume24hr", 0) or 0),
         "liquidity": float(market.get("liquidity", 0) or 0),
@@ -544,42 +840,54 @@ def analyze_market(market, price_history=None):
     return signal
 
 
-def generate_reasoning(factors, recommendation, question, edge):
-    """Generate human-readable reasoning from factor scores."""
+def generate_reasoning(factor_results, recommendation, question, edge, agreement):
+    """Generate human-readable reasoning from 7-factor results."""
     parts = []
 
-    # Odds movement
-    om = factors["odds_movement"]
-    if om > 70:
-        parts.append(f"Strong momentum detected (score: {om}/100)")
-    elif om > 55:
-        parts.append(f"Moderate bullish momentum (score: {om}/100)")
-    elif om < 30:
-        parts.append(f"Reversal pattern detected — contrarian signal (score: {om}/100)")
+    # Price momentum
+    pm = factor_results["price_momentum"]
+    if pm["score"] > 70:
+        dir_label = "bullish" if pm["direction"] > 0 else "bearish"
+        parts.append(f"Strong {dir_label} momentum (score: {pm['score']}/100, accel: {pm['acceleration']:.4f})")
+    elif pm["score"] > 55:
+        dir_label = "bullish" if pm["direction"] > 0 else "bearish"
+        parts.append(f"Moderate {dir_label} momentum ({pm['score']}/100)")
 
-    # Volume
-    vs = factors["volume_surge"]
-    if vs > 75:
-        parts.append(f"Volume surge indicates new information entering the market ({vs}/100)")
-    elif vs > 50:
-        parts.append(f"Above-average volume supports conviction ({vs}/100)")
+    # Volume analysis
+    va = factor_results["volume_analysis"]
+    if va["score"] > 75:
+        parts.append(f"Volume surge {va['surge_ratio']:.1f}x average — new info entering market ({va['score']}/100)")
+    elif va["score"] > 50:
+        parts.append(f"Above-average volume ({va['surge_ratio']:.1f}x) supports conviction ({va['score']}/100)")
 
-    # News
-    nc = factors["news_catalyst"]
-    if nc > 60:
-        parts.append(f"Potential news catalyst identified ({nc}/100)")
+    # Market efficiency
+    me = factor_results["market_efficiency"]
+    if me["score"] > 60:
+        parts.append(f"Market inefficiency detected — spread: {me['spread_inefficiency']:.2%} ({me['score']}/100)")
 
-    # Sentiment
-    se = factors["sentiment"]
-    if se > 70:
-        parts.append(f"Market sentiment strongly aligned ({se}/100)")
-    elif se < 35:
-        parts.append(f"Contrarian sentiment opportunity ({se}/100)")
+    # Smart money
+    sm = factor_results["smart_money"]
+    if sm["score"] > 60:
+        parts.append(f"Smart money signal: {sm['sharp_moves']} sharp moves detected ({sm['score']}/100)")
 
-    # Historical
-    hp = factors["historical_patterns"]
-    if hp > 65:
-        parts.append(f"Historical patterns favor this outcome ({hp}/100)")
+    # Time decay
+    td = factor_results["time_decay"]
+    if td["phase"] in ("late", "terminal"):
+        parts.append(f"Time decay {td['phase']} phase — {td['days_left']}d to resolution ({td['score']}/100)")
+
+    # Odds compression
+    oc = factor_results["odds_compression"]
+    if oc["compressing"]:
+        parts.append(f"Consensus forming — odds compressing ({oc['score']}/100)")
+
+    # Contrarian
+    ct = factor_results["contrarian"]
+    if ct["extreme"]:
+        dir_label = "YES" if ct["direction"] > 0 else "NO"
+        parts.append(f"Contrarian signal toward {dir_label} — extreme odds + thinning volume ({ct['score']}/100)")
+
+    # Agreement summary
+    parts.append(f"Factor agreement: {agreement} align {'bullish' if recommendation == 'YES' else 'bearish'}")
 
     if not parts:
         parts.append("Multi-factor analysis suggests moderate edge")
@@ -628,7 +936,8 @@ def format_signal_card(signal, for_telegram=False):
             f"✅ *Recommendation:* {rec} @ {rec_odds}%\n"
             f"🎯 *Model Price:* {model_pct}%\n"
             f"💰 *Edge:* +{edge_pct}%\n"
-            f"🔥 *Confidence:* {signal['confidence']:.0f}/100\n\n"
+            f"🔥 *Confidence:* {signal['confidence']:.0f}/100\n"
+            f"🤝 *Factor Agreement:* {signal.get('factor_agreement', 'N/A')}\n\n"
             f"📋 *Analysis:*\n{signal['reasoning']}\n\n"
             f"⏰ *Resolves:* {res_date}\n"
             f"📊 *24h Volume:* {vol_str}\n\n"
@@ -648,6 +957,7 @@ def format_signal_card(signal, for_telegram=False):
             f"  Model Price:    {model_pct}%\n"
             f"  Edge:           +{edge_pct}%\n"
             f"  Confidence:     {signal['confidence']:.0f}/100\n"
+            f"  Agreement:      {signal.get('factor_agreement', 'N/A')}\n"
             f"\n"
             f"  Analysis:\n"
             f"  {signal['reasoning']}\n"
