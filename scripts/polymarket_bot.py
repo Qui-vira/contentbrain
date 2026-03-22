@@ -1108,7 +1108,9 @@ def _auto_ta_scan_cycle():
             cwd=os.path.join(os.path.dirname(__file__), ".."),
         )
         if result.returncode != 0:
-            err = result.stderr[:300] if result.stderr else result.stdout[:300] if result.stdout else "Unknown error"
+            # Combine stderr+stdout, grab last 600 chars for full traceback
+            combined = (result.stderr or '') + (result.stdout or '')
+            err = combined.strip()[-600:] if combined.strip() else "Unknown error"
             print(f"[AUTO-SCAN] Scan failed: {err}")
             if admin:
                 send_message(admin, f"[AUTO-SCAN] Scan failed at {ts}:\n`{err}`")
