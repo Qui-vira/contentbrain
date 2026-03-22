@@ -1164,87 +1164,21 @@ def _unified_cron_cycle():
         run_full_cycle()
 
 
-def _auto_ta_scan_cycle():
-    """Run full crypto TA scan and send qualifying signals to approval channel."""
-    scan_interval = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "4"))
-    admin = ADMIN_CHAT_ID or APPROVAL_CHANNEL_ID
-    ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    print(f"[AUTO-SCAN] Starting scheduled TA scan at {ts}")
-
-    # Run the TA scanner
-    script_path = os.path.join(os.path.dirname(__file__), "binance_ta_runner.py")
-    if not os.path.exists(script_path):
-        print("[AUTO-SCAN] binance_ta_runner.py not found — skipping.")
-        return
-
-    try:
-        result = subprocess.run(
-            [sys.executable, script_path],
-            capture_output=True, text=True, timeout=300,
-            cwd=os.path.join(os.path.dirname(__file__), ".."),
-        )
-        if result.returncode != 0:
-            # Combine stderr+stdout, grab last 600 chars for full traceback
-            combined = (result.stderr or '') + (result.stdout or '')
-            err = combined.strip()[-600:] if combined.strip() else "Unknown error"
-            print(f"[AUTO-SCAN] Scan failed: {err}")
-            if admin:
-                send_message(admin, f"[AUTO-SCAN] Scan failed at {ts}:\n`{err}`")
-            return
-    except subprocess.TimeoutExpired:
-        print("[AUTO-SCAN] Scan timed out after 5 minutes.")
-        if admin:
-            send_message(admin, f"[AUTO-SCAN] Scan timed out at {ts}")
-        return
-    except Exception as e:
-        print(f"[AUTO-SCAN] Scan error: {e}")
-        return
-
-    # Load signals and send qualifying ones to approval
-    try:
-        from binance_ta_runner import load_ta_signals
-        signals = load_ta_signals(max_age_minutes=90)
-        if not signals:
-            print(f"[AUTO-SCAN] No qualifying signals (3+ confluences).")
-            if admin:
-                send_message(admin, f"[AUTO-SCAN] Scan complete at {ts} — no qualifying signals.")
-            return
-
-        sent = 0
-        for signal in signals:
-            signal['source'] = 'auto'
-            msg_id = send_to_approval(signal)
-            if msg_id:
-                sent += 1
-
-        print(f"[AUTO-SCAN] Sent {sent}/{len(signals)} signal(s) to approval channel.")
-        if admin:
-            send_message(admin, f"[AUTO-SCAN] Scan complete at {ts}\n{sent} signal(s) sent for approval.")
-    except Exception as e:
-        print(f"[AUTO-SCAN] Signal load error: {e}")
-        if admin:
-            send_message(admin, f"[AUTO-SCAN] Signal load error at {ts}: {e}")
-
-
 def _cron_loop():
-    """Background thread: runs scheduled scans."""
+    """Background thread: runs unified auto-scanner every N hours."""
     scan_interval = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "4"))
 
-    # Initial TA scan 30s after startup
-    time.sleep(30)
-    print("[CRON] Running initial TA scan...")
+    # Wait before first scan to let bot stabilize
+    time.sleep(60)
+    print("[CRON] Running initial unified scan...")
     try:
-        _auto_ta_scan_cycle()
+        _unified_cron_cycle()
     except Exception as e:
-        print(f"[CRON] Initial TA scan error: {e}")
+        print(f"[CRON] Initial scan error: {e}")
 
-    # Schedule TA scans every N hours (default 4)
-    schedule.every(scan_interval).hours.do(_auto_ta_scan_cycle)
-    print(f"[CRON] TA auto-scan scheduled every {scan_interval} hours.")
-
-    # Keep existing polymarket/unified cycle running hourly
-    schedule.every(1).hours.do(_unified_cron_cycle)
-    print("[CRON] Hourly unified scanner started.")
+    # Single schedule: unified scanner every N hours (crypto + forex + polymarket)
+    schedule.every(scan_interval).hours.do(_unified_cron_cycle)
+    print(f"[CRON] Unified auto-scan scheduled every {scan_interval} hours.")
 
     while True:
         schedule.run_pending()
@@ -1263,7 +1197,7 @@ def run_bot():
         cron_thread = threading.Thread(target=_cron_loop, daemon=True)
         cron_thread.start()
         scan_interval = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "4"))
-        print(f"Embedded cron scheduler started (TA scan every {scan_interval}h, polymarket hourly).")
+        print(f"Embedded cron scheduler started (unified scan every {scan_interval}h).")
     elif enable_cron and schedule is None:
         print("WARNING: 'schedule' package not installed — cron disabled.")
     else:
