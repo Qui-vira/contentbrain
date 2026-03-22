@@ -11,12 +11,32 @@ allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "mcp__notion__n
 3. Ask me which ones to post now. Wait for my selection.
 4. For each selected entry, route to the correct platform:
 
-### X/Twitter and LinkedIn → Typefully API
-POST https://api.typefully.com/v1/drafts/
-Headers: X-API-KEY: [from .env TYPEFULLY_API_KEY]
-Body: {"content": "[post text]", "schedule-date": "[ISO date if scheduling]"}
+### X/Twitter and LinkedIn → Typefully API v2
 
-For threads on X: split content by numbered tweets (1/, 2/, 3/), send as threadify=true
+First, get the social set ID (cached after first call):
+GET https://api.typefully.com/v2/social-sets
+Headers: Authorization: Bearer [from .env TYPEFULLY_API_KEY]
+Save the first result's "id" as SOCIAL_SET_ID.
+
+Then create and publish:
+POST https://api.typefully.com/v2/social-sets/{SOCIAL_SET_ID}/drafts
+Headers: Authorization: Bearer [from .env TYPEFULLY_API_KEY]
+Content-Type: application/json
+
+Single tweet:
+{"platforms": {"x": {"enabled": true, "posts": [{"text": "[post text]"}]}}, "publish_at": "now"}
+
+Thread (split by numbered tweets 1/, 2/, 3/ — each becomes a separate post object):
+{"platforms": {"x": {"enabled": true, "posts": [{"text": "[tweet 1]"}, {"text": "[tweet 2]"}, {"text": "[tweet 3]"}]}}, "publish_at": "now"}
+
+LinkedIn post:
+{"platforms": {"linkedin": {"enabled": true, "posts": [{"text": "[post text]"}]}}, "publish_at": "now"}
+
+Both X and LinkedIn at once:
+{"platforms": {"x": {"enabled": true, "posts": [{"text": "[tweet]"}]}, "linkedin": {"enabled": true, "posts": [{"text": "[linkedin post]"}]}}, "publish_at": "now"}
+
+To schedule instead of publish now, replace "publish_at": "now" with "publish_at": "[ISO 8601 datetime]" (e.g. "2026-03-25T14:00:00Z").
+To save as draft only (no publish), omit the "publish_at" field entirely.
 
 ### TikTok and Instagram → Buffer API
 POST https://api.bufferapp.com/1/updates/create.json
@@ -62,11 +82,12 @@ Before posting, check the Notion entry for:
 1. Content Type property (tweet, thread, reel, carousel, video, image post)
 2. If Content Type includes video or image:
 
-### For X/LinkedIn (Typefully):
+### For X/LinkedIn (Typefully v2):
 - Check if a media file path exists in the Notion Notes field or in 06-Drafts/
 - If video: attach the MP4 file to the Typefully API call
 - If image: attach the image file to the Typefully API call
 - Typefully supports up to 4 images per tweet or 1 video
+- Use Authorization: Bearer header (NOT X-API-KEY)
 
 ### For TikTok/Instagram (Buffer):
 - Buffer requires a public media URL, not a local file
