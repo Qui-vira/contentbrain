@@ -4,7 +4,7 @@ Polymarket Scanner — Core scanner + multi-factor analysis engine.
 Scans Polymarket prediction markets, applies 7-factor analysis
 (price momentum, volume analysis, market efficiency, smart money,
 time decay, odds compression, contrarian), and generates signal cards
-for markets with >= 10% edge.
+for markets with >= 5% edge. Includes Claude AI independent probability assessment.
 
 Usage:
     python scripts/polymarket_scanner.py --scan              # Full scan, output signals
@@ -30,6 +30,21 @@ except ImportError:
     pass
 
 import requests
+
+from claude_estimator import ClaudeEstimator
+
+# Initialize Claude estimator (lazy — only fails if actually called without API key)
+_claude_estimator = None
+
+def _get_claude_estimator():
+    global _claude_estimator
+    if _claude_estimator is None:
+        try:
+            _claude_estimator = ClaudeEstimator()
+        except (ValueError, ImportError) as e:
+            print(f"Claude Estimator unavailable: {e}")
+            return None
+    return _claude_estimator
 
 # --- Constants ---
 
@@ -832,6 +847,27 @@ def analyze_market(market, price_history=None):
         "slug": market.get("slug", ""),
     }
 
+    # --- Claude Estimator: independent AI probability check ---
+    estimator = _get_claude_estimator()
+    if estimator:
+        claude_result = estimator.estimate(
+            question=question,
+            yes_odds=yes_odds,
+            category=category,
+            resolution_date=market.get("endDate", "Unknown"),
+            model_prob=model_prob,
+            model_edge=edge,
+        )
+        signal["claude_estimate"] = claude_result
+        signal["combined_edge"] = claude_result["combined_edge"]
+        signal["signal_strength"] = claude_result["signal_strength"]
+        signal["claude_agrees"] = claude_result["agrees_with_model"]
+    else:
+        signal["claude_estimate"] = None
+        signal["combined_edge"] = edge
+        signal["signal_strength"] = "weak"
+        signal["claude_agrees"] = None
+
     # Check thresholds
     signal["passes_threshold"] = (
         confidence >= MIN_CONFIDENCE and edge >= MIN_EDGE
@@ -926,6 +962,27 @@ def format_signal_card(signal, for_telegram=False):
     rec = signal["recommendation"]
     rec_odds = yes_pct if rec == "YES" else no_pct
 
+    # Claude estimate fields
+    claude_est = signal.get("claude_estimate")
+    combined_edge_pct = round(signal.get("combined_edge", signal["edge"]) * 100, 1)
+    signal_strength = signal.get("signal_strength", "N/A").upper()
+    claude_agrees = signal.get("claude_agrees")
+
+    if claude_est and not claude_est.get("error"):
+        claude_prob_pct = round(claude_est["claude_probability"] * 100, 1)
+        claude_conf = claude_est["confidence"].upper()
+        agrees_str = "YES" if claude_agrees else "NO"
+        claude_section = (
+            f"\n*Claude AI Assessment:*\n"
+            f"*Claude Probability:* {claude_prob_pct}%\n"
+            f"*Claude Confidence:* {claude_conf}\n"
+            f"*Agrees with Model:* {agrees_str}\n"
+            f"*Combined Edge:* +{combined_edge_pct}%\n"
+            f"*Signal Strength:* {signal_strength}\n"
+        )
+    else:
+        claude_section = ""
+
     if for_telegram:
         # Telegram format — clean, no emojis, no hashtags
         card = (
@@ -937,13 +994,27 @@ def format_signal_card(signal, for_telegram=False):
             f"*Model Price:* {model_pct}%\n"
             f"*Edge:* +{edge_pct}%\n"
             f"*Confidence:* {signal['confidence']:.0f}/100\n"
-            f"*Factor Agreement:* {signal.get('factor_agreement', 'N/A')}\n\n"
+            f"*Factor Agreement:* {signal.get('factor_agreement', 'N/A')}\n"
+            f"{claude_section}\n"
             f"*Analysis:*\n{signal['reasoning']}\n\n"
             f"*Resolves:* {res_date}\n"
             f"*24h Volume:* {vol_str}"
         )
     else:
         # CLI format
+        if claude_est and not claude_est.get("error"):
+            claude_cli = (
+                f"\n"
+                f"  --- Claude AI Assessment ---\n"
+                f"  Claude Prob:    {claude_prob_pct}%\n"
+                f"  Claude Conf:    {claude_conf}\n"
+                f"  Agrees w/Model: {agrees_str}\n"
+                f"  Combined Edge:  +{combined_edge_pct}%\n"
+                f"  Signal Strength:{signal_strength}\n"
+            )
+        else:
+            claude_cli = ""
+
         card = (
             f"\n{'='*60}\n"
             f"  POLYMARKET SIGNAL\n"
@@ -957,7 +1028,7 @@ def format_signal_card(signal, for_telegram=False):
             f"  Edge:           +{edge_pct}%\n"
             f"  Confidence:     {signal['confidence']:.0f}/100\n"
             f"  Agreement:      {signal.get('factor_agreement', 'N/A')}\n"
-            f"\n"
+            f"{claude_cli}\n"
             f"  Analysis:\n"
             f"  {signal['reasoning']}\n"
             f"\n"
