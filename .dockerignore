@@ -7,3 +7,4 @@
 !scripts/polymarket_cron.py
 !scripts/polymarket_scanner.py
 !scripts/polymarket_tracker.py
+!scripts/claude_estimator.py
