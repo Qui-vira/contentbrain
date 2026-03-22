@@ -1051,8 +1051,14 @@ def handle_send_signals_direct(chat_id):
         send_message(chat_id, f"Error: {e}")
 
 
+def handle_chatid(chat_id):
+    """Reply with the chat ID — useful for finding group/channel IDs."""
+    send_message(chat_id, f"`{chat_id}`")
+
+
 COMMAND_HANDLERS = {
     "/start": handle_start,
+    "/chatid": handle_chatid,
     "/scan": handle_scan,
     "/top": handle_top,
     "/status": handle_status,
