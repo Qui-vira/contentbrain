@@ -11,6 +11,7 @@ COPY scripts/polymarket_bot.py scripts/
 COPY scripts/polymarket_cron.py scripts/
 COPY scripts/polymarket_scanner.py scripts/
 COPY scripts/polymarket_tracker.py scripts/
+COPY scripts/claude_estimator.py scripts/
 
 # Create data directories the scripts expect
 RUN mkdir -p 07-Analytics/signal-performance \
