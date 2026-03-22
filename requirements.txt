@@ -5,3 +5,4 @@ schedule
 anthropic
 pandas
 numpy
+python-binance
