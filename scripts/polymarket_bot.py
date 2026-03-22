@@ -720,6 +720,9 @@ BOT_COMMANDS = [
     {"command": "scan_custom", "description": "Custom scan (e.g. /scan_custom ETHUSDT 1h,4h)"},
     {"command": "send_signals", "description": "Send TA signals to approval channel"},
     {"command": "send_signals_direct", "description": "Send TA signals directly (skip approval)"},
+    {"command": "forex_scan", "description": "Full forex scan (all pairs, all TFs)"},
+    {"command": "forex_pair", "description": "Scan one forex pair (e.g. /forex_pair EUR/USD)"},
+    {"command": "forex_custom", "description": "Custom forex scan (e.g. /forex_custom EUR/USD 1h,4h)"},
     {"command": "top", "description": "Show top 10 markets by volume"},
     {"command": "status", "description": "Show active signals"},
     {"command": "performance", "description": "Win rate and metrics"},
@@ -1068,6 +1071,92 @@ def _send_ta_signals_to_approval(chat_id):
         return 0
 
 
+def _run_forex_script(chat_id, args_list, label):
+    """Run forex_ta_runner.py with given args via subprocess, report results."""
+    script_path = os.path.join(os.path.dirname(__file__), "forex_ta_runner.py")
+    if not os.path.exists(script_path):
+        send_message(chat_id, f"Error: `forex_ta_runner.py` not found.")
+        return False
+
+    cmd = [sys.executable, script_path] + args_list
+    try:
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, timeout=600,
+            cwd=os.path.join(os.path.dirname(__file__), ".."),
+        )
+        lines = result.stdout.strip().split('\n') if result.stdout else []
+        status_line = lines[-1] if lines else "Scan complete."
+        if result.returncode != 0:
+            combined = (result.stderr or '') + (result.stdout or '')
+            err = combined.strip()[-400:] if combined.strip() else "Unknown error"
+            send_message(chat_id, f"[{label}] Scan failed:\n`{err}`")
+            return False
+        send_message(chat_id, f"[{label}] {status_line}")
+        return True
+    except subprocess.TimeoutExpired:
+        send_message(chat_id, f"[{label}] Scan timed out after 10 minutes.")
+        return False
+    except Exception as e:
+        send_message(chat_id, f"[{label}] Error: {e}")
+        return False
+
+
+def _send_forex_signals_to_approval(chat_id):
+    """Load forex signals from JSON and send qualifying ones for approval."""
+    try:
+        from forex_ta_runner import load_forex_signals
+        signals = load_forex_signals(max_age_minutes=90)
+        if not signals:
+            send_message(chat_id, "No qualifying forex signals (3+ confluences) in latest scan.")
+            return 0
+        send_message(chat_id, f"Found *{len(signals)}* qualifying forex signal(s). Sending for approval...")
+        sent = 0
+        for signal in signals:
+            msg_id = send_to_approval(signal)
+            if msg_id:
+                sent += 1
+        send_message(chat_id, f"Sent *{sent}* forex signal(s) to approval channel. Review and approve/reject.")
+        return sent
+    except Exception as e:
+        send_message(chat_id, f"Forex signal load error: {e}")
+        return 0
+
+
+def handle_forex_scan(chat_id):
+    """Handle /forex_scan — full forex scan, then send signals for approval."""
+    send_message(chat_id, "Running full forex TA scan (8 pairs, all timeframes)... This takes ~3 minutes.")
+    ok = _run_forex_script(chat_id, [], "FOREX SCAN ALL")
+    if ok:
+        _send_forex_signals_to_approval(chat_id)
+
+
+def handle_forex_pair(chat_id, text=""):
+    """Handle /forex_pair EUR/USD — scan one forex pair, then send signals for approval."""
+    parts = text.strip().split()
+    if len(parts) < 2:
+        send_message(chat_id, "Usage: `/forex_pair EUR/USD`")
+        return
+    pair = parts[1].upper()
+    send_message(chat_id, f"Scanning forex pair *{pair}* on all timeframes (1h, 4h, 1d)...")
+    ok = _run_forex_script(chat_id, ["--pair", pair], f"FOREX {pair}")
+    if ok:
+        _send_forex_signals_to_approval(chat_id)
+
+
+def handle_forex_custom(chat_id, text=""):
+    """Handle /forex_custom EUR/USD 1h,4h — scan forex pair on specific timeframes."""
+    parts = text.strip().split()
+    if len(parts) < 3:
+        send_message(chat_id, "Usage: `/forex_custom EUR/USD 1h,4h`")
+        return
+    pair = parts[1].upper()
+    timeframes = parts[2]
+    send_message(chat_id, f"Scanning forex *{pair}* on *{timeframes}*...")
+    ok = _run_forex_script(chat_id, ["--pair", pair, "--timeframe", timeframes], f"FOREX {pair} {timeframes}")
+    if ok:
+        _send_forex_signals_to_approval(chat_id)
+
+
 def handle_scan_all(chat_id):
     """Handle /scan_all — full crypto TA scan, then send signals for approval."""
     send_message(chat_id, "Running full crypto TA scan (all pairs, all timeframes)... This takes ~60 seconds.")
@@ -1147,11 +1236,14 @@ COMMAND_HANDLERS = {
     "/scan_custom": handle_scan_custom,
     "/send_signals": handle_send_signals,
     "/send_signals_direct": handle_send_signals_direct,
+    "/forex_scan": handle_forex_scan,
+    "/forex_pair": handle_forex_pair,
+    "/forex_custom": handle_forex_custom,
     "/help": handle_start,
 }
 
 # Commands that need the full text (for argument parsing)
-_COMMANDS_WITH_ARGS = {"/setcap", "/scan_pair", "/scan_custom"}
+_COMMANDS_WITH_ARGS = {"/setcap", "/scan_pair", "/scan_custom", "/forex_pair", "/forex_custom"}
 
 
 def _unified_cron_cycle():
