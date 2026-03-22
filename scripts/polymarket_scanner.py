@@ -877,58 +877,61 @@ def analyze_market(market, price_history=None):
 
 
 def generate_reasoning(factor_results, recommendation, question, edge, agreement):
-    """Generate human-readable reasoning from 7-factor results."""
+    """Generate conversational reasoning from 7-factor results."""
     parts = []
 
     # Price momentum
     pm = factor_results["price_momentum"]
     if pm["score"] > 70:
         dir_label = "bullish" if pm["direction"] > 0 else "bearish"
-        parts.append(f"Strong {dir_label} momentum (score: {pm['score']}/100, accel: {pm['acceleration']:.4f})")
+        parts.append(f"Price action is showing strong {dir_label} momentum right now")
     elif pm["score"] > 55:
         dir_label = "bullish" if pm["direction"] > 0 else "bearish"
-        parts.append(f"Moderate {dir_label} momentum ({pm['score']}/100)")
+        parts.append(f"There's moderate {dir_label} momentum building in the price")
 
     # Volume analysis
     va = factor_results["volume_analysis"]
     if va["score"] > 75:
-        parts.append(f"Volume surge {va['surge_ratio']:.1f}x average — new info entering market ({va['score']}/100)")
+        parts.append(f"Volume is surging at {va['surge_ratio']:.1f}x the average, which tells us new information is hitting this market")
     elif va["score"] > 50:
-        parts.append(f"Above-average volume ({va['surge_ratio']:.1f}x) supports conviction ({va['score']}/100)")
+        parts.append(f"Volume is running above average at {va['surge_ratio']:.1f}x, adding conviction to the move")
 
     # Market efficiency
     me = factor_results["market_efficiency"]
     if me["score"] > 60:
-        parts.append(f"Market inefficiency detected — spread: {me['spread_inefficiency']:.2%} ({me['score']}/100)")
+        parts.append(f"We're seeing some inefficiency in the pricing here, which creates opportunity")
 
     # Smart money
     sm = factor_results["smart_money"]
     if sm["score"] > 60:
-        parts.append(f"Smart money signal: {sm['sharp_moves']} sharp moves detected ({sm['score']}/100)")
+        parts.append(f"Smart money is active with {sm['sharp_moves']} sharp moves detected recently")
 
     # Time decay
     td = factor_results["time_decay"]
-    if td["phase"] in ("late", "terminal"):
-        parts.append(f"Time decay {td['phase']} phase — {td['days_left']}d to resolution ({td['score']}/100)")
+    if td["phase"] == "terminal":
+        parts.append(f"This market resolves today, so the window to act is closing fast")
+    elif td["phase"] == "late":
+        parts.append(f"Only {td['days_left']} days left before resolution, time pressure is real")
 
     # Odds compression
     oc = factor_results["odds_compression"]
     if oc["compressing"]:
-        parts.append(f"Consensus forming — odds compressing ({oc['score']}/100)")
+        parts.append(f"The odds are compressing, meaning the market is forming a consensus")
 
     # Contrarian
     ct = factor_results["contrarian"]
     if ct["extreme"]:
         dir_label = "YES" if ct["direction"] > 0 else "NO"
-        parts.append(f"Contrarian signal toward {dir_label} — extreme odds + thinning volume ({ct['score']}/100)")
+        parts.append(f"There's a contrarian play toward {dir_label} here since volume is thinning at extreme odds")
 
     # Agreement summary
-    parts.append(f"Factor agreement: {agreement} align {'bullish' if recommendation == 'YES' else 'bearish'}")
+    agree_dir = "bullish" if recommendation == "YES" else "bearish"
+    parts.append(f"{agreement} of our factors agree on a {agree_dir} lean")
 
     if not parts:
-        parts.append("Multi-factor analysis suggests moderate edge")
+        parts.append("Our multi-factor analysis is picking up a moderate edge on this one")
 
-    parts.append(f"Recommendation: {recommendation} with +{edge*100:.1f}% edge over market odds")
+    parts.append(f"We're going {recommendation} with a +{edge*100:.1f}% edge over what the market is pricing")
 
     return ". ".join(parts) + "."
 
