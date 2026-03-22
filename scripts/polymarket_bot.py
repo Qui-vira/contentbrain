@@ -120,6 +120,41 @@ PENDING_FILE = os.path.join(VAULT_DIR, "07-Analytics", "signal-performance", "pe
 DRAFTS_DIR = os.path.join(VAULT_DIR, "06-Drafts", "polymarket")
 
 
+# --- Subscriber Channels ---
+
+def _get_subscriber_channels():
+    """Return list of approved subscriber chat IDs from Supabase."""
+    if not _supabase:
+        return []
+    try:
+        resp = _supabase.table('subscriber_channels').select('chat_id').eq('status', 'approved').execute()
+        return [r['chat_id'] for r in (resp.data or [])]
+    except Exception as e:
+        print(f"[Subscribers] Error fetching channels: {e}")
+        return []
+
+
+def _send_to_subscribers(text, parse_mode="Markdown"):
+    """Send a message to all approved subscriber channels. Returns count of successful sends."""
+    channels = _get_subscriber_channels()
+    if not channels:
+        return 0
+    sent = 0
+    for chat_id in channels:
+        try:
+            result = send_message(chat_id, text, parse_mode=parse_mode)
+            if result and result.get("ok"):
+                sent += 1
+            else:
+                desc = result.get("description", "Unknown") if result else "No response"
+                print(f"[Subscribers] FAIL sending to {chat_id}: {desc}")
+        except Exception as e:
+            print(f"[Subscribers] ERROR sending to {chat_id}: {e}")
+    if sent:
+        print(f"[Subscribers] Sent to {sent}/{len(channels)} subscriber channel(s).")
+    return sent
+
+
 # --- Typefully Integration ---
 
 _typefully_social_set_id_cache = None
@@ -390,7 +425,12 @@ def distribute_signal(signal):
             results["typefully"] = "FAIL"
             print(f"  Typefully: FAIL — check logs above for details")
 
-    # 4. Log to tracker
+    # 4. Send to subscriber channels
+    sub_count = _send_to_subscribers(card)
+    if sub_count:
+        results["subscribers"] = f"{sub_count} sent"
+
+    # 5. Log to tracker
     if is_trading:
         log_trading_to_tracker(signal)
     else:
@@ -833,13 +873,14 @@ def _signal_monitor_cycle():
         if not _update_trading_signal_supabase(signal_id, updates):
             continue
 
-        # Send notification to Krib and Poly channel
+        # Send notification to Krib, Poly channel, and subscribers
         notification = _format_hit_notification(signal, current_price, new_status, check)
 
         if KRIB_CHAT_ID:
             send_message(KRIB_CHAT_ID, notification)
         if POLY_CHANNEL_ID:
             send_message(POLY_CHANNEL_ID, notification)
+        _send_to_subscribers(notification)
 
     # Also auto-resolve Polymarket signals
     try:
@@ -854,6 +895,7 @@ def _signal_monitor_cycle():
                 send_message(KRIB_CHAT_ID, msg)
             if POLY_CHANNEL_ID:
                 send_message(POLY_CHANNEL_ID, msg)
+            _send_to_subscribers(msg)
             print(f"[MONITOR] {len(resolved)} Polymarket signal(s) auto-resolved.")
     except ImportError:
         pass
@@ -1522,6 +1564,204 @@ def handle_chatid(chat_id):
     send_message(chat_id, f"`{chat_id}`")
 
 
+# --- Subscriber Channel Commands ---
+
+def _is_admin(chat_id):
+    """Check if a chat_id is the bot admin."""
+    admin = ADMIN_CHAT_ID or APPROVAL_CHANNEL_ID
+    return str(chat_id) == str(admin)
+
+
+def handle_subscribe(chat_id):
+    """Handle /subscribe — request to receive signals in this group/channel."""
+    if not _supabase:
+        send_message(chat_id, "Subscription system unavailable.")
+        return
+
+    chat_id_str = str(chat_id)
+
+    # Check if already registered
+    try:
+        existing = _supabase.table('subscriber_channels').select('*').eq('chat_id', chat_id_str).execute()
+        if existing.data:
+            row = existing.data[0]
+            if row['status'] == 'approved':
+                send_message(chat_id, "This channel is already subscribed and receiving signals.")
+                return
+            elif row['status'] == 'pending':
+                send_message(chat_id, "Your subscription request is pending approval. Hang tight.")
+                return
+            elif row['status'] == 'removed':
+                # Re-request
+                _supabase.table('subscriber_channels').update({
+                    'status': 'pending',
+                    'added_at': datetime.now(timezone.utc).isoformat()
+                }).eq('chat_id', chat_id_str).execute()
+    except Exception as e:
+        send_message(chat_id, f"Error: {e}")
+        return
+
+    # Get chat name
+    chat_name = chat_id_str
+    try:
+        data = _telegram_request("get", "getChat", params={"chat_id": chat_id_str})
+        if data and data.get("ok"):
+            chat_info = data["result"]
+            chat_name = chat_info.get("title", chat_info.get("first_name", chat_id_str))
+    except Exception:
+        pass
+
+    # Insert pending subscription
+    try:
+        _supabase.table('subscriber_channels').insert({
+            'chat_id': chat_id_str,
+            'name': chat_name,
+            'status': 'pending',
+        }).execute()
+    except Exception as e:
+        send_message(chat_id, f"Error registering: {e}")
+        return
+
+    send_message(chat_id, "Subscription request sent. You'll receive signals once approved by @Big_Quiv.")
+
+    # Notify admin
+    admin_dest = ADMIN_CHAT_ID or APPROVAL_CHANNEL_ID
+    if admin_dest:
+        send_message(
+            admin_dest,
+            f"*New subscriber request*\n\n"
+            f"*Channel:* {chat_name}\n"
+            f"*Chat ID:* `{chat_id_str}`\n\n"
+            f"Approve with:\n`/approve_channel {chat_id_str}`"
+        )
+
+
+def handle_approve_channel(chat_id, text=""):
+    """Handle /approve_channel <chat_id> — admin approves a subscriber channel."""
+    if not _is_admin(chat_id):
+        send_message(chat_id, "Only the bot admin can approve channels.")
+        return
+
+    parts = text.strip().split()
+    if len(parts) < 2:
+        # Show pending channels
+        if not _supabase:
+            send_message(chat_id, "Supabase unavailable.")
+            return
+        try:
+            resp = _supabase.table('subscriber_channels').select('*').eq('status', 'pending').execute()
+            pending = resp.data or []
+            if not pending:
+                send_message(chat_id, "No pending subscriber requests.")
+                return
+            lines = ["*Pending subscriber requests:*\n"]
+            for p in pending:
+                lines.append(f"- {p.get('name', '?')} (`{p['chat_id']}`)")
+            lines.append(f"\nApprove with: `/approve_channel <chat_id>`")
+            send_message(chat_id, "\n".join(lines))
+        except Exception as e:
+            send_message(chat_id, f"Error: {e}")
+        return
+
+    target_id = parts[1].strip()
+
+    if not _supabase:
+        send_message(chat_id, "Supabase unavailable.")
+        return
+
+    try:
+        existing = _supabase.table('subscriber_channels').select('*').eq('chat_id', target_id).execute()
+        if not existing.data:
+            send_message(chat_id, f"No subscription request found for `{target_id}`.")
+            return
+
+        _supabase.table('subscriber_channels').update({
+            'status': 'approved',
+            'approved_at': datetime.now(timezone.utc).isoformat()
+        }).eq('chat_id', target_id).execute()
+
+        channel_name = existing.data[0].get('name', target_id)
+        send_message(chat_id, f"Approved *{channel_name}* (`{target_id}`). They will now receive all signals.")
+
+        # Notify the subscriber channel
+        send_message(target_id, "Your subscription has been approved! You will now receive trading signals from @Big_Quiv.")
+
+    except Exception as e:
+        send_message(chat_id, f"Error approving: {e}")
+
+
+def handle_remove_channel(chat_id, text=""):
+    """Handle /remove_channel <chat_id> — admin removes a subscriber channel."""
+    if not _is_admin(chat_id):
+        send_message(chat_id, "Only the bot admin can remove channels.")
+        return
+
+    parts = text.strip().split()
+    if len(parts) < 2:
+        # Show approved channels
+        if not _supabase:
+            send_message(chat_id, "Supabase unavailable.")
+            return
+        try:
+            resp = _supabase.table('subscriber_channels').select('*').eq('status', 'approved').execute()
+            approved = resp.data or []
+            if not approved:
+                send_message(chat_id, "No active subscriber channels.")
+                return
+            lines = ["*Active subscriber channels:*\n"]
+            for a in approved:
+                lines.append(f"- {a.get('name', '?')} (`{a['chat_id']}`)")
+            lines.append(f"\nRemove with: `/remove_channel <chat_id>`")
+            send_message(chat_id, "\n".join(lines))
+        except Exception as e:
+            send_message(chat_id, f"Error: {e}")
+        return
+
+    target_id = parts[1].strip()
+
+    if not _supabase:
+        send_message(chat_id, "Supabase unavailable.")
+        return
+
+    try:
+        _supabase.table('subscriber_channels').update({
+            'status': 'removed'
+        }).eq('chat_id', target_id).execute()
+
+        send_message(chat_id, f"Removed `{target_id}` from subscriber list. They will no longer receive signals.")
+    except Exception as e:
+        send_message(chat_id, f"Error removing: {e}")
+
+
+def handle_subscribers(chat_id):
+    """Handle /subscribers — list all subscriber channels and their status."""
+    if not _is_admin(chat_id):
+        send_message(chat_id, "Only the bot admin can view subscribers.")
+        return
+
+    if not _supabase:
+        send_message(chat_id, "Supabase unavailable.")
+        return
+
+    try:
+        resp = _supabase.table('subscriber_channels').select('*').order('added_at').execute()
+        rows = resp.data or []
+        if not rows:
+            send_message(chat_id, "No subscriber channels registered.")
+            return
+
+        lines = ["*Subscriber Channels:*\n"]
+        for r in rows:
+            status = r.get('status', '?').upper()
+            name = r.get('name', '?')
+            cid = r.get('chat_id', '?')
+            lines.append(f"- {name} (`{cid}`) — *{status}*")
+
+        send_message(chat_id, "\n".join(lines))
+    except Exception as e:
+        send_message(chat_id, f"Error: {e}")
+
+
 COMMAND_HANDLERS = {
     "/start": handle_start,
     "/chatid": handle_chatid,
@@ -1540,11 +1780,16 @@ COMMAND_HANDLERS = {
     "/forex_scan": handle_forex_scan,
     "/forex_pair": handle_forex_pair,
     "/forex_custom": handle_forex_custom,
+    "/subscribe": handle_subscribe,
+    "/approve_channel": handle_approve_channel,
+    "/remove_channel": handle_remove_channel,
+    "/subscribers": handle_subscribers,
     "/help": handle_start,
 }
 
 # Commands that need the full text (for argument parsing)
-_COMMANDS_WITH_ARGS = {"/setcap", "/scan_pair", "/scan_custom", "/forex_pair", "/forex_custom"}
+_COMMANDS_WITH_ARGS = {"/setcap", "/scan_pair", "/scan_custom", "/forex_pair", "/forex_custom",
+                       "/approve_channel", "/remove_channel"}
 
 
 def _unified_cron_cycle():
