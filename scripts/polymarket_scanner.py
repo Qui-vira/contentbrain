@@ -1043,6 +1043,69 @@ def format_signal_card(signal, for_telegram=False):
     return card
 
 
+def format_trading_signal_card(signal, for_telegram=False):
+    """Format a crypto trading signal for Telegram or CLI display."""
+    pair = signal.get('pair', 'UNKNOWN')
+    direction = signal.get('direction', 'NEUTRAL')
+    tf = signal.get('timeframe', '?')
+    entry = signal.get('entry', 0)
+    sl = signal.get('stop_loss', 0)
+    tp1 = signal.get('tp1', 0)
+    tp2 = signal.get('tp2', 0)
+    tp3 = signal.get('tp3', 0)
+    confluences = signal.get('confluences', [])
+    confidence = signal.get('confidence', 'LOW')
+    strength = signal.get('strength_score', 0)
+    trend = signal.get('trend', 'UNKNOWN')
+    rsi = signal.get('rsi')
+    rsi_str = f"{rsi:.1f}" if rsi else "N/A"
+
+    conf_lines = "\n".join(f"  - {c}" for c in confluences) if confluences else "  None"
+
+    if for_telegram:
+        card = (
+            f"*TRADING SIGNAL*\n\n"
+            f"*Pair:* {pair}\n"
+            f"*Direction:* {direction}\n"
+            f"*Timeframe:* {tf}\n\n"
+            f"*Entry:* {entry}\n"
+            f"*Stop Loss:* {sl}\n"
+            f"*TP1 (1:2):* {tp1}\n"
+            f"*TP2 (1:3):* {tp2}\n"
+            f"*TP3 (1:5):* {tp3}\n\n"
+            f"*Confluences ({len(confluences)}):*\n{conf_lines}\n\n"
+            f"*Confidence:* {confidence}\n"
+            f"*Strength:* {strength}/10\n"
+            f"*Trend:* {trend}\n"
+            f"*RSI:* {rsi_str}"
+        )
+    else:
+        card = (
+            f"\n{'='*60}\n"
+            f"  TRADING SIGNAL\n"
+            f"{'='*60}\n"
+            f"  Pair:        {pair}\n"
+            f"  Direction:   {direction}\n"
+            f"  Timeframe:   {tf}\n"
+            f"\n"
+            f"  Entry:       {entry}\n"
+            f"  Stop Loss:   {sl}\n"
+            f"  TP1 (1:2):   {tp1}\n"
+            f"  TP2 (1:3):   {tp2}\n"
+            f"  TP3 (1:5):   {tp3}\n"
+            f"\n"
+            f"  Confluences ({len(confluences)}):\n{conf_lines}\n"
+            f"\n"
+            f"  Confidence:  {confidence}\n"
+            f"  Strength:    {strength}/10\n"
+            f"  Trend:       {trend}\n"
+            f"  RSI:         {rsi_str}\n"
+            f"{'='*60}\n"
+        )
+
+    return card
+
+
 # --- Full Scan ---
 
 def run_scan(json_output=False, top_n=None):

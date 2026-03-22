@@ -725,6 +725,154 @@ def run(pairs_override=None, timeframes_override=None):
           f"{len(errors)} errors. Saved to {output_path} ({elapsed:.1f}s)")
 
 
+# --- Signal Builder Functions ---
+
+def calculate_trade_levels(result):
+    """Compute Entry, SL, TP1/TP2/TP3 from price, ATR, and S/R levels."""
+    price = result['current_price']
+    atr = result['indicators'].get('atr')
+    direction = result['confluence']['direction']
+    sr = result.get('support_resistance', {})
+
+    if not atr or direction == 'NEUTRAL':
+        return None
+
+    supports = sr.get('support', [])
+    resistances = sr.get('resistance', [])
+
+    # Stop loss: nearest support (longs) or resistance (shorts)
+    if direction == 'LONG':
+        # SL below nearest support
+        if supports:
+            sl_level = supports[0]['price']
+        else:
+            sl_level = price - atr
+        # Enforce min 0.5% distance
+        min_sl = price * 0.995
+        if sl_level > min_sl:
+            sl_level = min_sl
+        # Cap at 1.5x ATR
+        max_distance = 1.5 * atr
+        if (price - sl_level) > max_distance:
+            sl_level = price - max_distance
+    else:  # SHORT
+        # SL above nearest resistance
+        if resistances:
+            sl_level = resistances[-1]['price']
+        else:
+            sl_level = price + atr
+        # Enforce min 0.5% distance
+        min_sl = price * 1.005
+        if sl_level < min_sl:
+            sl_level = min_sl
+        # Cap at 1.5x ATR
+        max_distance = 1.5 * atr
+        if (sl_level - price) > max_distance:
+            sl_level = price + max_distance
+
+    risk = abs(price - sl_level)
+    if risk == 0:
+        return None
+
+    # TPs at 1:2, 1:3, 1:5 R:R
+    if direction == 'LONG':
+        tp1 = price + risk * 2
+        tp2 = price + risk * 3
+        tp3 = price + risk * 5
+    else:
+        tp1 = price - risk * 2
+        tp2 = price - risk * 3
+        tp3 = price - risk * 5
+
+    return {
+        'entry': round(price, 6),
+        'stop_loss': round(sl_level, 6),
+        'tp1': round(tp1, 6),
+        'tp2': round(tp2, 6),
+        'tp3': round(tp3, 6),
+        'risk': round(risk, 6),
+        'rr_tp1': '1:2',
+        'rr_tp2': '1:3',
+        'rr_tp3': '1:5',
+    }
+
+
+def build_trading_signal(result):
+    """Convert a TA result dict into a signal dict with signal_type='trading'."""
+    levels = calculate_trade_levels(result)
+    if not levels:
+        return None
+
+    confluence = result.get('confluence', {})
+    confluences_list = [c['detail'] for c in confluence.get('confluences', [])]
+
+    return {
+        'signal_type': 'trading',
+        'pair': result['pair'],
+        'timeframe': result['timeframe'],
+        'direction': confluence.get('direction', 'NEUTRAL'),
+        'current_price': result['current_price'],
+        'entry': levels['entry'],
+        'stop_loss': levels['stop_loss'],
+        'tp1': levels['tp1'],
+        'tp2': levels['tp2'],
+        'tp3': levels['tp3'],
+        'risk': levels['risk'],
+        'rr_tp1': levels['rr_tp1'],
+        'rr_tp2': levels['rr_tp2'],
+        'rr_tp3': levels['rr_tp3'],
+        'confluences': confluences_list,
+        'confluence_count': confluence.get('confluence_count', 0),
+        'confidence': confluence.get('confidence', 'LOW'),
+        'strength_score': result.get('strength_score', 0),
+        'trend': result.get('trend', 'UNKNOWN'),
+        'rsi': result['indicators'].get('rsi'),
+        'atr': result['indicators'].get('atr'),
+        'generated_at': result.get('generated_at', datetime.now(timezone.utc).isoformat()),
+    }
+
+
+def load_ta_signals(max_age_minutes=60):
+    """Read binance_ta_summary.json, check freshness, filter 3+ confluences, return signal dicts."""
+    output_path = os.path.abspath(OUTPUT_FILE)
+    if not os.path.exists(output_path):
+        print(f"TA summary not found: {output_path}")
+        return []
+
+    with open(output_path, 'r') as f:
+        data = json.load(f)
+
+    # Check freshness
+    generated_at = data.get('generated_at', '')
+    if generated_at:
+        try:
+            gen_time = datetime.fromisoformat(generated_at.replace('Z', '+00:00'))
+            age_minutes = (datetime.now(timezone.utc) - gen_time).total_seconds() / 60
+            if age_minutes > max_age_minutes:
+                print(f"TA data is {age_minutes:.0f} minutes old (max {max_age_minutes}). Run binance_ta_runner.py first.")
+                return []
+        except (ValueError, TypeError):
+            pass
+
+    results = data.get('results', [])
+    signals = []
+
+    for result in results:
+        confluence = result.get('confluence', {})
+        if confluence.get('confluence_count', 0) < 3:
+            continue
+        if confluence.get('direction') == 'NEUTRAL':
+            continue
+
+        signal = build_trading_signal(result)
+        if signal:
+            signal['generated_at'] = generated_at
+            signals.append(signal)
+
+    print(f"Loaded {len(signals)} trading signals from TA summary ({len(results)} total analyses)")
+    return signals
+
+
 # --- CLI ---
 
 def main():

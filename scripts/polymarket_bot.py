@@ -1,12 +1,13 @@
 """
 Polymarket Telegram Bot — Multi-channel distribution with approval flow.
 
-Sends Polymarket signals to approval channel, then distributes approved signals
-to Hustler's Krib, dedicated Poly channel, and queues for X/Twitter.
+Sends Polymarket and trading signals to approval channel, then distributes
+approved signals to Hustler's Krib, dedicated channels, and queues for X/Twitter.
 
 Usage:
     python scripts/polymarket_bot.py --send-signal <json_file>    # Send signal from JSON file
     python scripts/polymarket_bot.py --send-signal -              # Read signal JSON from stdin
+    python scripts/polymarket_bot.py --send-ta                    # Send TA trading signals for approval
     python scripts/polymarket_bot.py --test                       # Test bot connectivity
     python scripts/polymarket_bot.py --approve <message_id>       # Manually approve a signal
     python scripts/polymarket_bot.py --poll                       # Poll for approval callbacks
@@ -40,7 +41,7 @@ from urllib3.util.retry import Retry
 # Add scripts dir to path
 sys.path.insert(0, os.path.dirname(__file__))
 
-from polymarket_scanner import format_signal_card
+from polymarket_scanner import format_signal_card, format_trading_signal_card
 
 # --- HTTP Session with retry ---
 
@@ -211,7 +212,12 @@ def load_pending_signals():
 
 def send_to_approval(signal):
     """Send signal to approval channel with approve/reject buttons."""
-    card = format_signal_card(signal, for_telegram=True)
+    if signal.get('signal_type') == 'trading':
+        card = format_trading_signal_card(signal, for_telegram=True)
+        callback_id = f"{signal['pair']}_{signal['timeframe']}"[:20]
+    else:
+        card = format_signal_card(signal, for_telegram=True)
+        callback_id = signal['market_id'][:20]
 
     # Add approval prompt
     card += "\n\n---\nReply with 'APPROVE' or 'REJECT' to this signal."
@@ -220,8 +226,8 @@ def send_to_approval(signal):
     reply_markup = {
         "inline_keyboard": [
             [
-                {"text": "✅ Approve", "callback_data": f"approve_{signal['market_id'][:20]}"},
-                {"text": "❌ Reject", "callback_data": f"reject_{signal['market_id'][:20]}"},
+                {"text": "✅ Approve", "callback_data": f"approve_{callback_id}"},
+                {"text": "❌ Reject", "callback_data": f"reject_{callback_id}"},
             ]
         ]
     }
@@ -247,7 +253,13 @@ def send_to_approval(signal):
 
 def distribute_signal(signal):
     """Distribute approved signal to all channels."""
-    card = format_signal_card(signal, for_telegram=True)
+    is_trading = signal.get('signal_type') == 'trading'
+
+    if is_trading:
+        card = format_trading_signal_card(signal, for_telegram=True)
+    else:
+        card = format_signal_card(signal, for_telegram=True)
+
     results = {}
 
     # 1. Send to Hustler's Krib
@@ -256,20 +268,26 @@ def distribute_signal(signal):
         results["krib"] = "OK" if result and result.get("ok") else "FAIL"
         print(f"  Hustler's Krib: {results['krib']}")
 
-    # 2. Send to Poly channel
-    if POLY_CHANNEL_ID:
+    # 2. Send to relevant channel
+    if not is_trading and POLY_CHANNEL_ID:
         result = send_message(POLY_CHANNEL_ID, card)
         results["poly"] = "OK" if result and result.get("ok") else "FAIL"
         print(f"  Poly Channel: {results['poly']}")
 
-    # 3. Queue draft for X/Twitter via ghostwriter
-    draft = create_twitter_draft(signal)
+    # 3. Queue draft for X/Twitter
+    if is_trading:
+        draft = create_trading_twitter_draft(signal)
+    else:
+        draft = create_twitter_draft(signal)
     if draft:
         results["twitter_draft"] = "QUEUED"
         print(f"  X/Twitter Draft: QUEUED at {draft}")
 
-    # 4. Log to signal tracker
-    log_to_tracker(signal)
+    # 4. Log to tracker
+    if is_trading:
+        log_trading_to_tracker(signal)
+    else:
+        log_to_tracker(signal)
     results["tracker"] = "LOGGED"
     print(f"  Signal Tracker: LOGGED")
 
@@ -387,6 +405,93 @@ def log_to_tracker(signal):
         json.dump(sidecar, f, indent=2, default=str)
 
 
+TRADING_DRAFTS_DIR = os.path.join(VAULT_DIR, "06-Drafts", "trading")
+TRADING_LOG_PATH = os.path.join(
+    VAULT_DIR, "07-Analytics", "signal-performance", "trading-signals-log.md"
+)
+
+
+def create_trading_twitter_draft(signal):
+    """Create a tweet draft from a trading signal for ghostwriter pickup."""
+    os.makedirs(TRADING_DRAFTS_DIR, exist_ok=True)
+
+    pair = signal.get('pair', 'UNKNOWN')
+    direction = signal.get('direction', 'NEUTRAL')
+    entry = signal.get('entry', 0)
+    tp1 = signal.get('tp1', 0)
+    sl = signal.get('stop_loss', 0)
+    strength = signal.get('strength_score', 0)
+    conf_count = signal.get('confluence_count', 0)
+
+    tweet = (
+        f"New trading signal\n\n"
+        f"{pair} {direction}\n\n"
+        f"Entry: {entry}\n"
+        f"SL: {sl}\n"
+        f"TP1: {tp1}\n\n"
+        f"Strength: {strength}/10 | {conf_count} confluences\n\n"
+        f"Full levels and analysis in the Krib\n\n"
+        f"#crypto #trading #{pair.replace('USDT', '').lower()}"
+    )
+
+    now = datetime.now(timezone.utc)
+    filename = f"{now.strftime('%Y-%m-%d')}-ta-{pair}-{signal.get('timeframe', '4h')}.md"
+    filepath = os.path.join(TRADING_DRAFTS_DIR, filename)
+
+    content = (
+        f"---\n"
+        f"status: pending\n"
+        f"platform: X\n"
+        f"content_type: tweet\n"
+        f"goal: authority\n"
+        f"source: binance-ta-runner\n"
+        f"pair: {pair}\n"
+        f"timeframe: {signal.get('timeframe', '4h')}\n"
+        f"---\n\n"
+        f"{tweet}\n"
+    )
+
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(content)
+
+    return filepath
+
+
+def log_trading_to_tracker(signal):
+    """Log approved trading signal to trading-signals-log.md."""
+    log_dir = os.path.dirname(TRADING_LOG_PATH)
+    os.makedirs(log_dir, exist_ok=True)
+
+    # Create log file with header if it doesn't exist
+    if not os.path.exists(TRADING_LOG_PATH):
+        header = (
+            "# Trading Signals Log\n\n"
+            "| # | Date | Pair | TF | Direction | Entry | SL | TP1 | TP2 | TP3 | Strength | Confluences | Status | Result |\n"
+            "|---|------|------|----|-----------|-------|----|-----|-----|-----|----------|-------------|--------|--------|\n"
+        )
+        with open(TRADING_LOG_PATH, "w", encoding="utf-8") as f:
+            f.write(header)
+
+    # Read current log to get next signal number
+    with open(TRADING_LOG_PATH, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    lines = content.strip().split("\n")
+    signal_count = sum(1 for line in lines if line.startswith("|") and line[1:2].strip().isdigit())
+    next_num = signal_count + 1
+
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    row = (
+        f"| {next_num} | {now} | {signal.get('pair', '')} | {signal.get('timeframe', '')} | "
+        f"{signal.get('direction', '')} | {signal.get('entry', '')} | {signal.get('stop_loss', '')} | "
+        f"{signal.get('tp1', '')} | {signal.get('tp2', '')} | {signal.get('tp3', '')} | "
+        f"{signal.get('strength_score', '')}/10 | {signal.get('confluence_count', '')} | ACTIVE | — |\n"
+    )
+
+    with open(TRADING_LOG_PATH, "a", encoding="utf-8") as f:
+        f.write(row)
+
+
 # --- Approval Polling ---
 
 def poll_approvals(timeout=60):
@@ -419,13 +524,14 @@ def poll_approvals(timeout=60):
                     signal_data = pending[msg_id]
                     signal = signal_data["signal"]
 
+                    _label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
                     if data.startswith("approve_"):
-                        print(f"\nAPPROVED: {signal['market_question'][:50]}")
+                        print(f"\nAPPROVED: {_label}")
                         print("Distributing to all channels...")
                         distribute_signal(signal)
                         signal_data["status"] = "approved"
                     elif data.startswith("reject_"):
-                        print(f"\nREJECTED: {signal['market_question'][:50]}")
+                        print(f"\nREJECTED: {_label}")
                         signal_data["status"] = "rejected"
 
                     # Save updated status
@@ -441,13 +547,14 @@ def poll_approvals(timeout=60):
             if reply_id in pending and text in ("APPROVE", "REJECT"):
                 signal_data = pending[reply_id]
                 signal = signal_data["signal"]
+                _label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
 
                 if text == "APPROVE":
-                    print(f"\nAPPROVED: {signal['market_question'][:50]}")
+                    print(f"\nAPPROVED: {_label}")
                     distribute_signal(signal)
                     signal_data["status"] = "approved"
                 else:
-                    print(f"\nREJECTED: {signal['market_question'][:50]}")
+                    print(f"\nREJECTED: {_label}")
                     signal_data["status"] = "rejected"
 
                 with open(PENDING_FILE, "w", encoding="utf-8") as f:
@@ -469,7 +576,7 @@ def manual_approve(message_id):
     signal_data = pending[msg_id]
     signal = signal_data["signal"]
 
-    print(f"Approving: {signal['market_question'][:60]}")
+    print(f"Approving: {signal.get('market_question', signal.get('pair', 'Signal'))[:60]}")
     print("Distributing to all channels...")
     results = distribute_signal(signal)
 
@@ -485,6 +592,7 @@ def manual_approve(message_id):
 BOT_COMMANDS = [
     {"command": "start", "description": "Welcome message + menu"},
     {"command": "scan", "description": "Scan Polymarket for signals"},
+    {"command": "ta", "description": "Send crypto trading signals for approval"},
     {"command": "top", "description": "Show top 10 markets by volume"},
     {"command": "status", "description": "Show active signals"},
     {"command": "performance", "description": "Win rate and metrics"},
@@ -513,6 +621,7 @@ def handle_start(chat_id):
         "with +10% edge for you to approve.\n\n"
         "*Commands:*\n"
         "/scan — Scan markets for new signals\n"
+        "/ta — Crypto trading signals\n"
         "/top — Top 10 markets by volume\n"
         "/status — Your active signals\n"
         "/performance — Win rate & metrics\n"
@@ -673,6 +782,30 @@ def handle_resolve(chat_id):
         send_message(chat_id, f"Error: {e}")
 
 
+def handle_ta(chat_id):
+    """Handle /ta — load TA signals and send qualifying ones for approval."""
+    send_message(chat_id, "Loading trading signals from TA analysis...")
+
+    try:
+        from binance_ta_runner import load_ta_signals
+        signals = load_ta_signals(max_age_minutes=60)
+
+        if not signals:
+            send_message(chat_id,
+                "No qualifying trading signals right now.\n\n"
+                "Run `python scripts/binance_ta_runner.py` first, or data may be stale (>60 min)."
+            )
+            return
+
+        send_message(chat_id, f"Found *{len(signals)} trading signal(s)*. Sending for review...")
+
+        for signal in signals:
+            send_to_approval(signal)
+
+    except Exception as e:
+        send_message(chat_id, f"TA signal error: {e}")
+
+
 COMMAND_HANDLERS = {
     "/start": handle_start,
     "/scan": handle_scan,
@@ -680,6 +813,7 @@ COMMAND_HANDLERS = {
     "/status": handle_status,
     "/performance": handle_performance,
     "/resolve": handle_resolve,
+    "/ta": handle_ta,
     "/help": handle_start,
 }
 
@@ -779,7 +913,8 @@ def run_bot():
                         signal = signal_data["signal"]
 
                         if data.startswith("approve_"):
-                            send_message(cb_chat_id, f"Approved: {signal['market_question'][:50]}\nDistributing...")
+                            label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
+                            send_message(cb_chat_id, f"Approved: {label}\nDistributing...")
                             distribute_signal(signal)
                             signal_data["status"] = "approved"
                         elif data.startswith("reject_"):
@@ -819,6 +954,8 @@ def main():
                         help="Start bot in interactive mode (listens for commands, handles approvals)")
     parser.add_argument("--setup", action="store_true",
                         help="Register bot commands with Telegram (run once)")
+    parser.add_argument("--send-ta", action="store_true",
+                        help="Load TA signals and send qualifying ones for approval")
     args = parser.parse_args()
 
     if args.run:
@@ -857,6 +994,22 @@ def main():
         test_bot()
         return
 
+    if args.send_ta:
+        print("Loading trading signals from TA analysis...\n")
+        from binance_ta_runner import load_ta_signals
+        signals = load_ta_signals(max_age_minutes=60)
+        if not signals:
+            print("No qualifying trading signals. Run binance_ta_runner.py first.")
+            return
+        print(f"Sending {len(signals)} trading signal(s) for approval...\n")
+        for sig in signals:
+            if args.direct:
+                print(f"Direct distribution: {sig['pair']} {sig['timeframe']} {sig['direction']}")
+                distribute_signal(sig)
+            else:
+                send_to_approval(sig)
+        return
+
     if args.send_signal:
         # Load signal
         if args.send_signal == "-":
@@ -870,7 +1023,7 @@ def main():
 
         for sig in signals:
             if args.direct:
-                print(f"Direct distribution: {sig['market_question'][:50]}")
+                print(f"Direct distribution: {sig.get('market_question', sig.get('pair', 'Signal'))[:50]}")
                 distribute_signal(sig)
             else:
                 send_to_approval(sig)
