@@ -849,77 +849,115 @@ def handle_top(chat_id):
 
 
 def handle_status(chat_id):
-    """Handle /status — show active signals."""
+    """Handle /status — show active Polymarket, Crypto, and Forex signals."""
+    parts = []
+
+    # --- Active Polymarket signals ---
     try:
         from polymarket_tracker import parse_signals_log
         signals = parse_signals_log()
         active = [s for s in signals if s["status"] == "ACTIVE"]
 
-        if not active:
-            send_message(chat_id, "No active Polymarket signals right now.")
-            return
-
-        lines = [f"*Active Signals ({len(active)})*\n"]
-        for s in active:
-            lines.append(
-                f"#{s['num']} | {s['market'][:35]}\n"
-                f"   {s['recommendation']} | Edge: {s['edge_pct']} | Conf: {s['confidence']}"
-            )
-        send_message(chat_id, "\n".join(lines))
-
+        if active:
+            lines = [f"*Active Polymarket Signals ({len(active)})*\n"]
+            for s in active:
+                lines.append(
+                    f"#{s['num']} | {s['market'][:35]}\n"
+                    f"   {s['recommendation']} | Edge: {s['edge_pct']} | Conf: {s['confidence']}"
+                )
+            parts.append("\n".join(lines))
+        else:
+            parts.append("*Active Polymarket Signals (0)*\nNo active signals.")
     except Exception as e:
-        send_message(chat_id, f"Error: {e}")
+        parts.append(f"Polymarket status error: {e}")
+
+    # --- Active Crypto & Forex signals from Supabase ---
+    if _supabase:
+        try:
+            resp = _supabase.table('trading_signals').select('*').eq('status', 'ACTIVE').execute()
+            rows = resp.data or []
+            crypto_active = [r for r in rows if '/' not in (r.get('pair') or '')]
+            forex_active = [r for r in rows if '/' in (r.get('pair') or '')]
+
+            # Crypto
+            if crypto_active:
+                lines = [f"*Active Crypto Signals ({len(crypto_active)})*\n"]
+                for r in crypto_active:
+                    lines.append(
+                        f"{r.get('pair', '?')} | {r.get('direction', '?')} | {r.get('timeframe', '?')}\n"
+                        f"   Entry: {r.get('entry_price', '?')} | SL: {r.get('stop_loss', '?')} | Strength: {r.get('strength_score', '?')}/10"
+                    )
+                parts.append("\n".join(lines))
+            else:
+                parts.append("*Active Crypto Signals (0)*\nNo active signals.")
+
+            # Forex
+            if forex_active:
+                lines = [f"*Active Forex Signals ({len(forex_active)})*\n"]
+                for r in forex_active:
+                    lines.append(
+                        f"{r.get('pair', '?')} | {r.get('direction', '?')} | {r.get('timeframe', '?')}\n"
+                        f"   Entry: {r.get('entry_price', '?')} | SL: {r.get('stop_loss', '?')} | Strength: {r.get('strength_score', '?')}/10"
+                    )
+                parts.append("\n".join(lines))
+            else:
+                parts.append("*Active Forex Signals (0)*\nNo active signals.")
+
+        except Exception as e:
+            parts.append(f"Trading signals status error: {e}")
+
+    send_message(chat_id, "\n\n---\n\n".join(parts) if parts else "No active signals.")
+
+
+def _trading_performance_section(rows, label):
+    """Build a performance section string for a set of trading signal rows."""
+    total = len(rows)
+    if total == 0:
+        return f"*{label}*\n\nNo signals yet."
+
+    active = sum(1 for r in rows if r.get('status') == 'ACTIVE')
+    wins = sum(1 for r in rows if r.get('result') == 'WIN')
+    losses = sum(1 for r in rows if r.get('result') == 'LOSS')
+    closed = wins + losses
+    win_rate = round(wins / closed * 100, 1) if closed > 0 else 0
+    avg_strength = round(sum(r.get('strength_score', 0) or 0 for r in rows) / total, 1) if total > 0 else 0
+
+    section = (
+        f"*{label}*\n\n"
+        f"Total Signals: {total}\n"
+        f"Active: {active}\n"
+        f"Closed: {closed}\n"
+        f"Win Rate: {win_rate}%\n"
+        f"Record: {wins}W / {losses}L\n"
+        f"Avg Strength: {avg_strength}/10"
+    )
+
+    # Per-pair breakdown (top 5 by count)
+    pair_counts = {}
+    for r in rows:
+        p = r.get('pair', '?')
+        if p not in pair_counts:
+            pair_counts[p] = {'total': 0, 'wins': 0, 'losses': 0}
+        pair_counts[p]['total'] += 1
+        if r.get('result') == 'WIN':
+            pair_counts[p]['wins'] += 1
+        elif r.get('result') == 'LOSS':
+            pair_counts[p]['losses'] += 1
+
+    top_pairs = sorted(pair_counts.items(), key=lambda x: x[1]['total'], reverse=True)[:5]
+    if top_pairs:
+        section += "\n\n*By Pair (top 5):*"
+        for pair, d in top_pairs:
+            pc = d['wins'] + d['losses']
+            wr = round(d['wins'] / pc * 100) if pc > 0 else 0
+            section += f"\n  {pair}: {d['total']} signals, {d['wins']}W/{d['losses']}L ({wr}%)"
+
+    return section
 
 
 def handle_performance(chat_id):
-    """Handle /performance — show trading + polymarket metrics."""
+    """Handle /performance — show polymarket, crypto, and forex metrics."""
     parts = []
-
-    # --- Trading signals from Supabase ---
-    if _supabase:
-        try:
-            resp = _supabase.table('trading_signals').select('*').execute()
-            rows = resp.data or []
-            total = len(rows)
-            active = sum(1 for r in rows if r.get('status') == 'ACTIVE')
-            wins = sum(1 for r in rows if r.get('result') == 'WIN')
-            losses = sum(1 for r in rows if r.get('result') == 'LOSS')
-            closed = wins + losses
-            win_rate = round(wins / closed * 100, 1) if closed > 0 else 0
-            avg_strength = round(sum(r.get('strength_score', 0) or 0 for r in rows) / total, 1) if total > 0 else 0
-
-            parts.append(
-                f"*Trading Signal Performance*\n\n"
-                f"Total Signals: {total}\n"
-                f"Active: {active}\n"
-                f"Closed: {closed}\n"
-                f"Win Rate: {win_rate}%\n"
-                f"Record: {wins}W / {losses}L\n"
-                f"Avg Strength: {avg_strength}/10"
-            )
-
-            # Per-pair breakdown (top 5 by count)
-            pair_counts = {}
-            for r in rows:
-                p = r.get('pair', '?')
-                if p not in pair_counts:
-                    pair_counts[p] = {'total': 0, 'wins': 0, 'losses': 0}
-                pair_counts[p]['total'] += 1
-                if r.get('result') == 'WIN':
-                    pair_counts[p]['wins'] += 1
-                elif r.get('result') == 'LOSS':
-                    pair_counts[p]['losses'] += 1
-
-            top_pairs = sorted(pair_counts.items(), key=lambda x: x[1]['total'], reverse=True)[:5]
-            if top_pairs:
-                parts[-1] += "\n\n*By Pair (top 5):*"
-                for pair, d in top_pairs:
-                    pc = d['wins'] + d['losses']
-                    wr = round(d['wins'] / pc * 100) if pc > 0 else 0
-                    parts[-1] += f"\n  {pair}: {d['total']} signals, {d['wins']}W/{d['losses']}L ({wr}%)"
-
-        except Exception as e:
-            parts.append(f"Trading signals error: {e}")
 
     # --- Polymarket signals ---
     try:
@@ -943,6 +981,20 @@ def handle_performance(chat_id):
                 parts[-1] += f"\n  {cat.upper()}: {data['wins']}W/{data['losses']}L ({wr:.0f}%)"
     except Exception as e:
         parts.append(f"Polymarket error: {e}")
+
+    # --- Crypto & Forex signals from Supabase ---
+    if _supabase:
+        try:
+            resp = _supabase.table('trading_signals').select('*').execute()
+            rows = resp.data or []
+            crypto_rows = [r for r in rows if '/' not in (r.get('pair') or '')]
+            forex_rows = [r for r in rows if '/' in (r.get('pair') or '')]
+
+            parts.append(_trading_performance_section(crypto_rows, "Crypto Signal Performance"))
+            parts.append(_trading_performance_section(forex_rows, "Forex Signal Performance"))
+
+        except Exception as e:
+            parts.append(f"Trading signals error: {e}")
 
     send_message(chat_id, "\n\n---\n\n".join(parts) if parts else "No performance data yet.")
 

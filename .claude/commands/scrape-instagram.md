@@ -14,6 +14,7 @@ You scrape posts from competitor accounts on ANY social media platform using Api
 | Platform | Apify Actor | Input Key | Post Text Field |
 |----------|-------------|-----------|-----------------|
 | Instagram | `apify/instagram-scraper` | `directUrls` | `caption` |
+| Instagram Reels (transcript) | `apify/instagram-reel-scraper` | `directUrls` | `caption`, `transcript` |
 | Twitter/X | `apidojo/tweet-scraper` | `twitterHandles` | `text` |
 | TikTok | `clockworks/tiktok-scraper` | `profiles` | `caption` |
 | YouTube | `streamers/youtube-scraper` | `startUrls` | `description` |
@@ -166,6 +167,23 @@ PAYLOAD: {"usernames": ["USERNAME"], "maxPosts": LIMIT}
 
 Replace `USERNAME` with the target (no @ symbol) and `LIMIT` with number of posts (default 10).
 
+### Step 2B: Extract Instagram Reel Transcripts
+
+**Only for Instagram scrapes.** After the main scrape completes, run a second pass using the `apify/instagram-reel-scraper` actor to extract transcripts from Reels.
+
+```
+ACTOR_ID: apify~instagram-reel-scraper
+PAYLOAD: {"directUrls": ["https://www.instagram.com/USERNAME/reels/"], "resultsLimit": LIMIT}
+```
+
+Use the same universal scrape script from Step 2 with this actor and payload. The reel scraper returns a `transcript` field (string) for each Reel when audio transcription is available.
+
+After both scrapes complete, merge transcript data into the main post results by matching on `url` or `shortCode`. For each post in the main scrape results:
+- If the post is a Reel (type = `Video`) and a matching reel scraper result has a non-empty `transcript` field, attach that transcript to the post.
+- If the post is not a Reel or no transcript is available, set `transcript` to `""` (empty string).
+
+Skip this step entirely for non-Instagram platforms.
+
 ## Step 3: Extract Post Data
 
 Normalize data from any platform into a common structure. Map platform-specific fields:
@@ -174,6 +192,7 @@ Normalize data from any platform into a common structure. Map platform-specific 
 | Field | JSON Key |
 |-------|----------|
 | Caption | `caption` |
+| Transcript | `transcript` (from reel scraper, empty if not a Reel or unavailable) |
 | Likes | `likesCount` |
 | Comments | `commentsCount` |
 | Post date | `timestamp` |
@@ -306,6 +325,9 @@ Save results to `01-Competitors/[platform]/[username]-[YYYY-MM-DD].md` using thi
 - **Caption**:
 > [full caption/text]
 
+- **Transcript** (Reels only, if available):
+> [full transcript of what's being said in the video, or empty if not a Reel / no transcript]
+
 - **Hashtags**: [list, if available]
 
 ---
@@ -330,11 +352,15 @@ Create the subfolder if it does not exist.
 
 This is the core value step. Analyze ALL collected content and generate insights for 4 vault destinations.
 
+**Important (Instagram):** When transcripts are available for Reels, treat them as a primary content source alongside captions. Many creators say more in their videos than they write in captions. Analyze transcripts for hooks (spoken opening lines), frameworks, teaching patterns, storytelling techniques, and niche knowledge. If a Reel has both a caption and a transcript, analyze both — they often contain different information.
+
 Use the author's username as `[source]` in filenames.
 
 ### 5A: Extract Hooks → `02-Hooks/[platform]-hooks.md`
 
 For each post, extract the **first line** (everything before the first newline). This is the hook.
+
+**For Instagram Reels with transcripts:** Also extract the **spoken hook** — the first sentence of the transcript (what they say to open the video). Spoken hooks often differ from caption hooks and reveal what actually stops the scroll.
 
 Append to `02-Hooks/[platform]-hooks.md` (create if missing, never overwrite existing):
 - Instagram → `02-Hooks/instagram-hooks.md`
@@ -346,10 +372,10 @@ Append to `02-Hooks/[platform]-hooks.md` (create if missing, never overwrite exi
 ```
 ## @[source] — [date]
 
-| Hook | Likes | Comments | Type |
-|------|-------|----------|------|
-| [first line of caption] | [count] | [count] | [Reel/Carousel/Image/Video/Tweet/etc.] |
-| [next post first line] | [count] | [count] | [type] |
+| Hook | Spoken Hook | Likes | Comments | Type |
+|------|-------------|-------|----------|------|
+| [first line of caption] | [first sentence of transcript, or — if none] | [count] | [count] | [Reel/Carousel/Image/Video/Tweet/etc.] |
+| [next post first line] | [spoken hook or —] | [count] | [count] | [type] |
 ```
 
 ### 5B: Content Patterns → `04-Patterns/[source]-content-patterns.md`
@@ -361,6 +387,7 @@ Analyze all collected content and identify:
 3. **Engagement patterns** — What correlates with high engagement? (length, format, topic, time)
 4. **Hook patterns** — What hook formulas appear repeatedly? (number, question, bold claim, callout)
 5. **CTA patterns** — How do they close? (follow, save, DM, link, comment)
+6. **Spoken content patterns** (Instagram Reels with transcripts only) — How do they deliver value verbally? (pacing, teaching style, storytelling arc, energy level, script vs off-the-cuff)
 
 Write to `04-Patterns/[source]-content-patterns.md` matching the table/quick-reference format:
 
@@ -491,6 +518,12 @@ Extract domain-specific knowledge and positioning insights. Match the rules/obse
 - [Technique 1 — e.g., "Uses 'I used to be broke' origin story in every 5th post"]
 - [Technique 2 — e.g., "Names the enemy (9-to-5, scammers) in hooks"]
 - [Technique 3 — e.g., "Creates 'us vs them' framing with community members"]
+
+## Spoken Content Insights (from Reel transcripts, if available)
+- [Insight 1 — e.g., "Opens every Reel with a direct question to the viewer"]
+- [Insight 2 — e.g., "Teaches in 3-step frameworks spoken casually, not scripted"]
+- [Insight 3 — e.g., "Uses slang and cultural references not found in captions"]
+- [Key knowledge shared verbally but not in captions — topics, tips, frameworks only revealed in video]
 
 ## Lessons for @big_quiv
 - [Lesson 1 — specific, actionable]
