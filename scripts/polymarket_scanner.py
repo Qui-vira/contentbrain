@@ -927,21 +927,20 @@ def format_signal_card(signal, for_telegram=False):
     rec_odds = yes_pct if rec == "YES" else no_pct
 
     if for_telegram:
-        # Telegram MarkdownV2 format
+        # Telegram format — clean, no emojis, no hashtags
         card = (
-            f"🔮 *POLYMARKET SIGNAL*\n\n"
-            f"📊 *Market:* {signal['market_question']}\n"
-            f"🏷️ *Category:* {signal['category'].upper()}\n"
-            f"📈 *Current Odds:* YES {yes_pct}% | NO {no_pct}%\n\n"
-            f"✅ *Recommendation:* {rec} @ {rec_odds}%\n"
-            f"🎯 *Model Price:* {model_pct}%\n"
-            f"💰 *Edge:* +{edge_pct}%\n"
-            f"🔥 *Confidence:* {signal['confidence']:.0f}/100\n"
-            f"🤝 *Factor Agreement:* {signal.get('factor_agreement', 'N/A')}\n\n"
-            f"📋 *Analysis:*\n{signal['reasoning']}\n\n"
-            f"⏰ *Resolves:* {res_date}\n"
-            f"📊 *24h Volume:* {vol_str}\n\n"
-            f"#polymarket #{signal['category']} #quivira"
+            f"*POLYMARKET SIGNAL*\n\n"
+            f"*Market:* {signal['market_question']}\n"
+            f"*Category:* {signal['category'].upper()}\n"
+            f"*Current Odds:* YES {yes_pct}% | NO {no_pct}%\n\n"
+            f"*Recommendation:* {rec} @ {rec_odds}%\n"
+            f"*Model Price:* {model_pct}%\n"
+            f"*Edge:* +{edge_pct}%\n"
+            f"*Confidence:* {signal['confidence']:.0f}/100\n"
+            f"*Factor Agreement:* {signal.get('factor_agreement', 'N/A')}\n\n"
+            f"*Analysis:*\n{signal['reasoning']}\n\n"
+            f"*Resolves:* {res_date}\n"
+            f"*24h Volume:* {vol_str}"
         )
     else:
         # CLI format
