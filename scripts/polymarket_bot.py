@@ -349,8 +349,8 @@ def distribute_signal(signal):
         results["krib"] = "OK" if result and result.get("ok") else "FAIL"
         print(f"  Hustler's Krib: {results['krib']}")
 
-    # 2. Send to relevant channel
-    if not is_trading and POLY_CHANNEL_ID:
+    # 2. Send to Poly channel (all signal types)
+    if POLY_CHANNEL_ID:
         result = send_message(POLY_CHANNEL_ID, card)
         results["poly"] = "OK" if result and result.get("ok") else "FAIL"
         print(f"  Poly Channel: {results['poly']}")
