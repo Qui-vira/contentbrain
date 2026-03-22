@@ -685,6 +685,11 @@ BOT_COMMANDS = [
     {"command": "start", "description": "Welcome message + menu"},
     {"command": "scan", "description": "Scan Polymarket for signals"},
     {"command": "ta", "description": "Send crypto trading signals for approval"},
+    {"command": "scan_all", "description": "Full crypto TA scan (all pairs, all TFs)"},
+    {"command": "scan_pair", "description": "Scan one pair (e.g. /scan_pair BTCUSDT)"},
+    {"command": "scan_custom", "description": "Custom scan (e.g. /scan_custom ETHUSDT 1h,4h)"},
+    {"command": "send_signals", "description": "Send TA signals to approval channel"},
+    {"command": "send_signals_direct", "description": "Send TA signals directly (skip approval)"},
     {"command": "top", "description": "Show top 10 markets by volume"},
     {"command": "status", "description": "Show active signals"},
     {"command": "performance", "description": "Win rate and metrics"},
@@ -713,8 +718,13 @@ def handle_start(chat_id):
         "I scan prediction markets every hour and find signals "
         "with +10% edge for you to approve.\n\n"
         "*Commands:*\n"
-        "/scan — Scan markets for new signals\n"
-        "/ta — Crypto trading signals\n"
+        "/scan — Scan Polymarket for signals\n"
+        "/ta — Send crypto TA signals for approval\n"
+        "/scan\\_all — Full crypto scan (all pairs, all TFs)\n"
+        "/scan\\_pair BTCUSDT — Scan one pair\n"
+        "/scan\\_custom ETHUSDT 1h,4h — Custom scan\n"
+        "/send\\_signals — Send TA signals for approval\n"
+        "/send\\_signals\\_direct — Send directly (skip approval)\n"
         "/top — Top 10 markets by volume\n"
         "/status — Your active signals\n"
         "/performance — Win rate & metrics\n"
@@ -727,9 +737,11 @@ def handle_start(chat_id):
     )
     reply_markup = {
         "keyboard": [
-            [{"text": "/scan"}, {"text": "/top"}],
-            [{"text": "/status"}, {"text": "/performance"}],
-            [{"text": "/resolve"}, {"text": "/help"}],
+            [{"text": "/scan_all"}, {"text": "/scan"}],
+            [{"text": "/send_signals"}, {"text": "/ta"}],
+            [{"text": "/top"}, {"text": "/status"}],
+            [{"text": "/performance"}, {"text": "/resolve"}],
+            [{"text": "/help"}],
         ],
         "resize_keyboard": True,
         "one_time_keyboard": False,
@@ -929,6 +941,116 @@ def handle_setcap(chat_id, text=""):
         send_message(chat_id, f"Error setting cap: {e}")
 
 
+def _run_ta_script(chat_id, args_list, label):
+    """Run binance_ta_runner.py with given args via subprocess, report results."""
+    script_path = os.path.join(os.path.dirname(__file__), "binance_ta_runner.py")
+    if not os.path.exists(script_path):
+        send_message(chat_id, f"Error: `binance_ta_runner.py` not found.")
+        return False
+
+    cmd = [sys.executable, script_path] + args_list
+    try:
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, timeout=300,
+            cwd=os.path.join(os.path.dirname(__file__), ".."),
+        )
+        # Send last few lines of output as status
+        lines = result.stdout.strip().split('\n') if result.stdout else []
+        status_line = lines[-1] if lines else "Scan complete."
+        if result.returncode != 0:
+            err = result.stderr[:300] if result.stderr else "Unknown error"
+            send_message(chat_id, f"[{label}] Scan failed:\n`{err}`")
+            return False
+        send_message(chat_id, f"[{label}] {status_line}")
+        return True
+    except subprocess.TimeoutExpired:
+        send_message(chat_id, f"[{label}] Scan timed out after 5 minutes.")
+        return False
+    except Exception as e:
+        send_message(chat_id, f"[{label}] Error: {e}")
+        return False
+
+
+def _send_ta_signals_to_approval(chat_id):
+    """Load TA signals from JSON and send qualifying ones for approval."""
+    try:
+        from binance_ta_runner import load_ta_signals
+        signals = load_ta_signals(max_age_minutes=90)
+        if not signals:
+            send_message(chat_id, "No qualifying signals (3+ confluences) in latest scan.")
+            return 0
+        send_message(chat_id, f"Found *{len(signals)}* qualifying signal(s). Sending for approval...")
+        sent = 0
+        for signal in signals:
+            msg_id = send_to_approval(signal)
+            if msg_id:
+                sent += 1
+        send_message(chat_id, f"Sent *{sent}* signal(s) to approval channel. Review and approve/reject.")
+        return sent
+    except Exception as e:
+        send_message(chat_id, f"Signal load error: {e}")
+        return 0
+
+
+def handle_scan_all(chat_id):
+    """Handle /scan_all — full crypto TA scan, then send signals for approval."""
+    send_message(chat_id, "Running full crypto TA scan (all pairs, all timeframes)... This takes ~60 seconds.")
+    ok = _run_ta_script(chat_id, [], "SCAN ALL")
+    if ok:
+        _send_ta_signals_to_approval(chat_id)
+
+
+def handle_scan_pair(chat_id, text=""):
+    """Handle /scan_pair BTCUSDT — scan one pair, then send signals for approval."""
+    parts = text.strip().split()
+    if len(parts) < 2:
+        send_message(chat_id, "Usage: `/scan_pair BTCUSDT`")
+        return
+    pair = parts[1].upper()
+    send_message(chat_id, f"Scanning *{pair}* on all timeframes (1h, 4h, 1d)...")
+    ok = _run_ta_script(chat_id, ["--pair", pair], f"SCAN {pair}")
+    if ok:
+        _send_ta_signals_to_approval(chat_id)
+
+
+def handle_scan_custom(chat_id, text=""):
+    """Handle /scan_custom ETHUSDT 1h,4h — scan pair on specific timeframes, then send signals."""
+    parts = text.strip().split()
+    if len(parts) < 3:
+        send_message(chat_id, "Usage: `/scan_custom ETHUSDT 1h,4h`")
+        return
+    pair = parts[1].upper()
+    timeframes = parts[2]
+    send_message(chat_id, f"Scanning *{pair}* on *{timeframes}*...")
+    ok = _run_ta_script(chat_id, ["--pair", pair, "--timeframe", timeframes], f"SCAN {pair} {timeframes}")
+    if ok:
+        _send_ta_signals_to_approval(chat_id)
+
+
+def handle_send_signals(chat_id):
+    """Handle /send_signals — send qualifying TA signals to approval channel."""
+    send_message(chat_id, "Loading latest TA signals...")
+    _send_ta_signals_to_approval(chat_id)
+
+
+def handle_send_signals_direct(chat_id):
+    """Handle /send_signals_direct — send TA signals directly, skip approval."""
+    send_message(chat_id, "Loading and distributing TA signals directly (skipping approval)...")
+    try:
+        from binance_ta_runner import load_ta_signals
+        signals = load_ta_signals(max_age_minutes=90)
+        if not signals:
+            send_message(chat_id, "No qualifying signals (3+ confluences) in latest scan.")
+            return
+        sent = 0
+        for signal in signals:
+            distribute_signal(signal)
+            sent += 1
+        send_message(chat_id, f"Distributed *{sent}* signal(s) directly to all channels.")
+    except Exception as e:
+        send_message(chat_id, f"Error: {e}")
+
+
 COMMAND_HANDLERS = {
     "/start": handle_start,
     "/scan": handle_scan,
@@ -938,8 +1060,16 @@ COMMAND_HANDLERS = {
     "/resolve": handle_resolve,
     "/ta": handle_ta,
     "/setcap": handle_setcap,
+    "/scan_all": handle_scan_all,
+    "/scan_pair": handle_scan_pair,
+    "/scan_custom": handle_scan_custom,
+    "/send_signals": handle_send_signals,
+    "/send_signals_direct": handle_send_signals_direct,
     "/help": handle_start,
 }
+
+# Commands that need the full text (for argument parsing)
+_COMMANDS_WITH_ARGS = {"/setcap", "/scan_pair", "/scan_custom"}
 
 
 def _unified_cron_cycle():
@@ -952,17 +1082,83 @@ def _unified_cron_cycle():
         run_full_cycle()
 
 
-def _cron_loop():
-    """Background thread: runs unified auto-scanner on a schedule."""
-    # Initial scan 30s after startup
-    time.sleep(30)
-    print("[CRON] Running initial scan...")
-    try:
-        _unified_cron_cycle()
-    except Exception as e:
-        print(f"[CRON] Initial scan error: {e}")
+def _auto_ta_scan_cycle():
+    """Run full crypto TA scan and send qualifying signals to approval channel."""
+    scan_interval = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "4"))
+    admin = ADMIN_CHAT_ID or APPROVAL_CHANNEL_ID
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    print(f"[AUTO-SCAN] Starting scheduled TA scan at {ts}")
 
-    # Schedule hourly scans
+    # Run the TA scanner
+    script_path = os.path.join(os.path.dirname(__file__), "binance_ta_runner.py")
+    if not os.path.exists(script_path):
+        print("[AUTO-SCAN] binance_ta_runner.py not found — skipping.")
+        return
+
+    try:
+        result = subprocess.run(
+            [sys.executable, script_path],
+            capture_output=True, text=True, timeout=300,
+            cwd=os.path.join(os.path.dirname(__file__), ".."),
+        )
+        if result.returncode != 0:
+            err = result.stderr[:300] if result.stderr else "Unknown error"
+            print(f"[AUTO-SCAN] Scan failed: {err}")
+            if admin:
+                send_message(admin, f"[AUTO-SCAN] Scan failed at {ts}:\n`{err}`")
+            return
+    except subprocess.TimeoutExpired:
+        print("[AUTO-SCAN] Scan timed out after 5 minutes.")
+        if admin:
+            send_message(admin, f"[AUTO-SCAN] Scan timed out at {ts}")
+        return
+    except Exception as e:
+        print(f"[AUTO-SCAN] Scan error: {e}")
+        return
+
+    # Load signals and send qualifying ones to approval
+    try:
+        from binance_ta_runner import load_ta_signals
+        signals = load_ta_signals(max_age_minutes=90)
+        if not signals:
+            print(f"[AUTO-SCAN] No qualifying signals (3+ confluences).")
+            if admin:
+                send_message(admin, f"[AUTO-SCAN] Scan complete at {ts} — no qualifying signals.")
+            return
+
+        sent = 0
+        for signal in signals:
+            signal['source'] = 'auto'
+            msg_id = send_to_approval(signal)
+            if msg_id:
+                sent += 1
+
+        print(f"[AUTO-SCAN] Sent {sent}/{len(signals)} signal(s) to approval channel.")
+        if admin:
+            send_message(admin, f"[AUTO-SCAN] Scan complete at {ts}\n{sent} signal(s) sent for approval.")
+    except Exception as e:
+        print(f"[AUTO-SCAN] Signal load error: {e}")
+        if admin:
+            send_message(admin, f"[AUTO-SCAN] Signal load error at {ts}: {e}")
+
+
+def _cron_loop():
+    """Background thread: runs scheduled scans."""
+    scan_interval = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "4"))
+
+    # Initial TA scan 30s after startup
+    time.sleep(30)
+    print("[CRON] Running initial TA scan...")
+    try:
+        _auto_ta_scan_cycle()
+    except Exception as e:
+        print(f"[CRON] Initial TA scan error: {e}")
+
+    # Schedule TA scans every N hours (default 4)
+    schedule.every(scan_interval).hours.do(_auto_ta_scan_cycle)
+    print(f"[CRON] TA auto-scan scheduled every {scan_interval} hours.")
+
+    # Keep existing polymarket/unified cycle running hourly
     schedule.every(1).hours.do(_unified_cron_cycle)
     print("[CRON] Hourly unified scanner started.")
 
@@ -982,7 +1178,8 @@ def run_bot():
     if enable_cron and schedule is not None:
         cron_thread = threading.Thread(target=_cron_loop, daemon=True)
         cron_thread.start()
-        print("Embedded cron scheduler started (hourly scans).")
+        scan_interval = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "4"))
+        print(f"Embedded cron scheduler started (TA scan every {scan_interval}h, polymarket hourly).")
     elif enable_cron and schedule is None:
         print("WARNING: 'schedule' package not installed — cron disabled.")
     else:
@@ -1010,7 +1207,7 @@ def run_bot():
 
                     if cmd in COMMAND_HANDLERS:
                         print(f"[{datetime.now(timezone.utc).strftime('%H:%M')}] {cmd} from {chat_id}")
-                        if cmd == "/setcap":
+                        if cmd in _COMMANDS_WITH_ARGS:
                             COMMAND_HANDLERS[cmd](chat_id, text)
                         else:
                             COMMAND_HANDLERS[cmd](chat_id)

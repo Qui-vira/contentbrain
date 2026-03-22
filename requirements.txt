@@ -3,3 +3,5 @@ python-dotenv
 urllib3
 schedule
 anthropic
+pandas
+numpy
