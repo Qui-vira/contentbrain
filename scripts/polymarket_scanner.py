@@ -45,22 +45,22 @@ MIN_VOLUME_24H = 50000       # $50K+ daily volume
 MAX_RESOLUTION_DAYS = 30     # Within 30 days
 MIN_ODDS = 0.10              # Exclude < 10%
 MAX_ODDS = 0.90              # Exclude > 90%
-MIN_EDGE = 0.10              # 10% minimum edge
+MIN_EDGE = 0.05              # 5% minimum edge (manual review catches weak ones)
 MIN_CONFIDENCE = 65          # Minimum confidence score
 MIN_LIQUIDITY = 10000        # $10K+ liquidity
 
 # Factor weights for 7-factor scoring
 FACTOR_WEIGHTS = {
-    "price_momentum": 0.20,
+    "price_momentum": 0.30,     # Strongest, most consistent signal
     "volume_analysis": 0.15,
-    "market_efficiency": 0.15,
-    "smart_money": 0.15,
-    "time_decay": 0.10,
-    "odds_compression": 0.10,
-    "contrarian": 0.15,
+    "market_efficiency": 0.05,  # Rarely fires on liquid markets
+    "smart_money": 0.20,        # Sharp moves are real signal
+    "time_decay": 0.15,         # Consistent, was underweighted
+    "odds_compression": 0.05,   # Edge case, rarely activates
+    "contrarian": 0.10,         # Narrow activation band
 }
 
-MAX_SINGLE_FACTOR_SHIFT = 0.08
+MAX_SINGLE_FACTOR_SHIFT = 0.20
 MAX_TOTAL_SHIFT = 0.35
 CONFIDENCE_DISAGREEMENT_PENALTY = 0.15
 

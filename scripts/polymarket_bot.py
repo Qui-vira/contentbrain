@@ -324,7 +324,7 @@ def create_twitter_draft(signal):
 
 
 def log_to_tracker(signal):
-    """Log approved signal to polymarket signals log."""
+    """Log approved signal to polymarket signals log + write JSON sidecar with factor details."""
     log_path = os.path.join(
         VAULT_DIR, "07-Analytics", "signal-performance", "polymarket-signals-log.md"
     )
@@ -359,6 +359,32 @@ def log_to_tracker(signal):
     # Insert before the closing --- or at end
     with open(log_path, "a", encoding="utf-8") as f:
         f.write(row)
+
+    # Write JSON sidecar with full factor details for tuning analysis
+    details_dir = os.path.join(
+        VAULT_DIR, "07-Analytics", "signal-performance", "signal-details"
+    )
+    os.makedirs(details_dir, exist_ok=True)
+
+    sidecar = {
+        "signal_num": next_num,
+        "date": now,
+        "market_id": signal.get("market_id", ""),
+        "market_question": signal.get("market_question", ""),
+        "category": signal.get("category", ""),
+        "recommendation": signal.get("recommendation", ""),
+        "current_odds": signal.get("current_odds", {}),
+        "model_probability": signal.get("model_probability", 0),
+        "edge": signal.get("edge", 0),
+        "confidence": signal.get("confidence", 0),
+        "factor_agreement": signal.get("factor_agreement", ""),
+        "factors": signal.get("factors", {}),
+        "factor_details": signal.get("factor_details", {}),
+    }
+
+    sidecar_path = os.path.join(details_dir, f"{next_num}-{now}.json")
+    with open(sidecar_path, "w", encoding="utf-8") as f:
+        json.dump(sidecar, f, indent=2, default=str)
 
 
 # --- Approval Polling ---

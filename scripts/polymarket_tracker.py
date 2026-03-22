@@ -41,6 +41,9 @@ SIGNALS_LOG = os.path.join(
 SCAN_LOG = os.path.join(
     VAULT_DIR, "07-Analytics", "polymarket", "scan-log.md"
 )
+SIGNAL_DETAILS_DIR = os.path.join(
+    VAULT_DIR, "07-Analytics", "signal-performance", "signal-details"
+)
 
 
 # --- Signals Log Management ---
@@ -148,6 +151,23 @@ def update_signal_status(signal_num, new_status, result="", pnl=""):
             f.writelines(lines)
 
     return updated
+
+
+def load_signal_details(signal_num):
+    """Load the JSON sidecar file for a given signal number."""
+    if not os.path.exists(SIGNAL_DETAILS_DIR):
+        return None
+
+    # Search for file matching the signal number prefix
+    for filename in os.listdir(SIGNAL_DETAILS_DIR):
+        if filename.startswith(f"{signal_num}-") and filename.endswith(".json"):
+            filepath = os.path.join(SIGNAL_DETAILS_DIR, filename)
+            try:
+                with open(filepath, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except (json.JSONDecodeError, IOError):
+                return None
+    return None
 
 
 # --- Auto-Resolve ---
@@ -332,6 +352,99 @@ def calculate_performance(signals=None):
     }
 
 
+def calculate_factor_accuracy():
+    """
+    Calculate per-factor accuracy breakdown from resolved signals.
+    For each factor, checks if its direction agreed with the actual outcome.
+    Returns dict: {factor_name: {right: N, wrong: N, neutral: N, pct: float}}
+    """
+    signals = parse_signals_log()
+    resolved = [s for s in signals if s["status"] in ("WON", "LOST")]
+
+    factor_names = [
+        "price_momentum", "volume_analysis", "market_efficiency",
+        "smart_money", "time_decay", "odds_compression", "contrarian",
+    ]
+    accuracy = {f: {"right": 0, "wrong": 0, "neutral": 0, "pct": 0.0} for f in factor_names}
+
+    analyzed = 0
+    for signal in resolved:
+        details = load_signal_details(signal["num"])
+        if not details or "factor_details" not in details:
+            continue
+
+        analyzed += 1
+        rec = details.get("recommendation", "")
+        won = signal["status"] == "WON"
+        # If we won, the recommendation direction was correct
+        # If we lost, the recommendation direction was wrong
+        correct_direction = 1.0 if (rec == "YES" and won) or (rec == "NO" and won) else -1.0
+        # correct_direction > 0 means YES was right, < 0 means NO was right
+
+        for factor_name in factor_names:
+            fd = details["factor_details"].get(factor_name, {})
+            direction = fd.get("direction", 0.0)
+
+            if abs(direction) < 0.1:
+                accuracy[factor_name]["neutral"] += 1
+                continue
+
+            # Factor direction positive = leaning YES, negative = leaning NO
+            # Check if factor direction agreed with actual outcome
+            if won:
+                # We recommended rec and won, so rec was correct
+                # Factor is "right" if it pointed toward rec
+                factor_agrees_with_rec = (direction > 0 and rec == "YES") or (direction < 0 and rec == "NO")
+            else:
+                # We recommended rec and lost, so opposite of rec was correct
+                # Factor is "right" if it pointed AGAINST rec
+                factor_agrees_with_rec = (direction > 0 and rec == "NO") or (direction < 0 and rec == "YES")
+
+            if factor_agrees_with_rec:
+                accuracy[factor_name]["right"] += 1
+            else:
+                accuracy[factor_name]["wrong"] += 1
+
+    # Calculate percentages
+    for f in factor_names:
+        total = accuracy[f]["right"] + accuracy[f]["wrong"]
+        if total > 0:
+            accuracy[f]["pct"] = round(accuracy[f]["right"] / total * 100, 1)
+
+    return accuracy, analyzed
+
+
+def print_factor_report(json_output=False):
+    """Print per-factor accuracy report."""
+    accuracy, analyzed = calculate_factor_accuracy()
+
+    if json_output:
+        print(json.dumps({"factor_accuracy": accuracy, "signals_analyzed": analyzed}, indent=2))
+        return
+
+    print("\n" + "=" * 60)
+    print("  FACTOR ACCURACY REPORT")
+    print("=" * 60)
+    print(f"  Signals with factor data: {analyzed}\n")
+
+    if analyzed == 0:
+        print("  No resolved signals with factor details yet.")
+        print("  Factor data is saved on signal approval — accuracy")
+        print("  will populate as signals resolve.")
+        print("=" * 60 + "\n")
+        return
+
+    print(f"  {'FACTOR':<22s} {'RIGHT':>5s} {'WRONG':>5s} {'NEUT':>5s} {'ACC%':>6s}")
+    print(f"  {'-'*22} {'-'*5} {'-'*5} {'-'*5} {'-'*6}")
+
+    for factor, data in accuracy.items():
+        label = factor.replace("_", " ").title()
+        pct_str = f"{data['pct']:.0f}%" if (data["right"] + data["wrong"]) > 0 else "N/A"
+        print(f"  {label:<22s} {data['right']:>5d} {data['wrong']:>5d} {data['neutral']:>5d} {pct_str:>6s}")
+
+    print("=" * 60 + "\n")
+
+
 def print_performance(metrics, json_output=False):
     """Print performance report."""
     if json_output:
@@ -422,6 +535,7 @@ def main():
     parser.add_argument("--resolve", action="store_true", help="Auto-resolve closed markets")
     parser.add_argument("--performance", action="store_true", help="Show performance metrics")
     parser.add_argument("--weekly", action="store_true", help="Generate weekly report")
+    parser.add_argument("--factor-report", action="store_true", help="Per-factor accuracy breakdown")
     parser.add_argument("--json", action="store_true", help="JSON output")
     parser.add_argument("--init", action="store_true", help="Initialize signals log file")
     args = parser.parse_args()
@@ -455,6 +569,10 @@ def main():
     if args.performance:
         metrics = calculate_performance()
         print_performance(metrics, json_output=args.json)
+        return
+
+    if args.factor_report:
+        print_factor_report(json_output=args.json)
         return
 
     if args.weekly:
