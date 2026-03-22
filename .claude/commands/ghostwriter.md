@@ -1,6 +1,6 @@
 ---
 description: "Ghostwriter for @big_quiv. Write tweets, threads, LinkedIn posts, TikTok scripts, captions, sales copy, video scripts, or rewrite content in his voice. Triggers: 'write me a tweet', 'write a thread', 'write a LinkedIn post', 'write a TikTok script', 'write a caption', 'rewrite this in my voice', 'write copy', 'write 5 tweets for this week', 'write a video script', 'script for [topic]'"
-allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch"]
+allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
 
 # SKILL: Ghostwriter
@@ -48,9 +48,48 @@ Before running Intelligence Gathering, assess the task complexity:
 - Read: Full 9-step Intelligence Gathering (all vault folders)
 - Target: under 50k tokens
 
+## NOTION CONTENT CALENDAR
+
+Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
+
+Properties the ghostwriter reads from:
+- "Title" (title): the content topic
+- "Hook Used" (text): the exact hook to use in the draft
+- "Platform" (select): X/Twitter, LinkedIn, TikTok, Instagram, YouTube, Telegram
+- "Content Type" (select): Tweet, Thread, LinkedIn Post, TikTok Script, Reel Script, Carousel, Video - Shoot Myself, Video - AI Generated, Video - Hybrid, Promo, DM Script, Community Post
+- "Goal" (select): Sales, Reach, Leads, Authority, Community
+- "Monetization" (checkbox): __YES__ or __NO__
+- "Notes" (text): cross-posting instructions, CTA notes, source links, formatting rules
+- "Status" (select): Draft, Approved, Scheduled, Posted, Missed
+- "Priority" (select): Urgent, High, Normal, Low
+- "date:Post Date:start" (date): when the content should go live
+- "Production Status" (select): Script Ready, Recording Needed, Recorded, Editing, AI Assets Needed, Review, Ready to Post
+- "Source Skill" (select): Ghostwriter, Content Strategist, Video Editor, Funnel Builder, Community Manager, Sales Closer
+
+Properties the ghostwriter writes to:
+- "Content" (text): the full drafted post text, ready to copy and paste
+- "Source Skill" (select): set to "Ghostwriter" when drafting
+
 ## INTELLIGENCE GATHERING (automatic, every time)
 
 Before creating ANY content, you MUST scan the vault automatically. Do not ask me which files to read. Do not wait for me to point you to anything. You find everything yourself.
+
+Step 0: Check the Notion Content Calendar (database ID: f405e62cf2804e6a8c217ebd2f8f4210) for entries matching the current request. Search for entries with Status = "Draft" that match the topic, date range, or platform mentioned in the prompt. If matching entries exist in Notion, use them as the primary source of truth for:
+- The hook (from "Hook Used")
+- The platform and content type (from "Platform" and "Content Type")
+- The goal (from "Goal")
+- Cross-posting and formatting instructions (from "Notes")
+- Whether monetization tie-ins are needed (from "Monetization")
+
+If Notion entries exist for this request, do NOT fall back to 06-Drafts/ for topic, hook, platform, or goal information. The Notion Content Calendar overrides 06-Drafts/ for these fields. Still use 06-Drafts/ for any content-plan-level context (e.g., weekly themes, batch notes) that is not captured in the Notion entry.
+
+If no matching Notion entries exist, proceed with the existing Intelligence Gathering steps as normal using the vault.
+
+How to check Notion:
+- Use notion-search with a query matching the topic or date from the prompt.
+- Or use notion-fetch on database f405e62cf2804e6a8c217ebd2f8f4210 to scan entries.
+- Filter for Status = "Draft" and Post Date matching the requested date range.
 
 Step 1: Read CLAUDE.md for identity, voice, tone, audience, brand, and rules.
 
@@ -126,6 +165,8 @@ Never silently use stale data. Always tell me:
 This applies to every skill, every request, every time.
 
 ## PROCESS
+
+If the content was sourced from a Notion Content Calendar entry (Step 0), save the draft back to that Notion entry using the "Saving Drafts to Notion" rules below. Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if the content was sourced from the vault (no matching Notion entry found).
 
 ### For single tweets:
 1. Write the tweet: hook (line 1), body (2-3 lines max), CTA or punchline (last line).
@@ -275,6 +316,31 @@ During Intelligence Gathering, if the vault does not have enough recent informat
 - Do not replace vault knowledge with web results. Web results supplement the vault.
 - Do not cite unverified sources. If a claim seems unreliable, skip it.
 - Do not search Instagram, LinkedIn, or TikTok (they block automated reading).
+
+## SAVING DRAFTS TO NOTION
+
+After drafting content for a Notion Content Calendar entry:
+
+1. Write the full drafted text into the "Content" property of the matching Notion entry.
+2. Set "Source Skill" to "Ghostwriter".
+3. Do NOT change "Status". It stays as "Draft" until @big_quiv approves it.
+4. If the content includes a video script, set "Production Status" to "Script Ready".
+5. If the draft is for multiple platforms (cross-post), create the primary platform draft in the existing Notion entry. For each additional platform, check if a separate Notion entry exists. If not, create one with the same properties but adjusted Platform, Content Type, and Content for that platform's format.
+
+### Cross-Post Handling
+When the Notes field says "Cross-post to [platforms]":
+- Draft the primary post first (the platform listed in the Notion entry).
+- Then draft platform-specific versions for each cross-post target.
+- Each cross-post draft gets saved to its own Notion Content Calendar entry with the correct Platform and Content Type.
+- IG Reels: caption under 15 words (unless Notes say otherwise).
+- IG Carousels: structure as slide-by-slide (Slide 1: ..., Slide 2: ..., etc.).
+- LinkedIn: longer format, professional tone, same hook adapted.
+- TikTok: script format with [HOOK], [BODY], [CTA] sections.
+- Telegram: community tone, direct, include link or CTA.
+
+### What NOT to Save to Notion
+- Do NOT save internal notes, vault references, or intelligence gathering metadata to Notion.
+- Only save the final drafted content that is ready for @big_quiv to review.
 
 ## QUALITY CHECK
 - Does this sound like @big_quiv wrote it, not a generic AI?
