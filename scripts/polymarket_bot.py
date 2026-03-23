@@ -1940,8 +1940,27 @@ def _cron_loop():
 
 
 def run_bot():
-    """Run the bot in persistent polling mode — listens for commands and approvals."""
-    print("Starting Polymarket Signal Bot...")
+    """Run the bot in polling mode, or cron-only mode if BOT_MODE=cron.
+
+    BOT_MODE env var controls behaviour:
+      - "full" (default): polling for commands + embedded cron scheduler
+      - "cron": only the auto-scanner cron loop, NO getUpdates polling.
+        Use this on a second Railway service so it can auto-scan without
+        fighting the primary instance for Telegram updates.
+    """
+    bot_mode = os.getenv("BOT_MODE", "full").lower().strip()
+    print(f"Starting Polymarket Signal Bot (mode={bot_mode})...")
+
+    # --- Cron-only mode: just run the scanner loop, no Telegram polling ---
+    if bot_mode == "cron":
+        if schedule is None:
+            print("FATAL: 'schedule' package not installed — cannot run cron mode.")
+            return
+        print("Cron-only mode — no command polling. Running auto-scanner loop.")
+        _cron_loop()          # blocks forever (runs scheduled jobs)
+        return                # unreachable, but explicit
+
+    # --- Full mode: polling + cron ---
 
     # Clear any stale webhook so polling works cleanly (prevents duplicate
     # delivery if a webhook was ever set, e.g. during testing)
