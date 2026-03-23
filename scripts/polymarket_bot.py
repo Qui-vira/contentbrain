@@ -135,7 +135,7 @@ def _get_subscriber_channels():
         return []
 
 
-def _send_to_subscribers(text, parse_mode="Markdown"):
+def _send_to_subscribers(text, parse_mode="HTML"):
     """Send a message to all approved subscriber channels. Returns count of successful sends."""
     channels = _get_subscriber_channels()
     if not channels:
@@ -243,7 +243,7 @@ def push_to_typefully(tweet_text, publish=False):
 
 # --- Telegram Helpers ---
 
-def send_message(chat_id, text, parse_mode="Markdown", reply_markup=None):
+def send_message(chat_id, text, parse_mode="HTML", reply_markup=None):
     """Send a message via Telegram Bot API."""
     if not BOT_TOKEN:
         print("ERROR: TELEGRAM_BOT_TOKEN not set in .env")
@@ -780,13 +780,13 @@ def _format_hit_notification(signal, current_price, new_status, check_result):
         price_fmt = lambda p: f"{p:,.2f}" if p else "—"
 
     lines = [
-        f"*SIGNAL UPDATE*\n",
-        f"*{header}*\n",
-        f"*Pair:* {pair}",
-        f"*Direction:* {direction}",
-        f"*Entry:* {price_fmt(entry)}",
-        f"*Current:* {price_fmt(current_price)}",
-        f"*P&L:* {pnl_str}",
+        f"<b>SIGNAL UPDATE</b>\n",
+        f"<b>{header}</b>\n",
+        f"<b>Pair:</b> {pair}",
+        f"<b>Direction:</b> {direction}",
+        f"<b>Entry:</b> {price_fmt(entry)}",
+        f"<b>Current:</b> {price_fmt(current_price)}",
+        f"<b>P&amp;L:</b> {pnl_str}",
     ]
 
     if status_line:
@@ -902,9 +902,9 @@ def _signal_monitor_cycle():
         from polymarket_tracker import auto_resolve
         resolved = auto_resolve()
         if resolved:
-            lines = [f"*{len(resolved)} Polymarket signal(s) resolved:*\n"]
+            lines = [f"<b>{len(resolved)} Polymarket signal(s) resolved:</b>\n"]
             for u in resolved:
-                lines.append(f"#{u['signal']} {u['market'][:30]} — *{u['new_status']}* ({u['pnl']})")
+                lines.append(f"#{u['signal']} {u['market'][:30]} — <b>{u['new_status']}</b> ({u['pnl']})")
             msg = "\n".join(lines)
             if KRIB_CHAT_ID:
                 send_message(KRIB_CHAT_ID, msg)
@@ -1065,26 +1065,26 @@ def register_bot_commands():
 def handle_start(chat_id):
     """Handle /start command — welcome message with menu."""
     text = (
-        "*Welcome to the Polymarket Signal Bot* \n\n"
+        "<b>Welcome to the Polymarket Signal Bot</b> \n\n"
         "I scan prediction markets every hour and find signals "
         "with +10% edge for you to approve.\n\n"
-        "*Commands:*\n"
+        "<b>Commands:</b>\n"
         "/scan — Scan Polymarket for signals\n"
         "/ta — Send crypto TA signals for approval\n"
-        "/scan\\_all — Full crypto scan (all pairs, all TFs)\n"
-        "/scan\\_pair BTCUSDT — Scan one pair\n"
-        "/scan\\_custom ETHUSDT 1h,4h — Custom scan\n"
-        "/send\\_signals — Send TA signals for approval\n"
-        "/send\\_signals\\_direct — Send directly (skip approval)\n"
+        "/scan_all — Full crypto scan (all pairs, all TFs)\n"
+        "/scan_pair BTCUSDT — Scan one pair\n"
+        "/scan_custom ETHUSDT 1h,4h — Custom scan\n"
+        "/send_signals — Send TA signals for approval\n"
+        "/send_signals_direct — Send directly (skip approval)\n"
         "/top — Top 10 markets by volume\n"
         "/status — Your active signals\n"
-        "/performance — Win rate & metrics\n"
+        "/performance — Win rate &amp; metrics\n"
         "/resolve — Check if markets resolved\n"
         "/setcap N — Set daily auto-signal cap\n"
         "/help — Show this menu\n\n"
         "When I find a signal, I'll send it here with "
         "Approve/Reject buttons. Tap to decide.\n\n"
-        "_Powered by Quivira_"
+        "<i>Powered by Quivira</i>"
     )
     reply_markup = {
         "keyboard": [
@@ -1115,7 +1115,7 @@ def handle_scan(chat_id):
             )
             return
 
-        send_message(chat_id, f"Found *{len(signals)} signal(s)*. Sending for review...")
+        send_message(chat_id, f"Found <b>{len(signals)} signal(s)</b>. Sending for review...")
 
         for signal in signals:
             send_to_approval(signal)
@@ -1137,7 +1137,7 @@ def handle_top(chat_id):
             send_message(chat_id, "Could not fetch markets. Try again later.")
             return
 
-        lines = ["*Top 10 Polymarket Markets*\n"]
+        lines = ["<b>Top 10 Polymarket Markets</b>\n"]
         for i, m in enumerate(filtered[:10], 1):
             vol = float(m.get("volume24hr", 0) or 0)
             question = m.get("question", "N/A")
@@ -1177,7 +1177,7 @@ def handle_status(chat_id):
         active = [s for s in signals if s["status"] == "ACTIVE"]
 
         if active:
-            lines = [f"*Active Polymarket Signals ({len(active)})*\n"]
+            lines = [f"<b>Active Polymarket Signals ({len(active)})</b>\n"]
             for s in active:
                 lines.append(
                     f"#{s['num']} | {s['market'][:35]}\n"
@@ -1185,7 +1185,7 @@ def handle_status(chat_id):
                 )
             parts.append("\n".join(lines))
         else:
-            parts.append("*Active Polymarket Signals (0)*\nNo active signals.")
+            parts.append("<b>Active Polymarket Signals (0)</b>\nNo active signals.")
     except Exception as e:
         parts.append(f"Polymarket status error: {e}")
 
@@ -1207,7 +1207,7 @@ def handle_status(chat_id):
 
             # Crypto
             if crypto_active:
-                lines = [f"*Active Crypto Signals ({len(crypto_active)})*\n"]
+                lines = [f"<b>Active Crypto Signals ({len(crypto_active)})</b>\n"]
                 for r in crypto_active:
                     lines.append(
                         f"{r.get('pair', '?')} | {r.get('direction', '?')} | {r.get('timeframe', '?')}\n"
@@ -1215,11 +1215,11 @@ def handle_status(chat_id):
                     )
                 parts.append("\n".join(lines))
             else:
-                parts.append("*Active Crypto Signals (0)*\nNo active signals.")
+                parts.append("<b>Active Crypto Signals (0)</b>\nNo active signals.")
 
             # Forex
             if forex_active:
-                lines = [f"*Active Forex Signals ({len(forex_active)})*\n"]
+                lines = [f"<b>Active Forex Signals ({len(forex_active)})</b>\n"]
                 for r in forex_active:
                     lines.append(
                         f"{r.get('pair', '?')} | {r.get('direction', '?')} | {r.get('timeframe', '?')}\n"
@@ -1227,7 +1227,7 @@ def handle_status(chat_id):
                     )
                 parts.append("\n".join(lines))
             else:
-                parts.append("*Active Forex Signals (0)*\nNo active signals.")
+                parts.append("<b>Active Forex Signals (0)</b>\nNo active signals.")
 
         except Exception as e:
             parts.append(f"Trading signals status error: {e}")
@@ -1239,7 +1239,7 @@ def _trading_performance_section(rows, label):
     """Build a performance section string for a set of trading signal rows."""
     total = len(rows)
     if total == 0:
-        return f"*{label}*\n\nNo signals yet."
+        return f"<b>{label}</b>\n\nNo signals yet."
 
     active = sum(1 for r in rows if r.get('status') == 'ACTIVE')
     wins = sum(1 for r in rows if r.get('result') == 'WIN')
@@ -1249,7 +1249,7 @@ def _trading_performance_section(rows, label):
     avg_strength = round(sum(r.get('strength_score', 0) or 0 for r in rows) / total, 1) if total > 0 else 0
 
     section = (
-        f"*{label}*\n\n"
+        f"<b>{label}</b>\n\n"
         f"Total Signals: {total}\n"
         f"Active: {active}\n"
         f"Closed: {closed}\n"
@@ -1272,7 +1272,7 @@ def _trading_performance_section(rows, label):
 
     top_pairs = sorted(pair_counts.items(), key=lambda x: x[1]['total'], reverse=True)[:5]
     if top_pairs:
-        section += "\n\n*By Pair (top 5):*"
+        section += "\n\n<b>By Pair (top 5):</b>"
         for pair, d in top_pairs:
             pc = d['wins'] + d['losses']
             wr = round(d['wins'] / pc * 100) if pc > 0 else 0
@@ -1290,7 +1290,7 @@ def handle_performance(chat_id):
         from polymarket_tracker import calculate_performance
         m = calculate_performance()
         parts.append(
-            f"*Polymarket Signal Performance*\n\n"
+            f"<b>Polymarket Signal Performance</b>\n\n"
             f"Total Signals: {m['total_signals']}\n"
             f"Active: {m['active']}\n"
             f"Resolved: {m['resolved']}\n"
@@ -1300,7 +1300,7 @@ def handle_performance(chat_id):
             f"Avg Edge: +{m['avg_edge']}%"
         )
         if m["categories"]:
-            parts[-1] += "\n\n*By Category:*"
+            parts[-1] += "\n\n<b>By Category:</b>"
             for cat, data in m["categories"].items():
                 total = data["wins"] + data["losses"]
                 wr = data["wins"] / total * 100 if total > 0 else 0
@@ -1343,13 +1343,13 @@ def handle_resolve(chat_id):
         if not updates:
             send_message(chat_id, "No signals resolved in this check.")
         else:
-            lines = [f"*{len(updates)} signal(s) resolved:*\n"]
+            lines = [f"<b>{len(updates)} signal(s) resolved:</b>\n"]
             for u in updates:
                 sig_num = u.get('signal', '?')
                 market = u.get('market', 'Unknown')[:30]
                 status = u.get('new_status', '?')
                 pnl = u.get('pnl', '?')
-                lines.append(f"#{sig_num} {market} — *{status}* ({pnl})")
+                lines.append(f"#{sig_num} {market} — <b>{status}</b> ({pnl})")
             send_message(chat_id, "\n".join(lines))
 
     except Exception as e:
@@ -1367,11 +1367,11 @@ def handle_ta(chat_id):
         if not signals:
             send_message(chat_id,
                 "No qualifying trading signals right now.\n\n"
-                "Run `python scripts/binance_ta_runner.py` first, or data may be stale (>60 min)."
+                "Run <code>python scripts/binance_ta_runner.py</code> first, or data may be stale (&gt;60 min)."
             )
             return
 
-        send_message(chat_id, f"Found *{len(signals)} trading signal(s)*. Sending for review...")
+        send_message(chat_id, f"Found <b>{len(signals)} trading signal(s)</b>. Sending for review...")
 
         for signal in signals:
             send_to_approval(signal)
@@ -1384,7 +1384,7 @@ def handle_setcap(chat_id, text=""):
     """Handle /setcap — set daily auto-signal cap."""
     parts = text.strip().split()
     if len(parts) < 2:
-        send_message(chat_id, "Usage: `/setcap 5` — sets daily auto-signal cap to 5")
+        send_message(chat_id, "Usage: <code>/setcap 5</code> — sets daily auto-signal cap to 5")
         return
 
     try:
@@ -1393,7 +1393,7 @@ def handle_setcap(chat_id, text=""):
             send_message(chat_id, "Cap must be between 1 and 50.")
             return
     except ValueError:
-        send_message(chat_id, "Invalid number. Usage: `/setcap 5`")
+        send_message(chat_id, "Invalid number. Usage: <code>/setcap 5</code>")
         return
 
     try:
@@ -1402,7 +1402,7 @@ def handle_setcap(chat_id, text=""):
         state = load_state()
         send_message(
             chat_id,
-            f"Daily auto-signal cap set to *{actual_cap}*.\n"
+            f"Daily auto-signal cap set to <b>{actual_cap}</b>.\n"
             f"Today's usage: {state['signals_sent']}/{actual_cap}"
         )
     except Exception as e:
@@ -1413,7 +1413,7 @@ def _run_ta_script(chat_id, args_list, label):
     """Run binance_ta_runner.py with given args via subprocess, report results."""
     script_path = os.path.join(os.path.dirname(__file__), "binance_ta_runner.py")
     if not os.path.exists(script_path):
-        send_message(chat_id, f"Error: `binance_ta_runner.py` not found.")
+        send_message(chat_id, f"Error: <code>binance_ta_runner.py</code> not found.")
         return False
 
     cmd = [sys.executable, script_path] + args_list
@@ -1427,7 +1427,7 @@ def _run_ta_script(chat_id, args_list, label):
         status_line = lines[-1] if lines else "Scan complete."
         if result.returncode != 0:
             err = result.stderr[:300] if result.stderr else "Unknown error"
-            send_message(chat_id, f"[{label}] Scan failed:\n`{err}`")
+            send_message(chat_id, f"[{label}] Scan failed:\n<code>{err}</code>")
             return False
         send_message(chat_id, f"[{label}] {status_line}")
         return True
@@ -1447,13 +1447,13 @@ def _send_ta_signals_to_approval(chat_id):
         if not signals:
             send_message(chat_id, "No qualifying signals (3+ confluences) in latest scan.")
             return 0
-        send_message(chat_id, f"Found *{len(signals)}* qualifying signal(s). Sending for approval...")
+        send_message(chat_id, f"Found <b>{len(signals)}</b> qualifying signal(s). Sending for approval...")
         sent = 0
         for signal in signals:
             msg_id = send_to_approval(signal)
             if msg_id:
                 sent += 1
-        send_message(chat_id, f"Sent *{sent}* signal(s) to approval channel. Review and approve/reject.")
+        send_message(chat_id, f"Sent <b>{sent}</b> signal(s) to approval channel. Review and approve/reject.")
         return sent
     except Exception as e:
         send_message(chat_id, f"Signal load error: {e}")
@@ -1464,7 +1464,7 @@ def _run_forex_script(chat_id, args_list, label):
     """Run forex_ta_runner.py with given args via subprocess, report results."""
     script_path = os.path.join(os.path.dirname(__file__), "forex_ta_runner.py")
     if not os.path.exists(script_path):
-        send_message(chat_id, f"Error: `forex_ta_runner.py` not found.")
+        send_message(chat_id, f"Error: <code>forex_ta_runner.py</code> not found.")
         return False
 
     cmd = [sys.executable, script_path] + args_list
@@ -1478,7 +1478,7 @@ def _run_forex_script(chat_id, args_list, label):
         if result.returncode != 0:
             combined = (result.stderr or '') + (result.stdout or '')
             err = combined.strip()[-400:] if combined.strip() else "Unknown error"
-            send_message(chat_id, f"[{label}] Scan failed:\n`{err}`")
+            send_message(chat_id, f"[{label}] Scan failed:\n<code>{err}</code>")
             return False
         send_message(chat_id, f"[{label}] {status_line}")
         return True
@@ -1498,13 +1498,13 @@ def _send_forex_signals_to_approval(chat_id):
         if not signals:
             send_message(chat_id, "No qualifying forex signals (3+ confluences) in latest scan.")
             return 0
-        send_message(chat_id, f"Found *{len(signals)}* qualifying forex signal(s). Sending for approval...")
+        send_message(chat_id, f"Found <b>{len(signals)}</b> qualifying forex signal(s). Sending for approval...")
         sent = 0
         for signal in signals:
             msg_id = send_to_approval(signal)
             if msg_id:
                 sent += 1
-        send_message(chat_id, f"Sent *{sent}* forex signal(s) to approval channel. Review and approve/reject.")
+        send_message(chat_id, f"Sent <b>{sent}</b> forex signal(s) to approval channel. Review and approve/reject.")
         return sent
     except Exception as e:
         send_message(chat_id, f"Forex signal load error: {e}")
@@ -1523,10 +1523,10 @@ def handle_forex_pair(chat_id, text=""):
     """Handle /forex_pair EUR/USD — scan one forex pair, then send signals for approval."""
     parts = text.strip().split()
     if len(parts) < 2:
-        send_message(chat_id, "Usage: `/forex_pair EUR/USD`")
+        send_message(chat_id, "Usage: <code>/forex_pair EUR/USD</code>")
         return
     pair = parts[1].upper()
-    send_message(chat_id, f"Scanning forex pair *{pair}* on all timeframes (1h, 4h, 1d)...")
+    send_message(chat_id, f"Scanning forex pair <b>{pair}</b> on all timeframes (1h, 4h, 1d)...")
     ok = _run_forex_script(chat_id, ["--pair", pair], f"FOREX {pair}")
     if ok:
         _send_forex_signals_to_approval(chat_id)
@@ -1536,11 +1536,11 @@ def handle_forex_custom(chat_id, text=""):
     """Handle /forex_custom EUR/USD 1h,4h — scan forex pair on specific timeframes."""
     parts = text.strip().split()
     if len(parts) < 3:
-        send_message(chat_id, "Usage: `/forex_custom EUR/USD 1h,4h`")
+        send_message(chat_id, "Usage: <code>/forex_custom EUR/USD 1h,4h</code>")
         return
     pair = parts[1].upper()
     timeframes = parts[2]
-    send_message(chat_id, f"Scanning forex *{pair}* on *{timeframes}*...")
+    send_message(chat_id, f"Scanning forex <b>{pair}</b> on <b>{timeframes}</b>...")
     ok = _run_forex_script(chat_id, ["--pair", pair, "--timeframe", timeframes], f"FOREX {pair} {timeframes}")
     if ok:
         _send_forex_signals_to_approval(chat_id)
@@ -1558,10 +1558,10 @@ def handle_scan_pair(chat_id, text=""):
     """Handle /scan_pair BTCUSDT — scan one pair, then send signals for approval."""
     parts = text.strip().split()
     if len(parts) < 2:
-        send_message(chat_id, "Usage: `/scan_pair BTCUSDT`")
+        send_message(chat_id, "Usage: <code>/scan_pair BTCUSDT</code>")
         return
     pair = parts[1].upper()
-    send_message(chat_id, f"Scanning *{pair}* on all timeframes (1h, 4h, 1d)...")
+    send_message(chat_id, f"Scanning <b>{pair}</b> on all timeframes (1h, 4h, 1d)...")
     ok = _run_ta_script(chat_id, ["--pair", pair], f"SCAN {pair}")
     if ok:
         _send_ta_signals_to_approval(chat_id)
@@ -1571,11 +1571,11 @@ def handle_scan_custom(chat_id, text=""):
     """Handle /scan_custom ETHUSDT 1h,4h — scan pair on specific timeframes, then send signals."""
     parts = text.strip().split()
     if len(parts) < 3:
-        send_message(chat_id, "Usage: `/scan_custom ETHUSDT 1h,4h`")
+        send_message(chat_id, "Usage: <code>/scan_custom ETHUSDT 1h,4h</code>")
         return
     pair = parts[1].upper()
     timeframes = parts[2]
-    send_message(chat_id, f"Scanning *{pair}* on *{timeframes}*...")
+    send_message(chat_id, f"Scanning <b>{pair}</b> on <b>{timeframes}</b>...")
     ok = _run_ta_script(chat_id, ["--pair", pair, "--timeframe", timeframes], f"SCAN {pair} {timeframes}")
     if ok:
         _send_ta_signals_to_approval(chat_id)
@@ -1600,14 +1600,14 @@ def handle_send_signals_direct(chat_id):
         for signal in signals:
             distribute_signal(signal)
             sent += 1
-        send_message(chat_id, f"Distributed *{sent}* signal(s) directly to all channels.")
+        send_message(chat_id, f"Distributed <b>{sent}</b> signal(s) directly to all channels.")
     except Exception as e:
         send_message(chat_id, f"Error: {e}")
 
 
 def handle_chatid(chat_id):
     """Reply with the chat ID — useful for finding group/channel IDs."""
-    send_message(chat_id, f"`{chat_id}`")
+    send_message(chat_id, f"<code>{chat_id}</code>")
 
 
 # --- Subscriber Channel Commands ---
@@ -1647,7 +1647,7 @@ def handle_subscribe(chat_id):
                 # Notify admin
                 admin_dest = ADMIN_CHAT_ID or APPROVAL_CHANNEL_ID
                 if admin_dest:
-                    send_message(admin_dest, f"*Re-subscription request* from `{chat_id_str}`\nApprove with: `/approve_channel {chat_id_str}`")
+                    send_message(admin_dest, f"<b>Re-subscription request</b> from <code>{chat_id_str}</code>\nApprove with: <code>/approve_channel {chat_id_str}</code>")
                 return  # Bug #4: Must return here to prevent duplicate INSERT
     except Exception as e:
         send_message(chat_id, f"Error: {e}")
@@ -1681,10 +1681,10 @@ def handle_subscribe(chat_id):
     if admin_dest:
         send_message(
             admin_dest,
-            f"*New subscriber request*\n\n"
-            f"*Channel:* {chat_name}\n"
-            f"*Chat ID:* `{chat_id_str}`\n\n"
-            f"Approve with:\n`/approve_channel {chat_id_str}`"
+            f"<b>New subscriber request</b>\n\n"
+            f"<b>Channel:</b> {chat_name}\n"
+            f"<b>Chat ID:</b> <code>{chat_id_str}</code>\n\n"
+            f"Approve with:\n<code>/approve_channel {chat_id_str}</code>"
         )
 
 
@@ -1706,10 +1706,10 @@ def handle_approve_channel(chat_id, text=""):
             if not pending:
                 send_message(chat_id, "No pending subscriber requests.")
                 return
-            lines = ["*Pending subscriber requests:*\n"]
+            lines = ["<b>Pending subscriber requests:</b>\n"]
             for p in pending:
-                lines.append(f"- {p.get('name', '?')} (`{p['chat_id']}`)")
-            lines.append(f"\nApprove with: `/approve_channel <chat_id>`")
+                lines.append(f"- {p.get('name', '?')} (<code>{p['chat_id']}</code>)")
+            lines.append(f"\nApprove with: <code>/approve_channel &lt;chat_id&gt;</code>")
             send_message(chat_id, "\n".join(lines))
         except Exception as e:
             send_message(chat_id, f"Error: {e}")
@@ -1724,7 +1724,7 @@ def handle_approve_channel(chat_id, text=""):
     try:
         existing = _supabase.table('subscriber_channels').select('*').eq('chat_id', target_id).execute()
         if not existing.data:
-            send_message(chat_id, f"No subscription request found for `{target_id}`.")
+            send_message(chat_id, f"No subscription request found for <code>{target_id}</code>.")
             return
 
         _supabase.table('subscriber_channels').update({
@@ -1733,7 +1733,7 @@ def handle_approve_channel(chat_id, text=""):
         }).eq('chat_id', target_id).execute()
 
         channel_name = existing.data[0].get('name', target_id)
-        send_message(chat_id, f"Approved *{channel_name}* (`{target_id}`). They will now receive all signals.")
+        send_message(chat_id, f"Approved <b>{channel_name}</b> (<code>{target_id}</code>). They will now receive all signals.")
 
         # Notify the subscriber channel
         send_message(target_id, "Your subscription has been approved! You will now receive trading signals from @Big_Quiv.")
@@ -1760,10 +1760,10 @@ def handle_remove_channel(chat_id, text=""):
             if not approved:
                 send_message(chat_id, "No active subscriber channels.")
                 return
-            lines = ["*Active subscriber channels:*\n"]
+            lines = ["<b>Active subscriber channels:</b>\n"]
             for a in approved:
-                lines.append(f"- {a.get('name', '?')} (`{a['chat_id']}`)")
-            lines.append(f"\nRemove with: `/remove_channel <chat_id>`")
+                lines.append(f"- {a.get('name', '?')} (<code>{a['chat_id']}</code>)")
+            lines.append(f"\nRemove with: <code>/remove_channel &lt;chat_id&gt;</code>")
             send_message(chat_id, "\n".join(lines))
         except Exception as e:
             send_message(chat_id, f"Error: {e}")
@@ -1780,7 +1780,7 @@ def handle_remove_channel(chat_id, text=""):
             'status': 'removed'
         }).eq('chat_id', target_id).execute()
 
-        send_message(chat_id, f"Removed `{target_id}` from subscriber list. They will no longer receive signals.")
+        send_message(chat_id, f"Removed <code>{target_id}</code> from subscriber list. They will no longer receive signals.")
     except Exception as e:
         send_message(chat_id, f"Error removing: {e}")
 
@@ -1802,12 +1802,12 @@ def handle_subscribers(chat_id):
             send_message(chat_id, "No subscriber channels registered.")
             return
 
-        lines = ["*Subscriber Channels:*\n"]
+        lines = ["<b>Subscriber Channels:</b>\n"]
         for r in rows:
             status = r.get('status', '?').upper()
             name = r.get('name', '?')
             cid = r.get('chat_id', '?')
-            lines.append(f"- {name} (`{cid}`) — *{status}*")
+            lines.append(f"- {name} (<code>{cid}</code>) — <b>{status}</b>")
 
         send_message(chat_id, "\n".join(lines))
     except Exception as e:

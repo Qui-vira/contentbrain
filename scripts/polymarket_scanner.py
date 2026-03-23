@@ -980,32 +980,33 @@ def format_signal_card(signal, for_telegram=False):
         claude_conf = claude_est["confidence"].upper()
         agrees_str = "YES" if claude_agrees is True else ("NO" if claude_agrees is False else "N/A")
         claude_section = (
-            f"\n*Claude AI Assessment:*\n"
-            f"*Claude Probability:* {claude_prob_pct}%\n"
-            f"*Claude Confidence:* {claude_conf}\n"
-            f"*Agrees with Model:* {agrees_str}\n"
-            f"*Combined Edge:* +{combined_edge_pct}%\n"
-            f"*Signal Strength:* {signal_strength}\n"
+            f"\n<b>Claude AI Assessment:</b>\n"
+            f"<b>Claude Probability:</b> {claude_prob_pct}%\n"
+            f"<b>Claude Confidence:</b> {claude_conf}\n"
+            f"<b>Agrees with Model:</b> {agrees_str}\n"
+            f"<b>Combined Edge:</b> +{combined_edge_pct}%\n"
+            f"<b>Signal Strength:</b> {signal_strength}\n"
         )
     else:
         claude_section = ""
 
     if for_telegram:
+        import html as _html
         # Telegram format — clean, no emojis, no hashtags
         card = (
-            f"*POLYMARKET SIGNAL*\n\n"
-            f"*Market:* {signal['market_question']}\n"
-            f"*Category:* {signal['category'].upper()}\n"
-            f"*Current Odds:* YES {yes_pct}% | NO {no_pct}%\n\n"
-            f"*Recommendation:* {rec} @ {rec_odds}%\n"
-            f"*Model Price:* {model_pct}%\n"
-            f"*Edge:* +{edge_pct}%\n"
-            f"*Confidence:* {signal['confidence']:.0f}/100\n"
-            f"*Factor Agreement:* {signal.get('factor_agreement', 'N/A')}\n"
+            f"<b>POLYMARKET SIGNAL</b>\n\n"
+            f"<b>Market:</b> {_html.escape(signal['market_question'])}\n"
+            f"<b>Category:</b> {signal['category'].upper()}\n"
+            f"<b>Current Odds:</b> YES {yes_pct}% | NO {no_pct}%\n\n"
+            f"<b>Recommendation:</b> {rec} @ {rec_odds}%\n"
+            f"<b>Model Price:</b> {model_pct}%\n"
+            f"<b>Edge:</b> +{edge_pct}%\n"
+            f"<b>Confidence:</b> {signal['confidence']:.0f}/100\n"
+            f"<b>Factor Agreement:</b> {signal.get('factor_agreement', 'N/A')}\n"
             f"{claude_section}\n"
-            f"*Analysis:*\n{signal['reasoning']}\n\n"
-            f"*Resolves:* {res_date}\n"
-            f"*24h Volume:* {vol_str}"
+            f"<b>Analysis:</b>\n{_html.escape(signal['reasoning'])}\n\n"
+            f"<b>Resolves:</b> {res_date}\n"
+            f"<b>24h Volume:</b> {vol_str}"
         )
     else:
         # CLI format
@@ -1067,21 +1068,24 @@ def format_trading_signal_card(signal, for_telegram=False):
     conf_lines = "\n".join(f"  - {c}" for c in confluences) if confluences else "  None"
 
     if for_telegram:
+        # Escape HTML special chars in dynamic content
+        import html as _html
+        conf_lines_html = "\n".join(f"  - {_html.escape(c)}" for c in confluences) if confluences else "  None"
         card = (
-            f"*TRADING SIGNAL*\n\n"
-            f"*Pair:* {pair}\n"
-            f"*Direction:* {direction}\n"
-            f"*Timeframe:* {tf}\n\n"
-            f"*Entry:* {entry}\n"
-            f"*Stop Loss:* {sl}\n"
-            f"*TP1 (1:2):* {tp1}\n"
-            f"*TP2 (1:3):* {tp2}\n"
-            f"*TP3 (1:5):* {tp3}\n\n"
-            f"*Confluences ({len(confluences)}):*\n{conf_lines}\n\n"
-            f"*Confidence:* {confidence}\n"
-            f"*Strength:* {strength}/10\n"
-            f"*Trend:* {trend}\n"
-            f"*RSI:* {rsi_str}"
+            f"<b>TRADING SIGNAL</b>\n\n"
+            f"<b>Pair:</b> {_html.escape(str(pair))}\n"
+            f"<b>Direction:</b> {_html.escape(str(direction))}\n"
+            f"<b>Timeframe:</b> {_html.escape(str(tf))}\n\n"
+            f"<b>Entry:</b> {entry}\n"
+            f"<b>Stop Loss:</b> {sl}\n"
+            f"<b>TP1 (1:2):</b> {tp1}\n"
+            f"<b>TP2 (1:3):</b> {tp2}\n"
+            f"<b>TP3 (1:5):</b> {tp3}\n\n"
+            f"<b>Confluences ({len(confluences)}):</b>\n{conf_lines_html}\n\n"
+            f"<b>Confidence:</b> {confidence}\n"
+            f"<b>Strength:</b> {strength}/10\n"
+            f"<b>Trend:</b> {trend}\n"
+            f"<b>RSI:</b> {rsi_str}"
         )
     else:
         card = (
