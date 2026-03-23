@@ -62,6 +62,7 @@ def _new_state():
         'date': datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         'signals_sent': 0,
         'cap_override': None,
+        'last_scan_at': None,
     }
 
 
@@ -213,36 +214,50 @@ def run_auto_scan(dry_run=False):
     print(f"UNIFIED AUTO-SCANNER — {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
     print("=" * 50)
 
+    # 0. Cooldown check — skip if last scan was < 4 hours ago
+    scan_interval_hours = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "4"))
+    state = load_state()
+    last_scan = state.get('last_scan_at')
+    if last_scan:
+        try:
+            last_dt = datetime.fromisoformat(last_scan)
+            hours_since = (datetime.now(timezone.utc) - last_dt).total_seconds() / 3600
+            if hours_since < scan_interval_hours:
+                print(f"Cooldown active: last scan was {hours_since:.1f}h ago "
+                      f"(need {scan_interval_hours}h). Skipping.")
+                return
+        except (ValueError, TypeError):
+            pass  # corrupted timestamp, proceed with scan
+
     # 1. Check session
     session, is_active = get_kill_zone()
     print(f"Session: {session} ({'ACTIVE' if is_active else 'off-session'})")
-
-    # 2. Check daily cap
-    state = load_state()
     cap = get_cap(state)
     remaining = cap - state['signals_sent']
 
     if remaining <= 0:
         print(f"Daily cap reached ({state['signals_sent']}/{cap}). Exiting.")
+        state['last_scan_at'] = datetime.now(timezone.utc).isoformat()
+        save_state(state)
         log_scan_run(session, 0, 0, 0, 0, cap)
         return
 
     print(f"Daily cap: {state['signals_sent']}/{cap} used, {remaining} remaining")
 
-    # 3. Run scanners (skip if off-session for trading scanners)
-    crypto_ran = False
+    # 3. Run scanners
+    # Crypto runs 24/7 (market never closes). Forex only during kill zones.
+    crypto_ran = run_scanner('binance_ta_runner.py', 'CRYPTO')
     forex_ran = False
 
     if is_active:
-        crypto_ran = run_scanner('binance_ta_runner.py', 'CRYPTO')
         forex_ran = run_scanner('forex_ta_runner.py', 'FOREX')
     else:
-        print(f"  Skipping trading scanners (off-session: {session})")
+        print(f"  Skipping forex scanner (off-session: {session})")
 
     # 4. Collect signals
     print("\nCollecting signals...")
-    crypto_signals = collect_crypto_signals() if crypto_ran or not is_active else []
-    forex_signals = collect_forex_signals() if forex_ran or not is_active else []
+    crypto_signals = collect_crypto_signals() if crypto_ran else []
+    forex_signals = collect_forex_signals() if forex_ran else []
     poly_signals = collect_polymarket_signals()
 
     # Tag all as auto-sourced
@@ -258,6 +273,8 @@ def run_auto_scan(dry_run=False):
 
     if not to_send:
         print("\nNo qualifying signals found.")
+        state['last_scan_at'] = datetime.now(timezone.utc).isoformat()
+        save_state(state)
         log_scan_run(session, len(crypto_signals), len(forex_signals), len(poly_signals), 0, cap)
         return
 
@@ -297,6 +314,7 @@ def run_auto_scan(dry_run=False):
 
     # 7. Update state
     state['signals_sent'] += sent_count
+    state['last_scan_at'] = datetime.now(timezone.utc).isoformat()
     save_state(state)
 
     # 8. Log
