@@ -54,9 +54,20 @@ from polymarket_scanner import format_signal_card, format_trading_signal_card
 # --- HTTP Session with retry ---
 
 def _build_session():
-    """Build a requests session with retry logic."""
+    """Build a requests session with retry logic for GET only.
+
+    POST requests (sendMessage etc.) are NOT idempotent — if a 502/503/504
+    arrives after Telegram already processed the request, an automatic retry
+    sends the message again, causing duplicate messages.  Restrict retries
+    to GET so only safe operations like getUpdates are retried.
+    """
     session = requests.Session()
-    retries = Retry(total=3, backoff_factor=1, status_forcelist=[502, 503, 504])
+    retries = Retry(
+        total=3,
+        backoff_factor=1,
+        status_forcelist=[502, 503, 504],
+        allowed_methods=["GET"],        # Only retry GET, never POST
+    )
     adapter = HTTPAdapter(max_retries=retries)
     session.mount("https://", adapter)
     session.mount("http://", adapter)
@@ -606,8 +617,12 @@ def create_trading_twitter_draft(signal):
     strength = signal.get('strength_score', 0)
     conf_count = signal.get('confluence_count', 0)
 
+    from polymarket_scanner import detect_market_type
+    mtype = detect_market_type(signal)
+    type_label = "Forex" if mtype == 'FOREX' else "Crypto"
+
     tweet = (
-        f"New trading signal\n\n"
+        f"New {type_label.lower()} signal\n\n"
         f"{pair} {direction}\n\n"
         f"Entry: {entry}\n"
         f"SL: {sl}\n"
@@ -801,8 +816,16 @@ def _format_hit_notification(signal, current_price, new_status, check_result):
         header = "SIGNAL UPDATE"
         status_line = ""
 
+    # Detect market type for labeling
+    from polymarket_scanner import detect_market_type
+    mtype = detect_market_type(signal)
+    if mtype == 'FOREX':
+        type_label = "\U0001f4b1 FOREX"
+    else:
+        type_label = "\u20bf CRYPTO"
+
     # Format price display
-    is_forex = '/' in pair
+    is_forex = mtype == 'FOREX'
     if is_forex:
         price_fmt = lambda p: f"{p:.5f}" if p else "—"
     elif entry and entry < 1:
@@ -811,7 +834,7 @@ def _format_hit_notification(signal, current_price, new_status, check_result):
         price_fmt = lambda p: f"{p:,.2f}" if p else "—"
 
     lines = [
-        f"<b>SIGNAL UPDATE</b>\n",
+        f"<b>{type_label} SIGNAL UPDATE</b>\n",
         f"<b>{header}</b>\n",
         f"<b>Pair:</b> {pair}",
         f"<b>Direction:</b> {direction}",
@@ -1919,6 +1942,11 @@ def _cron_loop():
 def run_bot():
     """Run the bot in persistent polling mode — listens for commands and approvals."""
     print("Starting Polymarket Signal Bot...")
+
+    # Clear any stale webhook so polling works cleanly (prevents duplicate
+    # delivery if a webhook was ever set, e.g. during testing)
+    _telegram_request("post", "deleteWebhook", json={"drop_pending_updates": False})
+
     print("Registering commands with Telegram...")
     register_bot_commands()
 
@@ -1934,16 +1962,39 @@ def run_bot():
     else:
         print("Cron scheduler disabled (ENABLE_CRON=false).")
 
-    print("Bot is running. Press Ctrl+C to stop.\n")
+    # Flush stale updates so we don't re-process commands from before this
+    # startup (e.g. after Railway restart/redeploy).  offset=-1 tells Telegram
+    # to return only the most recent update; we use its ID to seed our offset.
+    flush = get_updates(offset=-1, timeout=0)
+    if flush:
+        offset = flush[-1]["update_id"] + 1
+        print(f"Flushed {len(flush)} stale update(s). Starting from offset {offset}.")
+    else:
+        offset = None
 
-    offset = None
+    # Dedup set — prevents double-processing when two instances briefly overlap
+    # during Railway rolling deploys.  Keeps last 200 update IDs in memory.
+    _processed_ids = set()
+    _DEDUP_MAX = 200
+
+    print("Bot is running. Press Ctrl+C to stop.\n")
 
     while True:
         try:
             updates = get_updates(offset=offset, timeout=30)
 
             for update in updates:
-                offset = update["update_id"] + 1
+                uid = update["update_id"]
+                offset = uid + 1
+
+                # Skip if already processed (rolling-deploy overlap guard)
+                if uid in _processed_ids:
+                    continue
+                _processed_ids.add(uid)
+                if len(_processed_ids) > _DEDUP_MAX:
+                    # Trim oldest IDs (update IDs are monotonically increasing)
+                    oldest = sorted(_processed_ids)[:_DEDUP_MAX // 2]
+                    _processed_ids.difference_update(oldest)
 
                 # Handle text commands
                 msg = update.get("message", {})

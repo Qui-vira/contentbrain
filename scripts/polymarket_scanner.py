@@ -942,6 +942,39 @@ def generate_reasoning(factor_results, recommendation, question, edge, agreement
 
 # --- Signal Formatting ---
 
+# Common fiat currency codes used in forex pairs
+_FOREX_CURRENCIES = {
+    "EUR", "USD", "GBP", "JPY", "CHF", "AUD", "NZD", "CAD",
+    "SEK", "NOK", "DKK", "SGD", "HKD", "ZAR", "MXN", "TRY",
+    "PLN", "CZK", "HUF", "INR", "BRL", "CNY", "KRW", "THB",
+}
+
+
+def detect_market_type(signal):
+    """Detect whether a signal is FOREX, CRYPTO, or POLYMARKET based on available fields.
+
+    Priority: explicit market_type field > signal_type field > pair name heuristic.
+    """
+    # Explicit field set by auto-scanner
+    mt = signal.get('market_type', '').upper()
+    if mt in ('FOREX', 'CRYPTO', 'POLYMARKET'):
+        return mt
+
+    # Polymarket signals have market_question / signal_type='polymarket'
+    if signal.get('signal_type') == 'polymarket' or signal.get('market_question'):
+        return 'POLYMARKET'
+
+    # Pair-name heuristic for trading signals
+    pair = signal.get('pair', '')
+    # Forex pairs use slash (EUR/USD) and both sides are fiat codes
+    if '/' in pair:
+        parts = pair.upper().replace(' ', '').split('/')
+        if len(parts) == 2 and parts[0] in _FOREX_CURRENCIES and parts[1] in _FOREX_CURRENCIES:
+            return 'FOREX'
+    # Binance-style pairs end with USDT/BUSD/BTC (no slash)
+    return 'CRYPTO'
+
+
 def format_signal_card(signal, for_telegram=False):
     """Format signal as readable card."""
     yes_pct = round(signal["current_odds"]["yes"] * 100, 1)
@@ -1049,7 +1082,7 @@ def format_signal_card(signal, for_telegram=False):
 
 
 def format_trading_signal_card(signal, for_telegram=False):
-    """Format a crypto trading signal for Telegram or CLI display."""
+    """Format a trading signal (crypto or forex) for Telegram or CLI display."""
     pair = signal.get('pair', 'UNKNOWN')
     direction = signal.get('direction', 'NEUTRAL')
     tf = signal.get('timeframe', '?')
@@ -1065,6 +1098,13 @@ def format_trading_signal_card(signal, for_telegram=False):
     rsi = signal.get('rsi')
     rsi_str = f"{rsi:.1f}" if rsi else "N/A"
 
+    # Detect market type for labeling
+    mtype = detect_market_type(signal)
+    if mtype == 'FOREX':
+        header_label = "\U0001f4b1 FOREX SIGNAL"
+    else:
+        header_label = "\u20bf CRYPTO SIGNAL"
+
     conf_lines = "\n".join(f"  - {c}" for c in confluences) if confluences else "  None"
 
     if for_telegram:
@@ -1072,7 +1112,7 @@ def format_trading_signal_card(signal, for_telegram=False):
         import html as _html
         conf_lines_html = "\n".join(f"  - {_html.escape(c)}" for c in confluences) if confluences else "  None"
         card = (
-            f"<b>TRADING SIGNAL</b>\n\n"
+            f"<b>{header_label}</b>\n\n"
             f"<b>Pair:</b> {_html.escape(str(pair))}\n"
             f"<b>Direction:</b> {_html.escape(str(direction))}\n"
             f"<b>Timeframe:</b> {_html.escape(str(tf))}\n\n"
@@ -1090,7 +1130,7 @@ def format_trading_signal_card(signal, for_telegram=False):
     else:
         card = (
             f"\n{'='*60}\n"
-            f"  TRADING SIGNAL\n"
+            f"  {header_label}\n"
             f"{'='*60}\n"
             f"  Pair:        {pair}\n"
             f"  Direction:   {direction}\n"
