@@ -277,7 +277,7 @@ def apply_filters(markets):
                 if end_date.tzinfo is None:
                     end_date = end_date.replace(tzinfo=timezone.utc)
                 now = datetime.now(timezone.utc)
-                days_to_resolve = (end_date - now).days
+                days_to_resolve = (end_date - now).total_seconds() / 86400
                 if days_to_resolve > MAX_RESOLUTION_DAYS or days_to_resolve < 0:
                     continue
             except (ValueError, TypeError):
@@ -389,7 +389,7 @@ def analyze_volume_analysis(market, price_history):
             created_dt = datetime.fromisoformat(created_str)
             if created_dt.tzinfo is None:
                 created_dt = created_dt.replace(tzinfo=timezone.utc)
-            days_active = max(1, (datetime.now(timezone.utc) - created_dt).days)
+            days_active = max(0.5, (datetime.now(timezone.utc) - created_dt).total_seconds() / 86400)
         except (ValueError, TypeError):
             pass
 
@@ -452,6 +452,10 @@ def analyze_market_efficiency(market):
     # Spread inefficiency: deviation from perfect pricing (yes + no = 1.0)
     spread_inefficiency = abs(yes_odds + no_odds - 1.0)
 
+    # Bug #21: Skip non-binary markets where odds don't sum near 1.0
+    if spread_inefficiency > 0.05:
+        print(f"[EFFICIENCY] WARNING: odds sum to {yes_odds + no_odds:.3f}, may be multi-outcome market")
+
     # Liquidity depth ratio
     liquidity = float(market.get("liquidity", 0) or 0)
     vol_24h = float(market.get("volume24hr", 0) or 0)
@@ -466,7 +470,7 @@ def analyze_market_efficiency(market):
             created_dt = datetime.fromisoformat(created_str)
             if created_dt.tzinfo is None:
                 created_dt = created_dt.replace(tzinfo=timezone.utc)
-            days_active = max(1, (datetime.now(timezone.utc) - created_dt).days)
+            days_active = max(0.5, (datetime.now(timezone.utc) - created_dt).total_seconds() / 86400)
         except (ValueError, TypeError):
             pass
 
@@ -562,7 +566,7 @@ def analyze_time_decay(market):
             end_date = datetime.fromisoformat(end_date_str_clean)
             if end_date.tzinfo is None:
                 end_date = end_date.replace(tzinfo=timezone.utc)
-            days_left = max(0, (end_date - datetime.now(timezone.utc)).days)
+            days_left = max(0, (end_date - datetime.now(timezone.utc)).total_seconds() / 86400)
         except (ValueError, TypeError):
             pass
 
@@ -622,7 +626,7 @@ def analyze_odds_compression(price_history):
     std_recent = _std_dev(prices[2 * third:])
 
     # Compression: std_dev shrinking across windows
-    compressing = std_early > std_mid > std_recent and std_recent < std_early * 0.7
+    compressing = std_early > std_mid >= std_recent and std_recent < std_early * 0.7
 
     if not compressing:
         return neutral
@@ -732,17 +736,17 @@ def calculate_model_probability(market, factor_results):
     else:
         agreement_ratio = 0.5
 
+    # Clamp total shift FIRST, then apply agreement boost (Bug #14)
+    total_shift = max(-MAX_TOTAL_SHIFT, min(MAX_TOTAL_SHIFT, total_shift))
+
     # Adjust shift based on agreement
     if agreement_ratio > 0.70:
-        # Strong agreement — boost shift by up to 50%
+        # Strong agreement — boost shift by up to 50% (can exceed normal cap)
         boost = 1.0 + (agreement_ratio - 0.70) * 1.67  # Max 1.5x at 100% agreement
         total_shift *= boost
     elif agreement_ratio < 0.30:
         # Strong disagreement — penalize
         total_shift *= (1.0 - CONFIDENCE_DISAGREEMENT_PENALTY)
-
-    # Clamp total shift
-    total_shift = max(-MAX_TOTAL_SHIFT, min(MAX_TOTAL_SHIFT, total_shift))
 
     model_prob = yes_odds + total_shift
     model_prob = max(0.05, min(0.95, model_prob))
@@ -931,7 +935,7 @@ def generate_reasoning(factor_results, recommendation, question, edge, agreement
     if not parts:
         parts.append("Our multi-factor analysis is picking up a moderate edge on this one")
 
-    parts.append(f"We're going {recommendation} with a +{edge*100:.1f}% edge over what the market is pricing")
+    parts.append(f"We're going {recommendation} with a {edge*100:+.1f}% edge over what the market is pricing")
 
     return ". ".join(parts) + "."
 
@@ -974,7 +978,7 @@ def format_signal_card(signal, for_telegram=False):
     if claude_est and not claude_est.get("error"):
         claude_prob_pct = round(claude_est["claude_probability"] * 100, 1)
         claude_conf = claude_est["confidence"].upper()
-        agrees_str = "YES" if claude_agrees else "NO"
+        agrees_str = "YES" if claude_agrees is True else ("NO" if claude_agrees is False else "N/A")
         claude_section = (
             f"\n*Claude AI Assessment:*\n"
             f"*Claude Probability:* {claude_prob_pct}%\n"

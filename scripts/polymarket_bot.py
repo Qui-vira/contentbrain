@@ -85,7 +85,8 @@ def _telegram_request(method, endpoint, **kwargs):
                        "-X", "POST", "-H", "Content-Type: application/json",
                        "-d", json.dumps(kwargs["json"]), url]
             elif "params" in kwargs:
-                params_str = "&".join(f"{k}={v}" for k, v in kwargs["params"].items())
+                from urllib.parse import urlencode
+                params_str = urlencode(kwargs["params"])
                 cmd = ["curl", "-s", "--connect-timeout", str(kwargs.get("timeout", 30)),
                        f"{url}?{params_str}"]
 
@@ -261,7 +262,7 @@ def send_message(chat_id, text, parse_mode="Markdown", reply_markup=None):
         print(f"Telegram API error: {data.get('description', 'Unknown error')}")
         # Retry without parse_mode if markdown fails
         if parse_mode:
-            payload["parse_mode"] = None
+            payload.pop("parse_mode", None)
             data = _telegram_request("post", "sendMessage", json=payload)
     return data
 
@@ -347,10 +348,13 @@ def send_to_approval(signal):
     """Send signal to approval channel with approve/reject buttons."""
     if signal.get('signal_type') == 'trading':
         card = format_trading_signal_card(signal, for_telegram=True)
-        callback_id = f"{signal['pair']}_{signal['timeframe']}"[:20]
+        raw_id = f"{signal['pair']}_{signal['timeframe']}_{int(datetime.now(timezone.utc).timestamp())}"
     else:
         card = format_signal_card(signal, for_telegram=True)
-        callback_id = signal['market_id'][:20]
+        raw_id = f"{signal['market_id']}_{int(datetime.now(timezone.utc).timestamp())}"
+    # Bug #10: Use hash to avoid callback_data collisions (Telegram max 64 bytes)
+    import hashlib
+    callback_id = hashlib.md5(raw_id.encode()).hexdigest()[:16]
 
     # Add approval prompt
     card += "\n\n---\nReply with 'APPROVE' or 'REJECT' to this signal."
@@ -461,8 +465,7 @@ def create_twitter_draft(signal):
         f"Edge: +{edge_pct}%\n\n"
         f"Recommendation: {rec}\n"
         f"Confidence: {signal['confidence']:.0f}/100\n\n"
-        f"Full breakdown in the Krib 👇\n\n"
-        f"#polymarket #{signal['category']} #predictions"
+        f"Full breakdown in the Krib"
     )
 
     # Save as draft
@@ -548,7 +551,8 @@ def log_to_tracker(signal):
         "factor_details": signal.get("factor_details", {}),
     }
 
-    sidecar_path = os.path.join(details_dir, f"{next_num}-{now}.json")
+    now_ts = datetime.now(timezone.utc).strftime("%Y-%m-%d-%H%M%S")
+    sidecar_path = os.path.join(details_dir, f"{next_num}-{now_ts}.json")
     with open(sidecar_path, "w", encoding="utf-8") as f:
         json.dump(sidecar, f, indent=2, default=str)
 
@@ -578,8 +582,7 @@ def create_trading_twitter_draft(signal):
         f"SL: {sl}\n"
         f"TP1: {tp1}\n\n"
         f"Strength: {strength}/10 | {conf_count} confluences\n\n"
-        f"Full levels and analysis in the Krib\n\n"
-        f"#crypto #trading #{pair.replace('USDT', '').lower()}"
+        f"Full levels and analysis in the Krib"
     )
 
     now = datetime.now(timezone.utc)
@@ -627,7 +630,7 @@ def log_trading_to_tracker(signal):
         'tp2': _safe_float(signal.get('tp2')),
         'tp3': _safe_float(signal.get('tp3')),
         'strength_score': _safe_float(signal.get('strength_score')),
-        'confluence_count': int(signal.get('confluence_count', 0)) if signal.get('confluence_count') else None,
+        'confluence_count': int(signal['confluence_count']) if signal.get('confluence_count') is not None else None,
         'confluences': ', '.join(signal.get('confluences', [])) if isinstance(signal.get('confluences'), list) else signal.get('confluences', ''),
         'trend': signal.get('trend', ''),
         'source': signal.get('source', 'manual'),
@@ -692,7 +695,13 @@ def _check_signal_levels(signal, current_price):
     if entry is None or current_price is None:
         return {'hits': [], 'recommended_status': signal.get('status', 'ACTIVE'), 'pnl_pct': 0}
 
+    # Bug #2: Prevent division by zero if entry is 0
+    if entry == 0:
+        print(f"[MONITOR] WARNING: entry price is 0 for {signal.get('pair', '?')}, skipping.")
+        return {'hits': [], 'recommended_status': signal.get('status', 'ACTIVE'), 'pnl_pct': 0}
+
     hits = []
+    pnl_pct = 0.0  # Bug #1: Initialize before if/elif to prevent UnboundLocalError
 
     if direction == 'LONG':
         if sl and current_price <= sl:
@@ -715,7 +724,7 @@ def _check_signal_levels(signal, current_price):
             hits.append('TP3 HIT')
         pnl_pct = ((entry - current_price) / entry) * 100
     else:
-        pnl_pct = 0
+        print(f"[MONITOR] WARNING: unexpected direction '{direction}' for {signal.get('pair', '?')}")
 
     # Determine recommended status (SL overrides everything)
     if 'SL HIT' in hits:
@@ -794,7 +803,7 @@ def _signal_monitor_cycle():
 
     try:
         resp = _supabase.table('trading_signals').select('*').in_(
-            'status', ['ACTIVE', 'TP1 HIT', 'TP2 HIT']
+            'status', ['ACTIVE', 'TP1 HIT', 'TP2 HIT', 'TP3 HIT']
         ).execute()
         signals = resp.data or []
     except Exception as e:
@@ -821,13 +830,19 @@ def _signal_monitor_cycle():
                 current_price = fetch_twelvedata_price(pair)
             else:
                 # Crypto: try Binance first, fallback to CoinGecko
+                # Bug #17: Normalize to Binance format (e.g. BTC/USD -> BTCUSDT)
                 binance_symbol = pair.upper().replace('/', '')
+                if binance_symbol.endswith('USD') and not binance_symbol.endswith('USDT') and not binance_symbol.endswith('USDC'):
+                    binance_symbol = binance_symbol + 'T'  # USD -> USDT
                 current_price = fetch_binance_spot_price(binance_symbol)
                 if current_price is None:
                     coin_id = SYMBOL_TO_COINGECKO.get(binance_symbol)
                     if coin_id:
                         price_data = fetch_coingecko_price(coin_id)
-                        current_price = price_data.get(coin_id, {}).get('usd')
+                        if price_data:
+                            current_price = price_data.get(coin_id, {}).get('usd')
+                            if current_price is None:
+                                print(f"[MONITOR] CoinGecko returned no 'usd' price for {coin_id}. Response keys: {list(price_data.keys())}")
         except Exception as e:
             print(f"[MONITOR] Price fetch failed for {pair}: {e}")
             continue
@@ -938,11 +953,17 @@ def poll_approvals(timeout=60):
                     signal = signal_data["signal"]
 
                     _label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
-                    if data.startswith("approve_"):
+                    if signal_data.get("status") != "pending":
+                        print(f"\nSKIP (already {signal_data['status']}): {_label}")
+                    elif data.startswith("approve_"):
                         print(f"\nAPPROVED: {_label}")
                         print("Distributing to all channels...")
-                        distribute_signal(signal)
                         signal_data["status"] = "approved"
+                        try:
+                            distribute_signal(signal)
+                        except Exception as e:
+                            print(f"  Distribution FAILED: {e}")
+                            signal_data["status"] = "failed"
                     elif data.startswith("reject_"):
                         print(f"\nREJECTED: {_label}")
                         signal_data["status"] = "rejected"
@@ -962,10 +983,16 @@ def poll_approvals(timeout=60):
                 signal = signal_data["signal"]
                 _label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
 
-                if text == "APPROVE":
+                if signal_data.get("status") != "pending":
+                    print(f"\nSKIP (already {signal_data['status']}): {_label}")
+                elif text == "APPROVE":
                     print(f"\nAPPROVED: {_label}")
-                    distribute_signal(signal)
                     signal_data["status"] = "approved"
+                    try:
+                        distribute_signal(signal)
+                    except Exception as e:
+                        print(f"  Distribution FAILED: {e}")
+                        signal_data["status"] = "failed"
                 else:
                     print(f"\nREJECTED: {_label}")
                     signal_data["status"] = "rejected"
@@ -1167,8 +1194,16 @@ def handle_status(chat_id):
         try:
             resp = _supabase.table('trading_signals').select('*').eq('status', 'ACTIVE').execute()
             rows = resp.data or []
-            crypto_active = [r for r in rows if '/' not in (r.get('pair') or '')]
-            forex_active = [r for r in rows if '/' in (r.get('pair') or '')]
+            _CRYPTO_QUOTES = {'USDT', 'USDC', 'BTC', 'ETH', 'BNB', 'BUSD', 'USD'}
+            def _is_crypto_pair(pair):
+                if not pair:
+                    return True  # default to crypto
+                if '/' in pair:
+                    quote = pair.split('/')[-1].upper()
+                    return quote in _CRYPTO_QUOTES
+                return True  # no slash = Binance format = crypto
+            crypto_active = [r for r in rows if _is_crypto_pair(r.get('pair', ''))]
+            forex_active = [r for r in rows if not _is_crypto_pair(r.get('pair', ''))]
 
             # Crypto
             if crypto_active:
@@ -1278,8 +1313,15 @@ def handle_performance(chat_id):
         try:
             resp = _supabase.table('trading_signals').select('*').execute()
             rows = resp.data or []
-            crypto_rows = [r for r in rows if '/' not in (r.get('pair') or '')]
-            forex_rows = [r for r in rows if '/' in (r.get('pair') or '')]
+            _CQ = {'USDT', 'USDC', 'BTC', 'ETH', 'BNB', 'BUSD', 'USD'}
+            def _is_crypto(pair):
+                if not pair:
+                    return True
+                if '/' in pair:
+                    return pair.split('/')[-1].upper() in _CQ
+                return True
+            crypto_rows = [r for r in rows if _is_crypto(r.get('pair', ''))]
+            forex_rows = [r for r in rows if not _is_crypto(r.get('pair', ''))]
 
             parts.append(_trading_performance_section(crypto_rows, "Crypto Signal Performance"))
             parts.append(_trading_performance_section(forex_rows, "Forex Signal Performance"))
@@ -1303,7 +1345,11 @@ def handle_resolve(chat_id):
         else:
             lines = [f"*{len(updates)} signal(s) resolved:*\n"]
             for u in updates:
-                lines.append(f"#{u['signal']} {u['market'][:30]} — *{u['new_status']}* ({u['pnl']})")
+                sig_num = u.get('signal', '?')
+                market = u.get('market', 'Unknown')[:30]
+                status = u.get('new_status', '?')
+                pnl = u.get('pnl', '?')
+                lines.append(f"#{sig_num} {market} — *{status}* ({pnl})")
             send_message(chat_id, "\n".join(lines))
 
     except Exception as e:
@@ -1343,8 +1389,8 @@ def handle_setcap(chat_id, text=""):
 
     try:
         new_cap = int(parts[1])
-        if new_cap < 0 or new_cap > 50:
-            send_message(chat_id, "Cap must be between 0 and 50.")
+        if new_cap < 1 or new_cap > 50:
+            send_message(chat_id, "Cap must be between 1 and 50.")
             return
     except ValueError:
         send_message(chat_id, "Invalid number. Usage: `/setcap 5`")
@@ -1597,6 +1643,12 @@ def handle_subscribe(chat_id):
                     'status': 'pending',
                     'added_at': datetime.now(timezone.utc).isoformat()
                 }).eq('chat_id', chat_id_str).execute()
+                send_message(chat_id, "Subscription re-requested. Waiting for admin approval.")
+                # Notify admin
+                admin_dest = ADMIN_CHAT_ID or APPROVAL_CHANNEL_ID
+                if admin_dest:
+                    send_message(admin_dest, f"*Re-subscription request* from `{chat_id_str}`\nApprove with: `/approve_channel {chat_id_str}`")
+                return  # Bug #4: Must return here to prevent duplicate INSERT
     except Exception as e:
         send_message(chat_id, f"Error: {e}")
         return
@@ -1806,8 +1858,8 @@ def _cron_loop():
     """Background thread: runs unified auto-scanner every N hours."""
     scan_interval = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "4"))
 
-    # Wait before first scan to let bot stabilize
-    time.sleep(60)
+    # Brief wait to let bot stabilize before first scan
+    time.sleep(5)
     print("[CRON] Running initial unified scan...")
     try:
         _unified_cron_cycle()
@@ -1887,13 +1939,20 @@ def run_bot():
                             signal_data = pending[reply_id]
                             signal = signal_data["signal"]
 
-                            if text.upper() == "APPROVE":
-                                send_message(chat_id, "Approved. Distributing to all channels...")
-                                distribute_signal(signal)
+                            if signal_data.get("status") != "pending":
+                                send_message(chat_id, f"Already {signal_data['status']}. Skipping.")
+                            elif text.upper() == "APPROVE":
                                 signal_data["status"] = "approved"
+                                send_message(chat_id, "Approved. Distributing to all channels...")
+                                try:
+                                    distribute_signal(signal)
+                                except Exception as e:
+                                    print(f"  Distribution FAILED: {e}")
+                                    signal_data["status"] = "failed"
+                                    send_message(chat_id, f"Distribution failed: {e}")
                             else:
-                                send_message(chat_id, "Signal rejected.")
                                 signal_data["status"] = "rejected"
+                                send_message(chat_id, "Signal rejected.")
 
                             with open(PENDING_FILE, "w", encoding="utf-8") as f:
                                 json.dump(pending, f, indent=2, default=str)
@@ -1902,6 +1961,8 @@ def run_bot():
                 callback = update.get("callback_query")
                 if callback:
                     data = callback.get("data", "")
+                    if not isinstance(data, str):  # Bug #19: validate data is string
+                        data = ""
                     cb_msg_id = str(callback.get("message", {}).get("message_id", ""))
                     cb_chat_id = callback.get("message", {}).get("chat", {}).get("id")
                     pending = load_pending_signals()
@@ -1910,28 +1971,38 @@ def run_bot():
                         signal_data = pending[cb_msg_id]
                         signal = signal_data["signal"]
 
-                        if data.startswith("approve_"):
+                        if signal_data.get("status") != "pending":
+                            send_message(cb_chat_id, f"Already {signal_data['status']}. Skipping.")
+                        elif data.startswith("approve_"):
                             label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
-                            send_message(cb_chat_id, f"Approved: {label}\nDistributing...")
-                            distribute_signal(signal)
                             signal_data["status"] = "approved"
+                            send_message(cb_chat_id, f"Approved: {label}\nDistributing...")
+                            try:
+                                distribute_signal(signal)
+                            except Exception as e:
+                                print(f"  Distribution FAILED: {e}")
+                                signal_data["status"] = "failed"
+                                send_message(cb_chat_id, f"Distribution failed: {e}")
                         elif data.startswith("reject_"):
-                            send_message(cb_chat_id, "Signal rejected.")
                             signal_data["status"] = "rejected"
+                            send_message(cb_chat_id, "Signal rejected.")
 
                         with open(PENDING_FILE, "w", encoding="utf-8") as f:
                             json.dump(pending, f, indent=2, default=str)
 
                     # Answer callback to remove loading state
-                    _telegram_request("post", "answerCallbackQuery",
-                                     json={"callback_query_id": callback["id"]})
+                    cb_id = callback.get("id")
+                    if cb_id:
+                        ack = _telegram_request("post", "answerCallbackQuery",
+                                               json={"callback_query_id": cb_id})
+                        if ack and not ack.get("ok"):
+                            print(f"[BOT] answerCallbackQuery failed: {ack.get('description', '?')}")
 
         except KeyboardInterrupt:
             print("\nBot stopped.")
             break
         except Exception as e:
             print(f"Error in polling loop: {e}")
-            import time
             time.sleep(5)
 
 
@@ -1966,25 +2037,32 @@ def main():
         return
 
     if args.my_chat_id:
-        print("Fetching your chat ID from recent bot messages...\n")
+        print("Fetching chat IDs from recent bot messages...\n")
         print("(Make sure you've sent /start or any message to the bot first)\n")
         updates = get_updates(timeout=5)
-        found = set()
+        found = []
+        seen = set()
         for u in updates:
-            msg = u.get("message", {})
-            chat = msg.get("chat", {})
-            if chat.get("type") == "private":
-                cid = chat["id"]
-                name = chat.get("first_name", "")
-                found.add((cid, name))
+            # Check message, channel_post, and my_chat_member events
+            for key in ("message", "channel_post", "my_chat_member"):
+                event = u.get(key, {})
+                # Bug #28: my_chat_member has chat at top level, not nested under message
+                chat = event.get("chat", {})
+                cid = chat.get("id")
+                if cid and cid not in seen:
+                    seen.add(cid)
+                    ctype = chat.get("type", "unknown")
+                    name = chat.get("title") or chat.get("first_name") or ""
+                    found.append((cid, name, ctype))
         if found:
-            for cid, name in found:
-                print(f"  Chat ID: {cid}  ({name})")
-            print(f"\nAdd this to your .env file:")
-            cid = list(found)[0][0]
-            print(f"  TELEGRAM_ADMIN_CHAT_ID={cid}")
+            for cid, name, ctype in found:
+                print(f"  Chat ID: {cid}  ({name}) [{ctype}]")
+            privates = [f for f in found if f[2] == "private"]
+            if privates:
+                print(f"\nYour admin chat ID:")
+                print(f"  TELEGRAM_ADMIN_CHAT_ID={privates[0][0]}")
         else:
-            print("No private messages found. Send /start to your bot first, then re-run.")
+            print("No messages found. Send /start to the bot, then re-run immediately.")
         return
 
     if args.test:
@@ -2037,12 +2115,16 @@ def main():
         return
 
     if args.broadcast:
-        print("Broadcasting to all channels...")
-        for name, chat_id in [("Krib", KRIB_CHAT_ID), ("Poly", POLY_CHANNEL_ID)]:
-            if chat_id:
-                result = send_message(chat_id, args.broadcast)
-                status = "OK" if result and result.get("ok") else "FAIL"
-                print(f"  {name}: {status}")
+        # Send only to approval channel or admin DM — NOT to all channels
+        dest = APPROVAL_CHANNEL_ID or ADMIN_CHAT_ID
+        if not dest:
+            print("ERROR: No TELEGRAM_APPROVAL_CHANNEL_ID or TELEGRAM_ADMIN_CHAT_ID set in .env")
+            return
+        dest_name = "Approval Channel" if APPROVAL_CHANNEL_ID else "Admin DM"
+        print(f"Sending to {dest_name}...")
+        result = send_message(dest, args.broadcast)
+        status = "OK" if result and result.get("ok") else "FAIL"
+        print(f"  {dest_name}: {status}")
         return
 
     parser.print_help()
