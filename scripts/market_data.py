@@ -473,15 +473,25 @@ def detect_ict_concepts(df):
 
 
 def get_kill_zone():
-    """Determine current kill zone based on EST time."""
+    """Determine current kill zone based on US Eastern time (DST-aware)."""
     now = datetime.now(timezone.utc)
-    est_hour = (now.hour - 5) % 24  # Simple EST offset (not DST-aware)
+    # US Eastern: UTC-5 (EST, Nov-Mar) or UTC-4 (EDT, Mar-Nov)
+    month, day = now.month, now.day
+    if 4 <= month <= 10:
+        offset = 4  # EDT (Apr-Oct)
+    elif month == 3:
+        offset = 4 if day >= 14 else 5  # EDT starts ~2nd Sunday of March
+    elif month == 11:
+        offset = 5 if day >= 7 else 4   # EST starts ~1st Sunday of November
+    else:
+        offset = 5  # EST (Dec-Feb)
+    et_hour = (now.hour - offset) % 24
 
-    if 19 <= est_hour <= 21:
+    if 19 <= et_hour <= 21:
         return 'Asia', True
-    elif 2 <= est_hour <= 5:
+    elif 2 <= et_hour <= 5:
         return 'London', True
-    elif 7 <= est_hour <= 10:
+    elif 7 <= et_hour <= 10:
         return 'New York', True
     else:
         return 'Off-session', False

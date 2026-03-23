@@ -388,8 +388,13 @@ def send_to_approval(signal):
         return None
 
 
-def distribute_signal(signal):
-    """Distribute approved signal to all channels."""
+def distribute_signal(signal, include_x=False):
+    """Distribute approved signal to Telegram channels (and optionally X/Twitter).
+
+    By default, distributes to Telegram only. If include_x=True, also publishes to
+    X/Twitter via Typefully immediately. When called from the approval flow, include_x
+    is False — the bot asks separately whether to post to X.
+    """
     is_trading = signal.get('signal_type') == 'trading'
 
     if is_trading:
@@ -411,7 +416,7 @@ def distribute_signal(signal):
         results["poly"] = "OK" if result and result.get("ok") else "FAIL"
         print(f"  Poly Channel: {results['poly']}")
 
-    # 3. Queue draft for X/Twitter + push to Typefully
+    # 3. Queue tweet draft
     if is_trading:
         draft_path, tweet_text = create_trading_twitter_draft(signal)
     else:
@@ -420,14 +425,15 @@ def distribute_signal(signal):
         results["twitter_draft"] = "QUEUED"
         print(f"  X/Twitter Draft: QUEUED at {draft_path}")
 
-        # Publish to X/Twitter via Typefully (publish immediately on approval)
-        typefully_id = push_to_typefully(tweet_text, publish=True)
-        if typefully_id:
-            results["typefully"] = "PUBLISHED"
-            print(f"  Typefully: PUBLISHED (id: {typefully_id})")
-        elif TYPEFULLY_API_KEY:
-            results["typefully"] = "FAIL"
-            print(f"  Typefully: FAIL — check logs above for details")
+        # Only publish to X if explicitly requested (include_x=True)
+        if include_x:
+            typefully_id = push_to_typefully(tweet_text, publish=True)
+            if typefully_id:
+                results["typefully"] = "PUBLISHED"
+                print(f"  Typefully: PUBLISHED (id: {typefully_id})")
+            elif TYPEFULLY_API_KEY:
+                results["typefully"] = "FAIL"
+                print(f"  Typefully: FAIL — check logs above for details")
 
     # 4. Send to subscriber channels
     sub_count = _send_to_subscribers(card)
@@ -443,6 +449,31 @@ def distribute_signal(signal):
     print(f"  Signal Tracker: LOGGED")
 
     return results
+
+
+def publish_signal_to_x(signal):
+    """Publish a signal to X/Twitter via Typefully."""
+    is_trading = signal.get('signal_type') == 'trading'
+    if is_trading:
+        _, tweet_text = create_trading_twitter_draft(signal)
+    else:
+        _, tweet_text = create_twitter_draft(signal)
+    if not tweet_text:
+        return None
+    return push_to_typefully(tweet_text, publish=True)
+
+
+def _ask_post_to_x(chat_id, signal, original_msg_id):
+    """Send 'Also post to X?' prompt with Yes/No buttons after Telegram distribution."""
+    label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
+    reply_markup = {
+        "inline_keyboard": [[
+            {"text": "✅ Post to X", "callback_data": f"postx_yes_{original_msg_id}"},
+            {"text": "❌ Skip X", "callback_data": f"postx_no_{original_msg_id}"},
+        ]]
+    }
+    send_message(chat_id, f"Telegram distribution done for: <b>{label}</b>\n\nAlso post to X/Twitter?",
+                 reply_markup=reply_markup)
 
 
 def create_twitter_draft(signal):
@@ -957,10 +988,10 @@ def poll_approvals(timeout=60):
                         print(f"\nSKIP (already {signal_data['status']}): {_label}")
                     elif data.startswith("approve_"):
                         print(f"\nAPPROVED: {_label}")
-                        print("Distributing to all channels...")
+                        print("Distributing to all channels (including X — poll mode)...")
                         signal_data["status"] = "approved"
                         try:
-                            distribute_signal(signal)
+                            distribute_signal(signal, include_x=True)
                         except Exception as e:
                             print(f"  Distribution FAILED: {e}")
                             signal_data["status"] = "failed"
@@ -989,7 +1020,7 @@ def poll_approvals(timeout=60):
                     print(f"\nAPPROVED: {_label}")
                     signal_data["status"] = "approved"
                     try:
-                        distribute_signal(signal)
+                        distribute_signal(signal, include_x=True)
                     except Exception as e:
                         print(f"  Distribution FAILED: {e}")
                         signal_data["status"] = "failed"
@@ -1017,8 +1048,8 @@ def manual_approve(message_id):
     signal = signal_data["signal"]
 
     print(f"Approving: {signal.get('market_question', signal.get('pair', 'Signal'))[:60]}")
-    print("Distributing to all channels...")
-    results = distribute_signal(signal)
+    print("Distributing to all channels (including X)...")
+    results = distribute_signal(signal, include_x=True)
 
     signal_data["status"] = "approved"
     with open(PENDING_FILE, "w", encoding="utf-8") as f:
@@ -1598,7 +1629,7 @@ def handle_send_signals_direct(chat_id):
             return
         sent = 0
         for signal in signals:
-            distribute_signal(signal)
+            distribute_signal(signal, include_x=True)
             sent += 1
         send_message(chat_id, f"Distributed <b>{sent}</b> signal(s) directly to all channels.")
     except Exception as e:
@@ -1943,9 +1974,10 @@ def run_bot():
                                 send_message(chat_id, f"Already {signal_data['status']}. Skipping.")
                             elif text.upper() == "APPROVE":
                                 signal_data["status"] = "approved"
-                                send_message(chat_id, "Approved. Distributing to all channels...")
+                                send_message(chat_id, "Approved. Distributing to Telegram...")
                                 try:
                                     distribute_signal(signal)
+                                    _ask_post_to_x(chat_id, signal, reply_id)
                                 except Exception as e:
                                     print(f"  Distribution FAILED: {e}")
                                     signal_data["status"] = "failed"
@@ -1967,7 +1999,23 @@ def run_bot():
                     cb_chat_id = callback.get("message", {}).get("chat", {}).get("id")
                     pending = load_pending_signals()
 
-                    if cb_msg_id in pending:
+                    # Handle "Post to X?" follow-up buttons
+                    if data.startswith("postx_yes_") or data.startswith("postx_no_"):
+                        original_id = data.split("_", 2)[-1]
+                        if original_id in pending:
+                            signal = pending[original_id]["signal"]
+                            if data.startswith("postx_yes_"):
+                                typefully_id = publish_signal_to_x(signal)
+                                if typefully_id:
+                                    send_message(cb_chat_id, f"Posted to X/Twitter via Typefully (id: {typefully_id})")
+                                else:
+                                    send_message(cb_chat_id, "Failed to post to X. Check Typefully API key.")
+                            else:
+                                send_message(cb_chat_id, "Skipped X/Twitter.")
+                        else:
+                            send_message(cb_chat_id, "Signal not found in pending list.")
+
+                    elif cb_msg_id in pending:
                         signal_data = pending[cb_msg_id]
                         signal = signal_data["signal"]
 
@@ -1976,9 +2024,11 @@ def run_bot():
                         elif data.startswith("approve_"):
                             label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
                             signal_data["status"] = "approved"
-                            send_message(cb_chat_id, f"Approved: {label}\nDistributing...")
+                            send_message(cb_chat_id, f"Approved: {label}\nDistributing to Telegram...")
                             try:
                                 distribute_signal(signal)
+                                # Ask about X/Twitter as a separate step
+                                _ask_post_to_x(cb_chat_id, signal, cb_msg_id)
                             except Exception as e:
                                 print(f"  Distribution FAILED: {e}")
                                 signal_data["status"] = "failed"
@@ -2081,7 +2131,7 @@ def main():
         for sig in signals:
             if args.direct:
                 print(f"Direct distribution: {sig['pair']} {sig['timeframe']} {sig['direction']}")
-                distribute_signal(sig)
+                distribute_signal(sig, include_x=True)
             else:
                 send_to_approval(sig)
         return
@@ -2100,7 +2150,7 @@ def main():
         for sig in signals:
             if args.direct:
                 print(f"Direct distribution: {sig.get('market_question', sig.get('pair', 'Signal'))[:50]}")
-                distribute_signal(sig)
+                distribute_signal(sig, include_x=True)
             else:
                 send_to_approval(sig)
 

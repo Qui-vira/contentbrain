@@ -1,0 +1,29 @@
+# Ignore heavy directories
+.obsidian/
+.claude/
+.git/
+01-Competitors/
+02-Hooks/
+03-Trends/
+04-Patterns/
+05-Frameworks/
+06-Drafts/
+07-Analytics/
+08-Templates/
+10-Niche-Knowledge/
+tasks/
+node_modules/
+__pycache__/
+
+# Ignore large files
+*.json
+*.md
+*.png
+*.jpg
+*.mp4
+*.pdf
+
+# Keep what matters
+!requirements.txt
+!Dockerfile
+!.dockerignore
