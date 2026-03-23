@@ -77,14 +77,14 @@ def _telegram_request(method, endpoint, **kwargs):
             resp = _session.post(url, **kwargs)
         return resp.json()
     except requests.RequestException:
-        # Fallback to curl
+        # Only fallback to curl for GET requests — POST (sendMessage etc.) is not
+        # idempotent: if requests sent the message but failed reading the response,
+        # a curl retry would send a duplicate message.
+        if method != "get":
+            return None
         try:
             cmd = ["curl", "-s", "--connect-timeout", "30", url]
-            if method == "post" and "json" in kwargs:
-                cmd = ["curl", "-s", "--connect-timeout", "30",
-                       "-X", "POST", "-H", "Content-Type: application/json",
-                       "-d", json.dumps(kwargs["json"]), url]
-            elif "params" in kwargs:
+            if "params" in kwargs:
                 from urllib.parse import urlencode
                 params_str = urlencode(kwargs["params"])
                 cmd = ["curl", "-s", "--connect-timeout", str(kwargs.get("timeout", 30)),
