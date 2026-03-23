@@ -15,6 +15,7 @@ import sys
 import json
 import argparse
 import time
+import requests
 from datetime import datetime, timezone
 
 # Ensure scripts directory is on path
@@ -40,6 +41,82 @@ from market_data import (
     get_kill_zone,
     SYMBOL_TO_COINGECKO,
 )
+
+# --- CoinGecko Fallback ---
+
+COINGECKO_DAYS_MAP = {
+    '1m': 1, '5m': 1, '15m': 1, '30m': 1,
+    '1h': 14, '4h': 30, '1d': 90, '1w': 180,
+}
+
+_binance_unavailable = False  # Set True after first 451/connection failure
+
+
+def fetch_coingecko_ohlcv(symbol, interval, limit=200):
+    """Fetch OHLCV candles from CoinGecko free API.
+    Returns a DataFrame matching fetch_binance_klines format, or None on failure."""
+    coin_id = SYMBOL_TO_COINGECKO.get(symbol)
+    if not coin_id:
+        return None
+
+    days = COINGECKO_DAYS_MAP.get(interval, 30)
+    url = f"https://api.coingecko.com/api/v3/coins/{coin_id}/ohlc"
+    params = {'vs_currency': 'usd', 'days': days}
+
+    try:
+        resp = requests.get(url, params=params, timeout=20)
+        resp.raise_for_status()
+        data = resp.json()  # [[timestamp, open, high, low, close], ...]
+    except Exception as e:
+        print(f"\n  CoinGecko fallback failed for {symbol}: {e}")
+        return None
+
+    if not data or len(data) < 10:
+        return None
+
+    df = pd.DataFrame(data, columns=['open_time', 'open', 'high', 'low', 'close'])
+    df['open_time'] = pd.to_datetime(df['open_time'], unit='ms')
+    # CoinGecko OHLC endpoint does not return volume; estimate with zeros
+    df['volume'] = 0.0
+    df['close_time'] = df['open_time']
+    df['quote_volume'] = 0.0
+    df['trades'] = 0
+    df['taker_buy_base'] = 0.0
+    df['taker_buy_quote'] = 0.0
+    df['ignore'] = 0
+
+    for col in ['open', 'high', 'low', 'close']:
+        df[col] = df[col].astype(float)
+
+    # Trim to requested limit
+    if len(df) > limit:
+        df = df.tail(limit).reset_index(drop=True)
+
+    return df
+
+
+def fetch_coingecko_volume(symbol):
+    """Fetch 24h volume from CoinGecko market_chart for a symbol. Returns float or 0."""
+    coin_id = SYMBOL_TO_COINGECKO.get(symbol)
+    if not coin_id:
+        return 0.0
+    try:
+        url = f"https://api.coingecko.com/api/v3/coins/{coin_id}"
+        params = {'localization': 'false', 'tickers': 'false',
+                  'community_data': 'false', 'developer_data': 'false'}
+        resp = requests.get(url, params=params, timeout=15)
+        resp.raise_for_status()
+        data = resp.json()
+        return float(data.get('market_data', {}).get('total_volume', {}).get('usd', 0))
+    except Exception:
+        return 0.0
+
+
+def _is_binance_geo_blocked(e):
+    """Check if an exception indicates Binance 451 geo-block or connection failure."""
+    msg = str(e).lower()
+    return '451' in msg or 'unavailable' in msg or 'connection' in msg or 'banned' in msg
+
 
 # --- Config ---
 
@@ -537,15 +614,29 @@ def discover_top_altcoins(client):
 
 def analyze_pair_tf(client, symbol, timeframe):
     """Full analysis for one pair on one timeframe. Returns structured dict."""
+    global _binance_unavailable
     interval = INTERVAL_MAP.get(timeframe, '4h')
+    data_source = 'binance'
 
-    try:
-        df = fetch_binance_klines(client, symbol, interval, limit=200)
-    except Exception as e:
-        return {'error': str(e)}
+    df = None
+    # Try Binance first (skip if already known to be geo-blocked)
+    if client and not _binance_unavailable:
+        try:
+            df = fetch_binance_klines(client, symbol, interval, limit=200)
+        except Exception as e:
+            if _is_binance_geo_blocked(e):
+                print(f"\n  Binance geo-blocked (451). Switching to CoinGecko fallback.")
+                _binance_unavailable = True
+            else:
+                pass  # Try CoinGecko below
+
+    # Fallback to CoinGecko
+    if df is None or len(df) < 10:
+        df = fetch_coingecko_ohlcv(symbol, interval, limit=200)
+        data_source = 'coingecko'
 
     if df is None or len(df) < 50:
-        return {'error': 'Insufficient data'}
+        return {'error': f'Insufficient data (tried {data_source})'}
 
     # Core indicators from market_data.py
     df = calculate_indicators(df)
@@ -606,6 +697,7 @@ def analyze_pair_tf(client, symbol, timeframe):
     return {
         'pair': symbol,
         'timeframe': timeframe,
+        'data_source': data_source,
         'current_price': round(price, 6),
         'volume_24h_approx': round(vol_24h, 2),
         'trend': trend,
@@ -665,10 +757,11 @@ def run(pairs_override=None, timeframes_override=None):
     """Run full TA scan and save to JSON."""
     start_time = time.time()
 
+    global _binance_unavailable
     client = get_binance_client()
     if not client:
-        print("ERROR: Cannot connect to Binance API. Check BINANCE_API_KEY in .env")
-        sys.exit(1)
+        print("WARNING: Binance API unavailable. Using CoinGecko fallback for price data.")
+        _binance_unavailable = True
 
     session, in_kz = get_kill_zone()
     print(f"Session: {session} ({'active' if in_kz else 'off-session'})")
@@ -677,8 +770,13 @@ def run(pairs_override=None, timeframes_override=None):
     if pairs_override:
         all_pairs = pairs_override
     else:
-        print("Discovering top altcoins by volume...")
-        altcoins = discover_top_altcoins(client)
+        if client and not _binance_unavailable:
+            print("Discovering top altcoins by volume...")
+            altcoins = discover_top_altcoins(client)
+        else:
+            print("Using default altcoin list (Binance unavailable)...")
+            altcoins = ['BNBUSDT', 'XRPUSDT', 'DOGEUSDT', 'ADAUSDT', 'LINKUSDT',
+                        'AVAXUSDT', 'SUIUSDT', 'ARBUSDT', 'NEARUSDT', 'OPUSDT']
         all_pairs = CORE_PAIRS + [a for a in altcoins if a not in CORE_PAIRS]
         print(f"Scanning {len(all_pairs)} pairs ({len(CORE_PAIRS)} core + {len(altcoins)} alts)")
 
@@ -700,11 +798,13 @@ def run(pairs_override=None, timeframes_override=None):
             else:
                 results.append(result)
 
-            time.sleep(0.15)  # Rate limiting
+            # CoinGecko free tier: ~10 req/min; Binance is faster
+            time.sleep(7.0 if _binance_unavailable else 0.15)
 
     # Build output
     output = {
         'generated_at': datetime.now(timezone.utc).isoformat(),
+        'data_source': 'coingecko' if _binance_unavailable else 'binance',
         'session': session,
         'in_kill_zone': in_kz,
         'pairs_scanned': len(all_pairs),
