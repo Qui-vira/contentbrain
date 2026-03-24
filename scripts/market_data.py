@@ -469,6 +469,95 @@ def detect_ict_concepts(df):
 
     results['liquidity_sweeps'] = sweeps
 
+    # --- CHOCH (Change of Character) ---
+    # CHOCH = break of the most recent swing low in uptrend (bearish)
+    #       or break of the most recent swing high in downtrend (bullish)
+    # Distinct from BOS/MSS: CHOCH specifically signals trend reversal
+    choch = []
+    if len(swing_highs) >= 2 and len(swing_lows) >= 1:
+        # Uptrend (HH pattern): if price breaks below most recent swing low = bearish CHOCH
+        if swing_highs[-1]['price'] > swing_highs[-2]['price']:
+            recent_sl = swing_lows[-1]
+            if close[-1] < recent_sl['price']:
+                choch.append({'type': 'bearish_choch', 'broken_level': recent_sl['price'], 'current': close[-1]})
+    if len(swing_lows) >= 2 and len(swing_highs) >= 1:
+        # Downtrend (LL pattern): if price breaks above most recent swing high = bullish CHOCH
+        if swing_lows[-1]['price'] < swing_lows[-2]['price']:
+            recent_sh = swing_highs[-1]
+            if close[-1] > recent_sh['price']:
+                choch.append({'type': 'bullish_choch', 'broken_level': recent_sh['price'], 'current': close[-1]})
+    results['choch'] = choch
+
+    # --- Market Structure Labels (HH/HL/LH/LL) ---
+    structure_labels = []
+    for i in range(1, len(swing_highs)):
+        if swing_highs[i]['price'] > swing_highs[i-1]['price']:
+            structure_labels.append({'type': 'HH', 'price': swing_highs[i]['price'], 'index': swing_highs[i]['index']})
+        else:
+            structure_labels.append({'type': 'LH', 'price': swing_highs[i]['price'], 'index': swing_highs[i]['index']})
+    for i in range(1, len(swing_lows)):
+        if swing_lows[i]['price'] > swing_lows[i-1]['price']:
+            structure_labels.append({'type': 'HL', 'price': swing_lows[i]['price'], 'index': swing_lows[i]['index']})
+        else:
+            structure_labels.append({'type': 'LL', 'price': swing_lows[i]['price'], 'index': swing_lows[i]['index']})
+    structure_labels.sort(key=lambda x: x['index'])
+    results['structure_labels'] = structure_labels[-6:]
+
+    # --- Liquidity Pools (Equal Highs / Equal Lows) ---
+    # When swing highs or lows cluster at the same level (within 0.1%),
+    # resting orders accumulate there — institutions target these levels
+    liquidity_pools = []
+    tolerance = 0.001  # 0.1%
+    for i in range(len(swing_highs)):
+        for j in range(i + 1, len(swing_highs)):
+            if swing_highs[j]['price'] > 0 and abs(swing_highs[i]['price'] - swing_highs[j]['price']) / swing_highs[j]['price'] < tolerance:
+                level = (swing_highs[i]['price'] + swing_highs[j]['price']) / 2
+                liquidity_pools.append({'type': 'equal_highs', 'price': level, 'side': 'buyside'})
+                break
+    for i in range(len(swing_lows)):
+        for j in range(i + 1, len(swing_lows)):
+            if swing_lows[j]['price'] > 0 and abs(swing_lows[i]['price'] - swing_lows[j]['price']) / swing_lows[j]['price'] < tolerance:
+                level = (swing_lows[i]['price'] + swing_lows[j]['price']) / 2
+                liquidity_pools.append({'type': 'equal_lows', 'price': level, 'side': 'sellside'})
+                break
+    results['liquidity_pools'] = liquidity_pools
+
+    # --- Breaker Blocks (Failed Order Blocks that flip) ---
+    # When price breaks through an OB, it becomes a breaker block
+    # acting as S/R in the opposite direction
+    breaker_blocks = []
+    for ob in order_blocks:
+        if ob['type'] == 'bullish' and close[-1] < ob['low']:
+            # Bullish OB broken to downside = bearish breaker
+            breaker_blocks.append({
+                'type': 'bearish_breaker', 'high': ob['high'], 'low': ob['low'],
+                'price': (ob['high'] + ob['low']) / 2
+            })
+        elif ob['type'] == 'bearish' and close[-1] > ob['high']:
+            # Bearish OB broken to upside = bullish breaker
+            breaker_blocks.append({
+                'type': 'bullish_breaker', 'high': ob['high'], 'low': ob['low'],
+                'price': (ob['high'] + ob['low']) / 2
+            })
+    results['breaker_blocks'] = breaker_blocks[-3:]
+
+    # --- FVG Fill Status ---
+    # Track whether each FVG has been filled by subsequent price action
+    fvgs_with_status = []
+    for fvg in fvgs[-5:]:
+        filled = False
+        for k in range(fvg['index'] + 1, len(df)):
+            if fvg['type'] == 'bullish' and low[k] <= fvg['bottom']:
+                filled = True
+                break
+            elif fvg['type'] == 'bearish' and high[k] >= fvg['top']:
+                filled = True
+                break
+        fvg_copy = dict(fvg)
+        fvg_copy['filled'] = filled
+        fvgs_with_status.append(fvg_copy)
+    results['fvgs'] = fvgs_with_status  # Replace with enriched version
+
     return results
 
 

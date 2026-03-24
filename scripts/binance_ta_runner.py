@@ -474,6 +474,39 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info):
     if nearest_resistance and abs(price - nearest_resistance['price']) / price < 0.005:
         confluences.append({'factor': 'SR', 'detail': f"At resistance {nearest_resistance['price']:.2f} ({nearest_resistance['touches']} touches)", 'direction': 'bearish'})
 
+    # 9. Market Structure (CHOCH + HH/HL/LH/LL)
+    for ch in ict.get('choch', []):
+        direction = 'bullish' if 'bullish' in ch['type'] else 'bearish'
+        confluences.append({'factor': 'Structure', 'detail': f"{ch['type'].upper()} — broke {ch['broken_level']:.2f}", 'direction': direction})
+        break
+    if not any(c['factor'] == 'Structure' for c in confluences):
+        labels = ict.get('structure_labels', [])
+        if len(labels) >= 2:
+            last_two = [l['type'] for l in labels[-2:]]
+            if last_two == ['HH', 'HL'] or last_two == ['HL', 'HH']:
+                confluences.append({'factor': 'Structure', 'detail': f"Bullish structure: {'+'.join(last_two)}", 'direction': 'bullish'})
+            elif last_two == ['LH', 'LL'] or last_two == ['LL', 'LH']:
+                confluences.append({'factor': 'Structure', 'detail': f"Bearish structure: {'+'.join(last_two)}", 'direction': 'bearish'})
+
+    # 10. Liquidity Pools (equal highs/lows being targeted)
+    for pool in ict.get('liquidity_pools', []):
+        dist = abs(price - pool['price']) / price if price > 0 else 1
+        if dist < 0.01:  # Within 1% of liquidity pool
+            if pool['side'] == 'buyside' and price < pool['price']:
+                confluences.append({'factor': 'Liquidity', 'detail': f"Equal highs liquidity at {pool['price']:.2f} (buyside target)", 'direction': 'bullish'})
+            elif pool['side'] == 'sellside' and price > pool['price']:
+                confluences.append({'factor': 'Liquidity', 'detail': f"Equal lows liquidity at {pool['price']:.2f} (sellside target)", 'direction': 'bearish'})
+            break
+
+    # 11. Breaker Blocks (failed OBs acting as S/R in opposite direction)
+    for bb in ict.get('breaker_blocks', []):
+        if bb['type'] == 'bullish_breaker' and bb['low'] <= price <= bb['high'] * 1.005:
+            confluences.append({'factor': 'Breaker', 'detail': f"Bullish breaker block at {bb['low']:.2f}-{bb['high']:.2f}", 'direction': 'bullish'})
+            break
+        elif bb['type'] == 'bearish_breaker' and bb['low'] * 0.995 <= price <= bb['high']:
+            confluences.append({'factor': 'Breaker', 'detail': f"Bearish breaker block at {bb['low']:.2f}-{bb['high']:.2f}", 'direction': 'bearish'})
+            break
+
     # Count unique factor categories (max 1 per category)
     seen_factors = set()
     unique_confluences = []
@@ -558,6 +591,12 @@ def calculate_strength_score(confluence_result, rsi_val, macd_hist, trend, patte
            (direction == 'SHORT' and p.get('direction') == 'bearish'):
             score += 0.5
             break
+
+    # Institutional factors bonus (0-1.5 points)
+    # CHOCH, liquidity pools, breaker blocks — nephew_sam_ methodology
+    institutional_factors = {'Structure', 'Liquidity', 'Breaker'}
+    inst_count = sum(1 for c in confluence_result['confluences'] if c['factor'] in institutional_factors)
+    score += inst_count * 0.5  # 0.5 per institutional factor (max 1.5)
 
     return max(1, min(10, round(score)))
 
