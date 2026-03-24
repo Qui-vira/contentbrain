@@ -1276,6 +1276,7 @@ BOT_COMMANDS = [
     {"command": "scan_all", "description": "Full crypto TA scan (all pairs, all TFs)"},
     {"command": "scan_pair", "description": "Scan one pair (e.g. /scan_pair BTCUSDT)"},
     {"command": "scan_custom", "description": "Custom scan (e.g. /scan_custom ETHUSDT 1h,4h)"},
+    {"command": "analyze", "description": "Full TA breakdown (e.g. /analyze BTCUSDT 4h)"},
     {"command": "test_signals", "description": "Send signals to test channel (paper trade)"},
     {"command": "send_signals", "description": "Send TA signals to approval channel"},
     {"command": "send_signals_direct", "description": "Send TA signals directly (skip approval)"},
@@ -1315,6 +1316,7 @@ def handle_start(chat_id):
         "/scan_all — Full crypto scan (all pairs, all TFs)\n"
         "/scan_pair BTCUSDT — Scan one pair\n"
         "/scan_custom ETHUSDT 1h,4h — Custom scan\n"
+        "/analyze BTCUSDT 4h — Full TA breakdown for any pair\n"
         "/test_signals — Send to test channel (paper trade)\n"
         "/send_signals — Send TA signals for approval\n"
         "/send_signals_direct — Send directly (skip approval)\n"
@@ -2136,6 +2138,168 @@ def handle_subscribers(chat_id):
         send_message(chat_id, f"Error: {e}")
 
 
+def handle_analyze(chat_id, text=""):
+    """Handle /analyze BTCUSDT [4h] — full TA breakdown for one pair on one timeframe."""
+    parts = text.strip().split()
+    if len(parts) < 2:
+        send_message(chat_id, "Usage: <code>/analyze BTCUSDT</code> or <code>/analyze EUR/USD 1h</code>")
+        return
+
+    pair = parts[1].upper()
+    timeframe = parts[2] if len(parts) >= 3 else '4h'
+
+    send_message(chat_id, f"Analyzing <b>{pair}</b> on <b>{timeframe}</b>...")
+
+    try:
+        from market_data import is_forex_pair
+        is_forex = is_forex_pair(pair)
+
+        if is_forex:
+            from forex_ta_runner import analyze_forex_pair_tf
+            result = analyze_forex_pair_tf(pair, timeframe)
+        else:
+            from binance_ta_runner import analyze_pair_tf
+            result = analyze_pair_tf(None, pair, timeframe)
+
+        if 'error' in result:
+            send_message(chat_id, f"Analysis failed: {result['error']}")
+            return
+
+        # Build detailed breakdown card
+        price = result['current_price']
+        trend = result.get('trend', '?')
+        strength = result.get('strength_score', 0)
+        ind = result.get('indicators', {})
+        confluence = result.get('confluence', {})
+        ict = result.get('ict_concepts', {})
+        sr = result.get('support_resistance', {})
+        patterns = result.get('patterns', [])
+
+        # Price formatting
+        if is_forex:
+            pfmt = lambda p: f"{p:.5f}" if p else "—"
+        elif price and price < 1:
+            pfmt = lambda p: f"{p:.6f}" if p else "—"
+        else:
+            pfmt = lambda p: f"{p:,.2f}" if p else "—"
+
+        # Direction and confidence
+        direction = confluence.get('direction', 'NEUTRAL')
+        confidence = confluence.get('confidence', 'LOW')
+        cc = confluence.get('confluence_count', 0)
+        contradiction = confluence.get('contradiction', False)
+
+        # Header
+        if direction == 'LONG':
+            dir_emoji = "\U0001f7e2"
+        elif direction == 'SHORT':
+            dir_emoji = "\U0001f534"
+        else:
+            dir_emoji = "\u26aa"
+
+        lines = [
+            f"<b>ANALYSIS: {pair} | {timeframe}</b>\n",
+            f"{dir_emoji} <b>Direction:</b> {direction} | <b>Confidence:</b> {confidence}",
+            f"<b>Strength:</b> {strength}/10 | <b>Confluences:</b> {cc}",
+            f"<b>Trend:</b> {trend}",
+        ]
+
+        if contradiction:
+            details = confluence.get('contradiction_detail', [])
+            lines.append(f"\u26a0\ufe0f <b>CONTRADICTION:</b> {', '.join(details)}")
+
+        # Price and indicators
+        rsi = ind.get('rsi')
+        atr = ind.get('atr')
+        macd_h = ind.get('macd_histogram')
+        lines.append(f"\n<b>--- PRICE ---</b>")
+        lines.append(f"<b>Price:</b> {pfmt(price)}")
+        lines.append(f"<b>EMA 21:</b> {pfmt(ind.get('ema_21'))} | <b>50:</b> {pfmt(ind.get('ema_50'))} | <b>200:</b> {pfmt(ind.get('ema_200'))}")
+        lines.append(f"<b>RSI:</b> {rsi:.1f}" if rsi else "<b>RSI:</b> —")
+        lines.append(f"<b>MACD Hist:</b> {macd_h:.6f}" if macd_h else "<b>MACD Hist:</b> —")
+        lines.append(f"<b>ATR:</b> {pfmt(atr)}")
+        lines.append(f"<b>BB:</b> {pfmt(ind.get('bb_lower'))} — {pfmt(ind.get('bb_upper'))}")
+
+        # Support/Resistance
+        supports = sr.get('support', [])[:3]
+        resistances = sr.get('resistance', [])[:3]
+        lines.append(f"\n<b>--- S/R LEVELS ---</b>")
+        for s in supports:
+            lines.append(f"\U0001f7e2 Support: {pfmt(s['price'])} ({s.get('touches', 0)} touches)")
+        for r in resistances:
+            lines.append(f"\U0001f534 Resistance: {pfmt(r['price'])} ({r.get('touches', 0)} touches)")
+        if not supports and not resistances:
+            lines.append("No significant S/R levels detected.")
+
+        # ICT Concepts
+        lines.append(f"\n<b>--- ICT CONCEPTS ---</b>")
+        ict_items = []
+        for ob in ict.get('order_blocks', [])[-2:]:
+            ict_items.append(f"OB: {ob['type']} at {pfmt(ob['low'])}-{pfmt(ob['high'])}")
+        for fvg in ict.get('fvgs', [])[-2:]:
+            fill = " (filled)" if fvg.get('filled') else " (open)"
+            ict_items.append(f"FVG: {fvg['type']}{fill} at {pfmt(fvg['bottom'])}-{pfmt(fvg['top'])}")
+        for mss in ict.get('mss_bos', []):
+            ict_items.append(f"{mss['type']} at {pfmt(mss['price'])}")
+        for sweep in ict.get('liquidity_sweeps', []):
+            ict_items.append(f"{sweep['type']} of {pfmt(sweep['swept_level'])}")
+        for ch in ict.get('choch', []):
+            ict_items.append(f"CHOCH: {ch['type']} broke {pfmt(ch['broken_level'])}")
+        for pool in ict.get('liquidity_pools', [])[:2]:
+            ict_items.append(f"Liq pool: {pool['type']} at {pfmt(pool['price'])}")
+        for bb in ict.get('breaker_blocks', [])[:2]:
+            ict_items.append(f"Breaker: {bb['type']} at {pfmt(bb['low'])}-{pfmt(bb['high'])}")
+        struct = ict.get('structure_labels', [])
+        if struct:
+            labels = [s['type'] for s in struct[-4:]]
+            ict_items.append(f"Structure: {' → '.join(labels)}")
+        if ict_items:
+            for item in ict_items:
+                lines.append(f"  • {item}")
+        else:
+            lines.append("  No ICT concepts detected.")
+
+        # Chart patterns
+        if patterns:
+            lines.append(f"\n<b>--- PATTERNS ---</b>")
+            for p in patterns[:3]:
+                lines.append(f"  • {p.get('pattern', '?')} ({p.get('direction', '?')})")
+
+        # Confluences
+        lines.append(f"\n<b>--- CONFLUENCES ({cc}) ---</b>")
+        for c in confluence.get('confluences', []):
+            dir_tag = "\U0001f7e2" if c['direction'] == 'bullish' else "\U0001f534" if c['direction'] == 'bearish' else "\u26aa"
+            lines.append(f"  {dir_tag} {c['detail']}")
+
+        # Signal recommendation
+        lines.append(f"\n<b>--- VERDICT ---</b>")
+        if contradiction:
+            lines.append(f"\u274c <b>NO TRADE</b> — Contradictory signals detected.")
+        elif cc >= 3 and direction != 'NEUTRAL':
+            from binance_ta_runner import calculate_trade_levels
+            levels = calculate_trade_levels(result)
+            if levels:
+                lines.append(f"\u2705 <b>SIGNAL: {direction}</b>")
+                lines.append(f"<b>Entry:</b> {pfmt(levels['entry'])}")
+                lines.append(f"<b>SL:</b> {pfmt(levels['stop_loss'])}")
+                lines.append(f"<b>TP1:</b> {pfmt(levels['tp1'])} ({levels['rr_tp1']})")
+                lines.append(f"<b>TP2:</b> {pfmt(levels['tp2'])} ({levels['rr_tp2']})")
+                lines.append(f"<b>TP3:</b> {pfmt(levels['tp3'])} ({levels['rr_tp3']})")
+            else:
+                lines.append(f"\u26a0\ufe0f Direction is {direction} but could not calculate levels.")
+        else:
+            lines.append(f"\u26a0\ufe0f <b>NO VALID SETUP</b> — {cc} confluences (need 3+)")
+            if direction == 'NEUTRAL':
+                lines.append("Direction is neutral — wait for clearer signal.")
+
+        send_message(chat_id, "\n".join(lines))
+
+    except Exception as e:
+        send_message(chat_id, f"Analysis error: {e}")
+        import traceback
+        traceback.print_exc()
+
+
 COMMAND_HANDLERS = {
     "/start": handle_start,
     "/chatid": handle_chatid,
@@ -2149,6 +2313,7 @@ COMMAND_HANDLERS = {
     "/scan_all": handle_scan_all,
     "/scan_pair": handle_scan_pair,
     "/scan_custom": handle_scan_custom,
+    "/analyze": handle_analyze,
     "/test_signals": handle_test_signals,
     "/send_signals": handle_send_signals,
     "/send_signals_direct": handle_send_signals_direct,
@@ -2164,7 +2329,7 @@ COMMAND_HANDLERS = {
 
 # Commands that need the full text (for argument parsing)
 _COMMANDS_WITH_ARGS = {"/setcap", "/scan_pair", "/scan_custom", "/forex_pair", "/forex_custom",
-                       "/approve_channel", "/remove_channel"}
+                       "/analyze", "/approve_channel", "/remove_channel"}
 
 
 def _unified_cron_cycle():
