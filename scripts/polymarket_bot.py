@@ -1357,6 +1357,12 @@ def handle_scan(chat_id):
             )
             return
 
+        # Auto-send to test channel if configured
+        if TEST_CHANNEL_ID:
+            test_sent = _send_to_test_channel(signals)
+            if test_sent:
+                send_message(chat_id, f"Auto-sent <b>{test_sent}</b> Polymarket signal(s) to test channel.")
+
         send_message(chat_id, f"Found <b>{len(signals)} signal(s)</b>. Sending for review...")
 
         for signal in signals:
@@ -1617,6 +1623,12 @@ def handle_ta(chat_id):
                 "Run <code>python scripts/binance_ta_runner.py</code> first, or data may be stale (&gt;60 min)."
             )
             return
+
+        # Auto-send to test channel if configured
+        if TEST_CHANNEL_ID:
+            test_sent = _send_to_test_channel(signals)
+            if test_sent:
+                send_message(chat_id, f"Auto-sent <b>{test_sent}</b> crypto signal(s) to test channel.")
 
         send_message(chat_id, f"Found <b>{len(signals)} trading signal(s)</b>. Sending for review...")
 

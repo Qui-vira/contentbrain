@@ -296,7 +296,12 @@ def run_auto_scan(dry_run=False):
         return
 
     sent_count = 0
-    from polymarket_bot import send_to_approval
+    from polymarket_bot import send_to_approval, _send_to_test_channel, TEST_CHANNEL_ID
+
+    # Auto-send ALL qualifying signals to test channel (no approval needed)
+    if TEST_CHANNEL_ID and to_send:
+        test_sent = _send_to_test_channel(to_send)
+        print(f"  [TEST] Auto-sent {test_sent} signal(s) to test channel.")
 
     for s in to_send:
         mtype = s.get('market_type', 'UNKNOWN')
