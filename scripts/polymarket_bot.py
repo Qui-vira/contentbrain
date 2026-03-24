@@ -702,8 +702,10 @@ def _safe_float(val):
         return None
 
 
-def log_trading_to_tracker(signal):
-    """Log approved trading signal to Supabase trading_signals table."""
+def log_trading_to_tracker(signal, approved_channels=None):
+    """Log trading signal to Supabase trading_signals table.
+    approved_channels: list of channel names where this signal was approved.
+    e.g. ['krib'], ['krib', 'public'], ['test'] — monitor only notifies these."""
     row = {
         'pair': signal.get('pair', ''),
         'timeframe': signal.get('timeframe', ''),
@@ -719,6 +721,7 @@ def log_trading_to_tracker(signal):
         'trend': signal.get('trend', ''),
         'source': signal.get('source', 'manual'),
         'status': 'PENDING_ENTRY',
+        'approved_channels': ','.join(approved_channels) if approved_channels else 'test',
     }
 
     if _supabase:
@@ -1008,16 +1011,18 @@ def _signal_monitor_cycle():
         if not _update_trading_signal_supabase(signal_id, updates):
             continue
 
-        # Send notification to Krib, Poly channel, test channel, and subscribers
+        # Send notification ONLY to channels where signal was approved
         notification = _format_hit_notification(signal, current_price, new_status, check)
+        approved = (signal.get('approved_channels') or 'test').split(',')
 
-        if KRIB_CHAT_ID:
+        if 'krib' in approved and KRIB_CHAT_ID:
             send_message(KRIB_CHAT_ID, notification)
-        if POLY_CHANNEL_ID:
+        if 'public' in approved and POLY_CHANNEL_ID:
             send_message(POLY_CHANNEL_ID, notification)
+        if 'public' in approved:
+            _send_to_subscribers(notification)
         if TEST_CHANNEL_ID:
             send_message(TEST_CHANNEL_ID, notification)
-        _send_to_subscribers(notification)
 
     # Also auto-resolve Polymarket signals
     try:
@@ -1028,11 +1033,11 @@ def _signal_monitor_cycle():
             for u in resolved:
                 lines.append(f"#{u['signal']} {u['market'][:30]} — <b>{u['new_status']}</b> ({u['pnl']})")
             msg = "\n".join(lines)
-            if KRIB_CHAT_ID:
-                send_message(KRIB_CHAT_ID, msg)
-            if POLY_CHANNEL_ID:
-                send_message(POLY_CHANNEL_ID, msg)
-            _send_to_subscribers(msg)
+            # Polymarket resolutions go to admin only (already approved signals tracked separately)
+            if ADMIN_CHAT_ID:
+                send_message(ADMIN_CHAT_ID, msg)
+            if TEST_CHANNEL_ID:
+                send_message(TEST_CHANNEL_ID, msg)
             print(f"[MONITOR] {len(resolved)} Polymarket signal(s) auto-resolved.")
     except ImportError:
         pass
@@ -1878,10 +1883,10 @@ def _send_to_test_channel(signals, chat_id=None):
         result = send_message(TEST_CHANNEL_ID, card)
         if result and result.get("ok"):
             sent += 1
-            # Log to tracker so the monitor auto-tracks TP/SL hits
+            # Log to tracker — tagged as 'test' so monitor only notifies test channel
             try:
                 if signal.get('signal_type') == 'trading':
-                    log_trading_to_tracker(signal)
+                    log_trading_to_tracker(signal, approved_channels=['test'])
                 else:
                     log_to_tracker(signal)
             except Exception as e:
@@ -2278,11 +2283,11 @@ def handle_analyze(chat_id, text=""):
                 lines.append(f"<b>TP2:</b> {pfmt(levels['tp2'])} ({levels['rr_tp2']})")
                 lines.append(f"<b>TP3:</b> {pfmt(levels['tp3'])} ({levels['rr_tp3']})")
 
-                # Auto-log to tracker for monitoring
+                # Auto-log to tracker for monitoring (test-only, won't notify public channels)
                 try:
                     signal = build_trading_signal(result)
                     if signal:
-                        log_trading_to_tracker(signal)
+                        log_trading_to_tracker(signal, approved_channels=['test'])
                         lines.append("\nLogged to tracker — monitor will auto-track TP/SL.")
                 except Exception as e:
                     print(f"  [ANALYZE] Tracker log error: {e}")
@@ -2483,33 +2488,9 @@ def run_bot():
                             if already_done:
                                 send_message(chat_id, "Already processed. Skipping.")
                             elif text.upper() == "APPROVE":
-                                send_message(chat_id, "Approved. Distributing to Krib + X...")
-                                try:
-                                    if entry.get("krib_status") == "pending":
-                                        entry["krib_status"] = "approved"
-                                        pending[cb_key] = entry
-                                        with open(PENDING_FILE, "w", encoding="utf-8") as f:
-                                            json.dump(pending, f, indent=2, default=str)
-                                        distribute_to_telegram(signal)
-                                    if entry.get("x_status") == "pending":
-                                        entry["x_status"] = "approved"
-                                        typefully_id = publish_to_x(signal, pending_entry=entry)
-                                        if typefully_id:
-                                            entry["typefully_id"] = typefully_id
-                                    # Backward compat
-                                    if "status" in entry:
-                                        entry["status"] = "approved"
-                                    pending[cb_key] = entry
-                                except Exception as e:
-                                    print(f"  Distribution FAILED: {e}")
-                                    send_message(chat_id, f"Distribution failed: {e}")
+                                send_message(chat_id, "Use the inline buttons to approve (Krib / Public / X separately).")
                             else:
-                                entry["krib_status"] = "rejected"
-                                entry["x_status"] = "rejected"
-                                if "status" in entry:
-                                    entry["status"] = "rejected"
-                                pending[cb_key] = entry
-                                send_message(chat_id, "Signal rejected.")
+                                send_message(chat_id, "Use the inline buttons to approve or reject.")
 
                             with open(PENDING_FILE, "w", encoding="utf-8") as f:
                                 json.dump(pending, f, indent=2, default=str)
@@ -2550,7 +2531,7 @@ def run_bot():
                                     if not entry.get("tracked"):
                                         try:
                                             if is_trading:
-                                                log_trading_to_tracker(signal)
+                                                log_trading_to_tracker(signal, approved_channels=['krib'])
                                             else:
                                                 log_to_tracker(signal)
                                             entry["tracked"] = True
@@ -2604,6 +2585,15 @@ def run_bot():
                                     sub_count = _send_to_subscribers(card)
                                     if sub_count:
                                         sent_to.append(f"{sub_count} subscribers")
+                                    # Update tracker approved_channels to include 'public'
+                                    if entry.get("tracked") and _supabase:
+                                        try:
+                                            pair = signal.get('pair', '')
+                                            _supabase.table('trading_signals').update(
+                                                {'approved_channels': 'krib,public'}
+                                            ).eq('pair', pair).eq('status', 'PENDING_ENTRY').execute()
+                                        except Exception:
+                                            pass
                                     status = f"Sent to: {', '.join(sent_to)}" if sent_to else "No public channels configured"
                                     send_message(cb_chat_id, f"{status}: {label}")
                                     pending[cb_hash] = entry
@@ -2671,28 +2661,8 @@ def run_bot():
                             send_message(cb_chat_id, "Signal not found in pending list.")
 
                     elif cb_msg_id in pending:
-                        # Old-format: keyed by message_id
-                        signal_data = pending[cb_msg_id]
-                        signal = signal_data["signal"]
-
-                        if signal_data.get("status") != "pending":
-                            send_message(cb_chat_id, f"Already {signal_data['status']}. Skipping.")
-                        elif data.startswith("approve_"):
-                            label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
-                            signal_data["status"] = "approved"
-                            send_message(cb_chat_id, f"Approved: {label}\nDistributing to Krib + X...")
-                            try:
-                                distribute_signal(signal, include_x=True)
-                            except Exception as e:
-                                print(f"  Distribution FAILED: {e}")
-                                signal_data["status"] = "failed"
-                                send_message(cb_chat_id, f"Distribution failed: {e}")
-                        elif data.startswith("reject_"):
-                            signal_data["status"] = "rejected"
-                            send_message(cb_chat_id, "Signal rejected.")
-
-                        with open(PENDING_FILE, "w", encoding="utf-8") as f:
-                            json.dump(pending, f, indent=2, default=str)
+                        # Old-format: keyed by message_id — reject and point to new flow
+                        send_message(cb_chat_id, "Old signal format. Use new approval buttons (Krib / Public / X).")
 
                     # Answer callback to remove loading state
                     cb_id = callback.get("id")
