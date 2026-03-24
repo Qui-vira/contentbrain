@@ -769,18 +769,12 @@ def _check_signal_levels(signal, current_price):
 
     current_status = signal.get('status', 'ACTIVE')
 
-    # --- PENDING_ENTRY: check if price reached entry zone before tracking TP/SL ---
+    # --- PENDING_ENTRY: wait for price to reach entry zone before tracking TP/SL ---
     if current_status == 'PENDING_ENTRY':
-        if direction == 'LONG':
-            if sl and current_price <= sl:
-                return {'hits': ['CANCELLED'], 'recommended_status': 'CANCELLED', 'pnl_pct': 0}
-            if current_price >= entry * 0.998:
-                return {'hits': ['ENTRY HIT'], 'recommended_status': 'ACTIVE', 'pnl_pct': 0}
-        elif direction == 'SHORT':
-            if sl and current_price >= sl:
-                return {'hits': ['CANCELLED'], 'recommended_status': 'CANCELLED', 'pnl_pct': 0}
-            if current_price <= entry * 1.002:
-                return {'hits': ['ENTRY HIT'], 'recommended_status': 'ACTIVE', 'pnl_pct': 0}
+        if direction == 'LONG' and current_price >= entry * 0.998:
+            return {'hits': ['ENTRY HIT'], 'recommended_status': 'ACTIVE', 'pnl_pct': 0}
+        elif direction == 'SHORT' and current_price <= entry * 1.002:
+            return {'hits': ['ENTRY HIT'], 'recommended_status': 'ACTIVE', 'pnl_pct': 0}
         return {'hits': [], 'recommended_status': 'PENDING_ENTRY', 'pnl_pct': 0}
 
     # --- ACTIVE / TP1 HIT / TP2 HIT: existing TP/SL tracking ---
@@ -838,10 +832,6 @@ def _format_hit_notification(signal, current_price, new_status, check_result):
     if new_status == 'ACTIVE' and 'ENTRY HIT' in check_result.get('hits', []):
         header = "ENTRY HIT"
         status_line = "Entry price reached. Signal is now ACTIVE."
-        suppress_pnl = True
-    elif new_status == 'CANCELLED':
-        header = "CANCELLED"
-        status_line = "Price hit SL before entry. No position opened. Not counted as a loss."
         suppress_pnl = True
     elif new_status == 'STOPPED OUT':
         header = "STOPPED OUT"
@@ -978,10 +968,6 @@ def _signal_monitor_cycle():
         if 'ENTRY HIT' in check['hits']:
             updates['hit_entry'] = True
             updates['entry_hit_at'] = now_iso
-        if 'CANCELLED' in check['hits']:
-            updates['result'] = 'CANCELLED'
-            updates['pnl_percent'] = 0
-            updates['closed_at'] = now_iso
         if 'TP1 HIT' in check['hits']:
             updates['hit_tp1'] = True
         if 'TP2 HIT' in check['hits']:
@@ -1059,35 +1045,99 @@ def poll_approvals(timeout=60):
         for update in updates:
             offset = update["update_id"] + 1
 
+            # Reload pending each iteration (another instance may have updated it)
+            pending = load_pending_signals()
+
             # Check for callback queries (inline button presses)
             callback = update.get("callback_query")
             if callback:
                 data = callback.get("data", "")
-                msg_id = str(callback.get("message", {}).get("message_id", ""))
 
-                if msg_id in pending:
-                    signal_data = pending[msg_id]
-                    signal = signal_data["signal"]
+                # --- New-format callbacks ---
+                if data.startswith("appkrib_") or data.startswith("rejkrib_"):
+                    cb_hash = data.split("_", 1)[1]
+                    entry = pending.get(cb_hash)
+                    if entry:
+                        signal = entry["signal"]
+                        _label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
+                        if data.startswith("appkrib_"):
+                            if entry.get("krib_status") != "pending":
+                                print(f"\nSKIP Krib (already {entry.get('krib_status')}): {_label}")
+                            else:
+                                print(f"\nAPPROVED Krib: {_label}")
+                                entry["krib_status"] = "approved"
+                                pending[cb_hash] = entry
+                                with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                    json.dump(pending, f, indent=2, default=str)
+                                try:
+                                    distribute_to_telegram(signal)
+                                except Exception as e:
+                                    print(f"  Krib distribution FAILED: {e}")
+                                    entry["krib_status"] = "failed"
+                                    pending[cb_hash] = entry
+                                    with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                        json.dump(pending, f, indent=2, default=str)
+                        else:  # rejkrib_
+                            print(f"\nREJECTED Krib: {_label}")
+                            entry["krib_status"] = "rejected"
+                            pending[cb_hash] = entry
+                            with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                json.dump(pending, f, indent=2, default=str)
 
-                    _label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
-                    if signal_data.get("status") != "pending":
-                        print(f"\nSKIP (already {signal_data['status']}): {_label}")
-                    elif data.startswith("approve_"):
-                        print(f"\nAPPROVED: {_label}")
-                        print("Distributing to all channels (including X — poll mode)...")
-                        signal_data["status"] = "approved"
-                        try:
-                            distribute_signal(signal, include_x=True)
-                        except Exception as e:
-                            print(f"  Distribution FAILED: {e}")
-                            signal_data["status"] = "failed"
-                    elif data.startswith("reject_"):
-                        print(f"\nREJECTED: {_label}")
-                        signal_data["status"] = "rejected"
+                elif data.startswith("appx_") or data.startswith("rejx_"):
+                    cb_hash = data.split("_", 1)[1]
+                    entry = pending.get(cb_hash)
+                    if entry:
+                        signal = entry["signal"]
+                        _label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
+                        if data.startswith("appx_"):
+                            if entry.get("x_status") != "pending" or entry.get("typefully_id"):
+                                print(f"\nSKIP X (already posted): {_label}")
+                            else:
+                                print(f"\nAPPROVED X: {_label}")
+                                entry["x_status"] = "approved"
+                                pending[cb_hash] = entry
+                                with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                    json.dump(pending, f, indent=2, default=str)
+                                typefully_id = publish_to_x(signal, pending_entry=entry)
+                                if typefully_id:
+                                    entry["typefully_id"] = typefully_id
+                                    print(f"  Typefully: PUBLISHED (id: {typefully_id})")
+                                pending[cb_hash] = entry
+                                with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                    json.dump(pending, f, indent=2, default=str)
+                        else:  # rejx_
+                            print(f"\nSKIPPED X: {_label}")
+                            entry["x_status"] = "rejected"
+                            pending[cb_hash] = entry
+                            with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                json.dump(pending, f, indent=2, default=str)
 
-                    # Save updated status
-                    with open(PENDING_FILE, "w", encoding="utf-8") as f:
-                        json.dump(pending, f, indent=2, default=str)
+                else:
+                    # --- Backward compat: old approve_/reject_ callbacks ---
+                    msg_id = str(callback.get("message", {}).get("message_id", ""))
+                    if msg_id in pending:
+                        signal_data = pending[msg_id]
+                        signal = signal_data["signal"]
+                        _label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
+
+                        if signal_data.get("status") != "pending":
+                            print(f"\nSKIP (already {signal_data['status']}): {_label}")
+                        elif data.startswith("approve_"):
+                            print(f"\nAPPROVED: {_label}")
+                            print("Distributing to all channels (including X — poll mode)...")
+                            signal_data["status"] = "approved"
+                            try:
+                                distribute_signal(signal, include_x=True)
+                            except Exception as e:
+                                print(f"  Distribution FAILED: {e}")
+                                signal_data["status"] = "failed"
+                        elif data.startswith("reject_"):
+                            print(f"\nREJECTED: {_label}")
+                            signal_data["status"] = "rejected"
+
+                        with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                            json.dump(pending, f, indent=2, default=str)
 
             # Check for text replies (APPROVE/REJECT)
             msg = update.get("message", {})
@@ -1095,49 +1145,103 @@ def poll_approvals(timeout=60):
             reply_to = msg.get("reply_to_message", {})
             reply_id = str(reply_to.get("message_id", ""))
 
-            if reply_id in pending and text in ("APPROVE", "REJECT"):
-                signal_data = pending[reply_id]
-                signal = signal_data["signal"]
-                _label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
+            if text in ("APPROVE", "REJECT"):
+                cb_key, entry = _find_pending_by_msg_id(reply_id)
+                if cb_key and entry:
+                    signal = entry["signal"]
+                    _label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
 
-                if signal_data.get("status") != "pending":
-                    print(f"\nSKIP (already {signal_data['status']}): {_label}")
-                elif text == "APPROVE":
-                    print(f"\nAPPROVED: {_label}")
-                    signal_data["status"] = "approved"
-                    try:
-                        distribute_signal(signal, include_x=True)
-                    except Exception as e:
-                        print(f"  Distribution FAILED: {e}")
-                        signal_data["status"] = "failed"
-                else:
-                    print(f"\nREJECTED: {_label}")
-                    signal_data["status"] = "rejected"
+                    if text == "APPROVE":
+                        print(f"\nAPPROVED (reply): {_label}")
+                        # New format
+                        if "krib_status" in entry:
+                            if entry.get("krib_status") == "pending":
+                                entry["krib_status"] = "approved"
+                                pending[cb_key] = entry
+                                with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                    json.dump(pending, f, indent=2, default=str)
+                                distribute_to_telegram(signal)
+                            if entry.get("x_status") == "pending":
+                                entry["x_status"] = "approved"
+                                typefully_id = publish_to_x(signal, pending_entry=entry)
+                                if typefully_id:
+                                    entry["typefully_id"] = typefully_id
+                            pending[cb_key] = entry
+                        else:
+                            # Old format
+                            entry["status"] = "approved"
+                            pending[cb_key] = entry
+                            try:
+                                distribute_signal(signal, include_x=True)
+                            except Exception as e:
+                                print(f"  Distribution FAILED: {e}")
+                                entry["status"] = "failed"
+                                pending[cb_key] = entry
+                    else:
+                        print(f"\nREJECTED (reply): {_label}")
+                        if "krib_status" in entry:
+                            entry["krib_status"] = "rejected"
+                            entry["x_status"] = "rejected"
+                        else:
+                            entry["status"] = "rejected"
+                        pending[cb_key] = entry
 
-                with open(PENDING_FILE, "w", encoding="utf-8") as f:
-                    json.dump(pending, f, indent=2, default=str)
+                    with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                        json.dump(pending, f, indent=2, default=str)
 
     print("\nPolling complete.")
 
 
 def manual_approve(message_id):
-    """Manually approve a pending signal by message ID."""
+    """Manually approve a pending signal by message ID or callback hash."""
     pending = load_pending_signals()
     msg_id = str(message_id)
 
-    if msg_id not in pending:
+    # Try direct key first, then search by msg_id
+    if msg_id in pending:
+        cb_key = msg_id
+        entry = pending[msg_id]
+    else:
+        cb_key, entry = _find_pending_by_msg_id(msg_id)
+
+    if not cb_key or not entry:
         print(f"No pending signal found for message_id {msg_id}")
         print(f"Pending IDs: {list(pending.keys())}")
         return
 
-    signal_data = pending[msg_id]
-    signal = signal_data["signal"]
-
+    signal = entry["signal"]
     print(f"Approving: {signal.get('market_question', signal.get('pair', 'Signal'))[:60]}")
-    print("Distributing to all channels (including X)...")
-    results = distribute_signal(signal, include_x=True)
 
-    signal_data["status"] = "approved"
+    # New format
+    if "krib_status" in entry:
+        print("Distributing to Krib...")
+        if entry.get("krib_status") == "pending":
+            entry["krib_status"] = "approved"
+            pending[cb_key] = entry
+            with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                json.dump(pending, f, indent=2, default=str)
+            results = distribute_to_telegram(signal)
+        else:
+            results = {"krib": f"already {entry.get('krib_status')}"}
+
+        print("Publishing to X...")
+        if entry.get("x_status") == "pending" and not entry.get("typefully_id"):
+            entry["x_status"] = "approved"
+            typefully_id = publish_to_x(signal, pending_entry=entry)
+            if typefully_id:
+                entry["typefully_id"] = typefully_id
+                results["typefully"] = "PUBLISHED"
+        else:
+            results["typefully"] = f"already {entry.get('x_status')} (id: {entry.get('typefully_id')})"
+
+        pending[cb_key] = entry
+    else:
+        # Old format
+        print("Distributing to all channels (including X)...")
+        results = distribute_signal(signal, include_x=True)
+        entry["status"] = "approved"
+        pending[cb_key] = entry
+
     with open(PENDING_FILE, "w", encoding="utf-8") as f:
         json.dump(pending, f, indent=2, default=str)
 
@@ -1365,7 +1469,6 @@ def _trading_performance_section(rows, label):
     active = sum(1 for r in rows if r.get('status') in ('ACTIVE', 'TP1 HIT', 'TP2 HIT'))
     wins = sum(1 for r in rows if r.get('result') == 'WIN')
     losses = sum(1 for r in rows if r.get('result') == 'LOSS')
-    cancelled = sum(1 for r in rows if r.get('result') == 'CANCELLED')
     closed = wins + losses
     win_rate = round(wins / closed * 100, 1) if closed > 0 else 0
     avg_strength = round(sum(r.get('strength_score', 0) or 0 for r in rows) / total, 1) if total > 0 else 0
@@ -1375,7 +1478,6 @@ def _trading_performance_section(rows, label):
         f"Total Signals: {total}\n"
         f"Pending Entry: {pending}\n"
         f"Active: {active}\n"
-        f"Cancelled (no entry): {cancelled}\n"
         f"Closed: {closed}\n"
         f"Win Rate: {win_rate}%\n"
         f"Record: {wins}W / {losses}L\n"
@@ -2159,14 +2261,84 @@ def run_bot():
                     cb_chat_id = callback.get("message", {}).get("chat", {}).get("id")
                     pending = load_pending_signals()
 
-                    # Handle "Post to X?" follow-up buttons
-                    if data.startswith("postx_yes_") or data.startswith("postx_no_"):
+                    # --- New-format callbacks: appkrib_, rejkrib_, appx_, rejx_ ---
+                    if data.startswith("appkrib_") or data.startswith("rejkrib_"):
+                        cb_hash = data.split("_", 1)[1]
+                        entry = pending.get(cb_hash)
+                        if entry:
+                            signal = entry["signal"]
+                            label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
+                            if data.startswith("appkrib_"):
+                                if entry.get("krib_status") != "pending":
+                                    send_message(cb_chat_id, f"Krib already {entry.get('krib_status')}. Skipping.")
+                                else:
+                                    entry["krib_status"] = "approved"
+                                    pending[cb_hash] = entry
+                                    with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                        json.dump(pending, f, indent=2, default=str)
+                                    send_message(cb_chat_id, f"Approved for Krib: {label}\nDistributing...")
+                                    try:
+                                        distribute_to_telegram(signal)
+                                    except Exception as e:
+                                        print(f"  Krib distribution FAILED: {e}")
+                                        entry["krib_status"] = "failed"
+                                        send_message(cb_chat_id, f"Krib distribution failed: {e}")
+                                    pending[cb_hash] = entry
+                                    with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                        json.dump(pending, f, indent=2, default=str)
+                            else:  # rejkrib_
+                                entry["krib_status"] = "rejected"
+                                pending[cb_hash] = entry
+                                with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                    json.dump(pending, f, indent=2, default=str)
+                                send_message(cb_chat_id, "Krib signal rejected.")
+                        else:
+                            send_message(cb_chat_id, "Signal not found in pending list.")
+
+                    elif data.startswith("appx_") or data.startswith("rejx_"):
+                        cb_hash = data.split("_", 1)[1]
+                        entry = pending.get(cb_hash)
+                        if entry:
+                            signal = entry["signal"]
+                            if data.startswith("appx_"):
+                                if entry.get("x_status") != "pending":
+                                    send_message(cb_chat_id, f"X already {entry.get('x_status')}. Skipping.")
+                                elif entry.get("typefully_id"):
+                                    send_message(cb_chat_id, f"Already posted to X (id: {entry['typefully_id']}). Skipping.")
+                                else:
+                                    entry["x_status"] = "approved"
+                                    pending[cb_hash] = entry
+                                    with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                        json.dump(pending, f, indent=2, default=str)
+                                    typefully_id = publish_to_x(signal, pending_entry=entry)
+                                    if typefully_id:
+                                        entry["typefully_id"] = typefully_id
+                                        send_message(cb_chat_id, f"Posted to X via Typefully (id: {typefully_id})")
+                                    else:
+                                        send_message(cb_chat_id, "Failed to post to X. Check Typefully API key.")
+                                    pending[cb_hash] = entry
+                                    with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                        json.dump(pending, f, indent=2, default=str)
+                            else:  # rejx_
+                                entry["x_status"] = "rejected"
+                                pending[cb_hash] = entry
+                                with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                    json.dump(pending, f, indent=2, default=str)
+                                send_message(cb_chat_id, "Skipped X/Twitter.")
+                        else:
+                            send_message(cb_chat_id, "Signal not found in pending list.")
+
+                    # --- Backward compat: old approve_/reject_ and postx_ callbacks ---
+                    elif data.startswith("postx_yes_") or data.startswith("postx_no_"):
                         original_id = data.split("_", 2)[-1]
                         if original_id in pending:
                             signal = pending[original_id]["signal"]
                             if data.startswith("postx_yes_"):
-                                typefully_id = publish_signal_to_x(signal)
+                                typefully_id = publish_to_x(signal, pending_entry=pending[original_id])
                                 if typefully_id:
+                                    pending[original_id]["typefully_id"] = typefully_id
+                                    with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                        json.dump(pending, f, indent=2, default=str)
                                     send_message(cb_chat_id, f"Posted to X/Twitter via Typefully (id: {typefully_id})")
                                 else:
                                     send_message(cb_chat_id, "Failed to post to X. Check Typefully API key.")
@@ -2176,6 +2348,7 @@ def run_bot():
                             send_message(cb_chat_id, "Signal not found in pending list.")
 
                     elif cb_msg_id in pending:
+                        # Old-format: keyed by message_id
                         signal_data = pending[cb_msg_id]
                         signal = signal_data["signal"]
 
@@ -2184,11 +2357,9 @@ def run_bot():
                         elif data.startswith("approve_"):
                             label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
                             signal_data["status"] = "approved"
-                            send_message(cb_chat_id, f"Approved: {label}\nDistributing to Telegram...")
+                            send_message(cb_chat_id, f"Approved: {label}\nDistributing to Krib + X...")
                             try:
-                                distribute_signal(signal)
-                                # Ask about X/Twitter as a separate step
-                                _ask_post_to_x(cb_chat_id, signal, cb_msg_id)
+                                distribute_signal(signal, include_x=True)
                             except Exception as e:
                                 print(f"  Distribution FAILED: {e}")
                                 signal_data["status"] = "failed"
