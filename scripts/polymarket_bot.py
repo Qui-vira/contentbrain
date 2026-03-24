@@ -330,18 +330,35 @@ def test_bot():
 
 # --- Signal Distribution ---
 
-def save_pending_signal(signal, message_id):
-    """Save signal to pending approvals file."""
+def save_pending_signal(signal, callback_id, krib_msg_id=None, x_msg_id=None):
+    """Save signal to pending approvals file, keyed by callback hash."""
     pending = load_pending_signals()
-    pending[str(message_id)] = {
+    pending[callback_id] = {
         "signal": signal,
         "sent_at": datetime.now(timezone.utc).isoformat(),
-        "status": "pending",
+        "krib_status": "pending",
+        "x_status": "pending",
+        "typefully_id": None,
+        "krib_msg_id": str(krib_msg_id) if krib_msg_id else None,
+        "x_msg_id": str(x_msg_id) if x_msg_id else None,
     }
 
     os.makedirs(os.path.dirname(PENDING_FILE), exist_ok=True)
     with open(PENDING_FILE, "w", encoding="utf-8") as f:
         json.dump(pending, f, indent=2, default=str)
+
+
+def _find_pending_by_msg_id(msg_id):
+    """Find a pending entry by either krib_msg_id or x_msg_id. Returns (callback_id, entry) or (None, None)."""
+    pending = load_pending_signals()
+    msg_id_str = str(msg_id)
+    for cb_id, entry in pending.items():
+        if entry.get("krib_msg_id") == msg_id_str or entry.get("x_msg_id") == msg_id_str:
+            return cb_id, entry
+        # Backward compat: old-format entries are keyed by msg_id directly
+        if cb_id == msg_id_str and "status" in entry:
+            return cb_id, entry
+    return None, None
 
 
 def load_pending_signals():
@@ -356,7 +373,7 @@ def load_pending_signals():
 
 
 def send_to_approval(signal):
-    """Send signal to approval channel with approve/reject buttons."""
+    """Send signal to approval channel with separate Krib and X approval messages."""
     if signal.get('signal_type') == 'trading':
         card = format_trading_signal_card(signal, for_telegram=True)
         raw_id = f"{signal['pair']}_{signal['timeframe']}_{int(datetime.now(timezone.utc).timestamp())}"
@@ -367,45 +384,44 @@ def send_to_approval(signal):
     import hashlib
     callback_id = hashlib.md5(raw_id.encode()).hexdigest()[:16]
 
-    # Add approval prompt
-    card += "\n\n---\nReply with 'APPROVE' or 'REJECT' to this signal."
-
-    # Inline keyboard for approval
-    reply_markup = {
-        "inline_keyboard": [
-            [
-                {"text": "✅ Approve", "callback_data": f"approve_{callback_id}"},
-                {"text": "❌ Reject", "callback_data": f"reject_{callback_id}"},
-            ]
-        ]
-    }
-
-    # Priority: approval channel > admin DM > Krib fallback
     approval_dest = APPROVAL_CHANNEL_ID or ADMIN_CHAT_ID or KRIB_CHAT_ID
 
-    result = send_message(
-        approval_dest,
-        card,
-        reply_markup=reply_markup,
-    )
+    # --- Message 1: Krib approval (full signal card) ---
+    krib_card = f"📌 <b>VIP Hustlers Krib Signal</b>\n\n{card}"
+    krib_card += "\n\n---\nReply APPROVE or REJECT to this signal."
+    krib_markup = {
+        "inline_keyboard": [[
+            {"text": "✅ Send to Krib", "callback_data": f"appkrib_{callback_id}"},
+            {"text": "❌ Reject Krib", "callback_data": f"rejkrib_{callback_id}"},
+        ]]
+    }
+    krib_result = send_message(approval_dest, krib_card, reply_markup=krib_markup)
+    krib_msg_id = krib_result["result"]["message_id"] if krib_result and krib_result.get("ok") else None
 
-    if result and result.get("ok"):
-        msg_id = result["result"]["message_id"]
-        save_pending_signal(signal, msg_id)
-        print(f"Signal sent to approval channel (message_id: {msg_id})")
-        return msg_id
+    # --- Message 2: X/Twitter approval (tweet preview) ---
+    is_trading = signal.get('signal_type') == 'trading'
+    tweet_text = _get_trading_tweet_text(signal) if is_trading else _get_poly_tweet_text(signal)
+    x_card = f"🐦 <b>X/Twitter Preview</b>\n\n<pre>{tweet_text}</pre>"
+    x_markup = {
+        "inline_keyboard": [[
+            {"text": "✅ Post to X", "callback_data": f"appx_{callback_id}"},
+            {"text": "❌ Skip X", "callback_data": f"rejx_{callback_id}"},
+        ]]
+    }
+    x_result = send_message(approval_dest, x_card, reply_markup=x_markup)
+    x_msg_id = x_result["result"]["message_id"] if x_result and x_result.get("ok") else None
+
+    if krib_msg_id or x_msg_id:
+        save_pending_signal(signal, callback_id, krib_msg_id=krib_msg_id, x_msg_id=x_msg_id)
+        print(f"Signal sent for approval (krib_msg: {krib_msg_id}, x_msg: {x_msg_id}, hash: {callback_id})")
+        return krib_msg_id
     else:
         print("Failed to send signal to approval channel")
         return None
 
 
-def distribute_signal(signal, include_x=False):
-    """Distribute approved signal to Telegram channels (and optionally X/Twitter).
-
-    By default, distributes to Telegram only. If include_x=True, also publishes to
-    X/Twitter via Typefully immediately. When called from the approval flow, include_x
-    is False — the bot asks separately whether to post to X.
-    """
+def distribute_to_telegram(signal):
+    """Distribute signal to Telegram channels (Krib, Poly, subscribers) + draft file + tracker."""
     is_trading = signal.get('signal_type') == 'trading'
 
     if is_trading:
@@ -427,24 +443,14 @@ def distribute_signal(signal, include_x=False):
         results["poly"] = "OK" if result and result.get("ok") else "FAIL"
         print(f"  Poly Channel: {results['poly']}")
 
-    # 3. Queue tweet draft
+    # 3. Queue tweet draft file
     if is_trading:
-        draft_path, tweet_text = create_trading_twitter_draft(signal)
+        draft_path, _ = create_trading_twitter_draft(signal)
     else:
-        draft_path, tweet_text = create_twitter_draft(signal)
+        draft_path, _ = create_twitter_draft(signal)
     if draft_path:
         results["twitter_draft"] = "QUEUED"
         print(f"  X/Twitter Draft: QUEUED at {draft_path}")
-
-        # Only publish to X if explicitly requested (include_x=True)
-        if include_x:
-            typefully_id = push_to_typefully(tweet_text, publish=True)
-            if typefully_id:
-                results["typefully"] = "PUBLISHED"
-                print(f"  Typefully: PUBLISHED (id: {typefully_id})")
-            elif TYPEFULLY_API_KEY:
-                results["typefully"] = "FAIL"
-                print(f"  Typefully: FAIL — check logs above for details")
 
     # 4. Send to subscriber channels
     sub_count = _send_to_subscribers(card)
@@ -462,53 +468,39 @@ def distribute_signal(signal, include_x=False):
     return results
 
 
-def publish_signal_to_x(signal):
-    """Publish a signal to X/Twitter via Typefully."""
+def publish_to_x(signal, pending_entry=None):
+    """Publish a signal to X/Twitter via Typefully. Deduplicates using typefully_id in pending_entry."""
+    # Dedup: if already posted, skip
+    if pending_entry and pending_entry.get("typefully_id"):
+        print(f"[Typefully] Already posted (id: {pending_entry['typefully_id']}). Skipping.")
+        return pending_entry["typefully_id"]
+
     is_trading = signal.get('signal_type') == 'trading'
-    if is_trading:
-        _, tweet_text = create_trading_twitter_draft(signal)
-    else:
-        _, tweet_text = create_twitter_draft(signal)
+    tweet_text = _get_trading_tweet_text(signal) if is_trading else _get_poly_tweet_text(signal)
     if not tweet_text:
         return None
     return push_to_typefully(tweet_text, publish=True)
 
 
-def _ask_post_to_x(chat_id, signal, original_msg_id):
-    """Send 'Also post to X?' prompt with Yes/No buttons after Telegram distribution."""
-    label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
-    reply_markup = {
-        "inline_keyboard": [[
-            {"text": "✅ Post to X", "callback_data": f"postx_yes_{original_msg_id}"},
-            {"text": "❌ Skip X", "callback_data": f"postx_no_{original_msg_id}"},
-        ]]
-    }
-    send_message(chat_id, f"Telegram distribution done for: <b>{label}</b>\n\nAlso post to X/Twitter?",
-                 reply_markup=reply_markup)
+def distribute_signal(signal, include_x=False):
+    """Backward-compat wrapper: distribute to Telegram, optionally X."""
+    results = distribute_to_telegram(signal)
+    if include_x:
+        typefully_id = publish_to_x(signal)
+        if typefully_id:
+            results["typefully"] = "PUBLISHED"
+            print(f"  Typefully: PUBLISHED (id: {typefully_id})")
+        elif TYPEFULLY_API_KEY:
+            results["typefully"] = "FAIL"
+            print(f"  Typefully: FAIL — check logs above for details")
+    return results
 
 
 def create_twitter_draft(signal):
     """Create a tweet draft from signal for ghostwriter pickup. Returns (filepath, tweet_text)."""
     os.makedirs(DRAFTS_DIR, exist_ok=True)
 
-    yes_pct = round(signal["current_odds"]["yes"] * 100, 1)
-    no_pct = round(signal["current_odds"]["no"] * 100, 1)
-    edge_pct = round(signal["edge"] * 100, 1)
-    rec = signal["recommendation"]
-    rec_odds = yes_pct if rec == "YES" else no_pct
-    model_pct = round(signal["model_probability"] * 100, 1)
-
-    # Generate tweet content
-    tweet = (
-        f"New prediction market signal 🔮\n\n"
-        f"{signal['market_question']}\n\n"
-        f"Market says: {rec_odds}%\n"
-        f"My model says: {model_pct}%\n"
-        f"Edge: +{edge_pct}%\n\n"
-        f"Recommendation: {rec}\n"
-        f"Confidence: {signal['confidence']:.0f}/100\n\n"
-        f"Full breakdown in the Krib"
-    )
+    tweet = _get_poly_tweet_text(signal)
 
     # Save as draft
     now = datetime.now(timezone.utc)
@@ -605,10 +597,8 @@ TRADING_LOG_PATH = os.path.join(
 )
 
 
-def create_trading_twitter_draft(signal):
-    """Create a tweet draft from a trading signal for ghostwriter pickup. Returns (filepath, tweet_text)."""
-    os.makedirs(TRADING_DRAFTS_DIR, exist_ok=True)
-
+def _get_trading_tweet_text(signal):
+    """Return tweet text for a trading signal with updated CTA."""
     pair = signal.get('pair', 'UNKNOWN')
     direction = signal.get('direction', 'NEUTRAL')
     entry = signal.get('entry', 0)
@@ -621,16 +611,47 @@ def create_trading_twitter_draft(signal):
     mtype = detect_market_type(signal)
     type_label = "Forex" if mtype == 'FOREX' else "Crypto"
 
-    tweet = (
+    return (
         f"New {type_label.lower()} signal\n\n"
         f"{pair} {direction}\n\n"
         f"Entry: {entry}\n"
         f"SL: {sl}\n"
         f"TP1: {tp1}\n\n"
         f"Strength: {strength}/10 | {conf_count} confluences\n\n"
-        f"Full levels and analysis in the Krib"
+        f"Full levels and analysis in the VIP Hustlers Krib\n"
+        f"Link to access in comments"
     )
 
+
+def _get_poly_tweet_text(signal):
+    """Return tweet text for a polymarket signal with updated CTA."""
+    yes_pct = round(signal["current_odds"]["yes"] * 100, 1)
+    no_pct = round(signal["current_odds"]["no"] * 100, 1)
+    edge_pct = round(signal["edge"] * 100, 1)
+    rec = signal["recommendation"]
+    rec_odds = yes_pct if rec == "YES" else no_pct
+    model_pct = round(signal["model_probability"] * 100, 1)
+
+    return (
+        f"New prediction market signal\n\n"
+        f"{signal['market_question']}\n\n"
+        f"Market says: {rec_odds}%\n"
+        f"My model says: {model_pct}%\n"
+        f"Edge: +{edge_pct}%\n\n"
+        f"Recommendation: {rec}\n"
+        f"Confidence: {signal['confidence']:.0f}/100\n\n"
+        f"Full breakdown in the VIP Hustlers Krib\n"
+        f"Link to access in comments"
+    )
+
+
+def create_trading_twitter_draft(signal):
+    """Create a tweet draft from a trading signal for ghostwriter pickup. Returns (filepath, tweet_text)."""
+    os.makedirs(TRADING_DRAFTS_DIR, exist_ok=True)
+
+    tweet = _get_trading_tweet_text(signal)
+
+    pair = signal.get('pair', 'UNKNOWN')
     now = datetime.now(timezone.utc)
     filename = f"{now.strftime('%Y-%m-%d')}-ta-{pair}-{signal.get('timeframe', '4h')}.md"
     filepath = os.path.join(TRADING_DRAFTS_DIR, filename)
@@ -680,7 +701,7 @@ def log_trading_to_tracker(signal):
         'confluences': ', '.join(signal.get('confluences', [])) if isinstance(signal.get('confluences'), list) else signal.get('confluences', ''),
         'trend': signal.get('trend', ''),
         'source': signal.get('source', 'manual'),
-        'status': 'ACTIVE',
+        'status': 'PENDING_ENTRY',
     }
 
     if _supabase:
@@ -706,7 +727,7 @@ def log_trading_to_tracker(signal):
     md_row = (
         f"| — | {now} | {row['pair']} | {row['timeframe']} | {row['direction']} | "
         f"{row['entry_price']} | {row['stop_loss']} | {row['tp1']} | {row['tp2']} | {row['tp3']} | "
-        f"{row['strength_score']}/10 | {row['confluence_count']} | ACTIVE |\n"
+        f"{row['strength_score']}/10 | {row['confluence_count']} | PENDING_ENTRY |\n"
     )
     with open(TRADING_LOG_PATH, "a", encoding="utf-8") as f:
         f.write(md_row)
@@ -746,6 +767,23 @@ def _check_signal_levels(signal, current_price):
         print(f"[MONITOR] WARNING: entry price is 0 for {signal.get('pair', '?')}, skipping.")
         return {'hits': [], 'recommended_status': signal.get('status', 'ACTIVE'), 'pnl_pct': 0}
 
+    current_status = signal.get('status', 'ACTIVE')
+
+    # --- PENDING_ENTRY: check if price reached entry zone before tracking TP/SL ---
+    if current_status == 'PENDING_ENTRY':
+        if direction == 'LONG':
+            if sl and current_price <= sl:
+                return {'hits': ['CANCELLED'], 'recommended_status': 'CANCELLED', 'pnl_pct': 0}
+            if current_price >= entry * 0.998:
+                return {'hits': ['ENTRY HIT'], 'recommended_status': 'ACTIVE', 'pnl_pct': 0}
+        elif direction == 'SHORT':
+            if sl and current_price >= sl:
+                return {'hits': ['CANCELLED'], 'recommended_status': 'CANCELLED', 'pnl_pct': 0}
+            if current_price <= entry * 1.002:
+                return {'hits': ['ENTRY HIT'], 'recommended_status': 'ACTIVE', 'pnl_pct': 0}
+        return {'hits': [], 'recommended_status': 'PENDING_ENTRY', 'pnl_pct': 0}
+
+    # --- ACTIVE / TP1 HIT / TP2 HIT: existing TP/SL tracking ---
     hits = []
     pnl_pct = 0.0  # Bug #1: Initialize before if/elif to prevent UnboundLocalError
 
@@ -795,7 +833,17 @@ def _format_hit_notification(signal, current_price, new_status, check_result):
     pnl = check_result.get('pnl_pct', 0)
     pnl_str = f"+{pnl:.2f}%" if pnl >= 0 else f"{pnl:.2f}%"
 
-    if new_status == 'STOPPED OUT':
+    suppress_pnl = False
+
+    if new_status == 'ACTIVE' and 'ENTRY HIT' in check_result.get('hits', []):
+        header = "ENTRY HIT"
+        status_line = "Entry price reached. Signal is now ACTIVE."
+        suppress_pnl = True
+    elif new_status == 'CANCELLED':
+        header = "CANCELLED"
+        status_line = "Price hit SL before entry. No position opened. Not counted as a loss."
+        suppress_pnl = True
+    elif new_status == 'STOPPED OUT':
         header = "STOPPED OUT"
         status_line = "Signal closed at stop loss."
     elif new_status == 'TP3 HIT':
@@ -803,7 +851,7 @@ def _format_hit_notification(signal, current_price, new_status, check_result):
         status_line = "All targets hit. Signal closed."
     elif new_status == 'TP2 HIT':
         header = "TP2 HIT"
-        status_line = "TP3 still active."
+        status_line = "Trail your stop to TP1. Lock in profits. TP3 still active."
     elif new_status == 'TP1 HIT':
         header = "TP1 HIT"
         remaining = []
@@ -811,7 +859,8 @@ def _format_hit_notification(signal, current_price, new_status, check_result):
             remaining.append('TP2')
         if signal.get('tp3'):
             remaining.append('TP3')
-        status_line = f"{'/'.join(remaining)} still active." if remaining else "Signal still active."
+        remaining_str = f" {'/'.join(remaining)} still active." if remaining else ""
+        status_line = f"Move your SL to entry (risk-free trade). Take partial profits.{remaining_str}"
     else:
         header = "SIGNAL UPDATE"
         status_line = ""
@@ -833,6 +882,11 @@ def _format_hit_notification(signal, current_price, new_status, check_result):
     else:
         price_fmt = lambda p: f"{p:,.2f}" if p else "—"
 
+    sl = signal.get('stop_loss')
+    tp1 = signal.get('tp1')
+    tp2 = signal.get('tp2')
+    tp3 = signal.get('tp3')
+
     lines = [
         f"<b>{type_label} SIGNAL UPDATE</b>\n",
         f"<b>{header}</b>\n",
@@ -840,7 +894,9 @@ def _format_hit_notification(signal, current_price, new_status, check_result):
         f"<b>Direction:</b> {direction}",
         f"<b>Entry:</b> {price_fmt(entry)}",
         f"<b>Current:</b> {price_fmt(current_price)}",
-        f"<b>P&amp;L:</b> {pnl_str}",
+        f"<b>SL:</b> {price_fmt(sl)}",
+        f"<b>TP1:</b> {price_fmt(tp1)} | <b>TP2:</b> {price_fmt(tp2)} | <b>TP3:</b> {price_fmt(tp3)}",
+        f"<b>P&amp;L:</b> {'—' if suppress_pnl else pnl_str}",
     ]
 
     if status_line:
@@ -857,7 +913,7 @@ def _signal_monitor_cycle():
 
     try:
         resp = _supabase.table('trading_signals').select('*').in_(
-            'status', ['ACTIVE', 'TP1 HIT', 'TP2 HIT', 'TP3 HIT']
+            'status', ['PENDING_ENTRY', 'ACTIVE', 'TP1 HIT', 'TP2 HIT']
         ).execute()
         signals = resp.data or []
     except Exception as e:
@@ -919,6 +975,13 @@ def _signal_monitor_cycle():
         updates = {'status': new_status}
         now_iso = datetime.now(timezone.utc).isoformat()
 
+        if 'ENTRY HIT' in check['hits']:
+            updates['hit_entry'] = True
+            updates['entry_hit_at'] = now_iso
+        if 'CANCELLED' in check['hits']:
+            updates['result'] = 'CANCELLED'
+            updates['pnl_percent'] = 0
+            updates['closed_at'] = now_iso
         if 'TP1 HIT' in check['hits']:
             updates['hit_tp1'] = True
         if 'TP2 HIT' in check['hits']:
@@ -1246,7 +1309,9 @@ def handle_status(chat_id):
     # --- Active Crypto & Forex signals from Supabase ---
     if _supabase:
         try:
-            resp = _supabase.table('trading_signals').select('*').eq('status', 'ACTIVE').execute()
+            resp = _supabase.table('trading_signals').select('*').in_(
+                'status', ['PENDING_ENTRY', 'ACTIVE', 'TP1 HIT', 'TP2 HIT']
+            ).execute()
             rows = resp.data or []
             _CRYPTO_QUOTES = {'USDT', 'USDC', 'BTC', 'ETH', 'BNB', 'BUSD', 'USD'}
             def _is_crypto_pair(pair):
@@ -1259,29 +1324,30 @@ def handle_status(chat_id):
             crypto_active = [r for r in rows if _is_crypto_pair(r.get('pair', ''))]
             forex_active = [r for r in rows if not _is_crypto_pair(r.get('pair', ''))]
 
+            def _format_signal_line(r):
+                status_tag = r.get('status', '?')
+                return (
+                    f"[{status_tag}] {r.get('pair', '?')} | {r.get('direction', '?')} | {r.get('timeframe', '?')}\n"
+                    f"   Entry: {r.get('entry_price', '?')} | SL: {r.get('stop_loss', '?')} | Strength: {r.get('strength_score', '?')}/10"
+                )
+
             # Crypto
             if crypto_active:
-                lines = [f"<b>Active Crypto Signals ({len(crypto_active)})</b>\n"]
+                lines = [f"<b>Crypto Signals ({len(crypto_active)})</b>\n"]
                 for r in crypto_active:
-                    lines.append(
-                        f"{r.get('pair', '?')} | {r.get('direction', '?')} | {r.get('timeframe', '?')}\n"
-                        f"   Entry: {r.get('entry_price', '?')} | SL: {r.get('stop_loss', '?')} | Strength: {r.get('strength_score', '?')}/10"
-                    )
+                    lines.append(_format_signal_line(r))
                 parts.append("\n".join(lines))
             else:
-                parts.append("<b>Active Crypto Signals (0)</b>\nNo active signals.")
+                parts.append("<b>Crypto Signals (0)</b>\nNo active signals.")
 
             # Forex
             if forex_active:
-                lines = [f"<b>Active Forex Signals ({len(forex_active)})</b>\n"]
+                lines = [f"<b>Forex Signals ({len(forex_active)})</b>\n"]
                 for r in forex_active:
-                    lines.append(
-                        f"{r.get('pair', '?')} | {r.get('direction', '?')} | {r.get('timeframe', '?')}\n"
-                        f"   Entry: {r.get('entry_price', '?')} | SL: {r.get('stop_loss', '?')} | Strength: {r.get('strength_score', '?')}/10"
-                    )
+                    lines.append(_format_signal_line(r))
                 parts.append("\n".join(lines))
             else:
-                parts.append("<b>Active Forex Signals (0)</b>\nNo active signals.")
+                parts.append("<b>Forex Signals (0)</b>\nNo active signals.")
 
         except Exception as e:
             parts.append(f"Trading signals status error: {e}")
@@ -1295,9 +1361,11 @@ def _trading_performance_section(rows, label):
     if total == 0:
         return f"<b>{label}</b>\n\nNo signals yet."
 
-    active = sum(1 for r in rows if r.get('status') == 'ACTIVE')
+    pending = sum(1 for r in rows if r.get('status') == 'PENDING_ENTRY')
+    active = sum(1 for r in rows if r.get('status') in ('ACTIVE', 'TP1 HIT', 'TP2 HIT'))
     wins = sum(1 for r in rows if r.get('result') == 'WIN')
     losses = sum(1 for r in rows if r.get('result') == 'LOSS')
+    cancelled = sum(1 for r in rows if r.get('result') == 'CANCELLED')
     closed = wins + losses
     win_rate = round(wins / closed * 100, 1) if closed > 0 else 0
     avg_strength = round(sum(r.get('strength_score', 0) or 0 for r in rows) / total, 1) if total > 0 else 0
@@ -1305,7 +1373,9 @@ def _trading_performance_section(rows, label):
     section = (
         f"<b>{label}</b>\n\n"
         f"Total Signals: {total}\n"
+        f"Pending Entry: {pending}\n"
         f"Active: {active}\n"
+        f"Cancelled (no entry): {cancelled}\n"
         f"Closed: {closed}\n"
         f"Win Rate: {win_rate}%\n"
         f"Record: {wins}W / {losses}L\n"
@@ -2031,29 +2101,49 @@ def run_bot():
                         else:
                             COMMAND_HANDLERS[cmd](chat_id)
                     elif text.upper() in ("APPROVE", "REJECT"):
-                        # Handle reply-based approval
+                        # Handle reply-based approval (approves both Krib + X)
                         reply_to = msg.get("reply_to_message", {})
                         reply_id = str(reply_to.get("message_id", ""))
                         pending = load_pending_signals()
 
-                        if reply_id in pending:
-                            signal_data = pending[reply_id]
-                            signal = signal_data["signal"]
+                        # New format: find by msg_id
+                        cb_key, entry = _find_pending_by_msg_id(reply_id)
+                        if cb_key and entry:
+                            signal = entry["signal"]
+                            already_done = entry.get("krib_status") not in ("pending", None) and entry.get("x_status") not in ("pending", None)
+                            # Backward compat: old format uses "status"
+                            if "status" in entry and "krib_status" not in entry:
+                                already_done = entry.get("status") != "pending"
 
-                            if signal_data.get("status") != "pending":
-                                send_message(chat_id, f"Already {signal_data['status']}. Skipping.")
+                            if already_done:
+                                send_message(chat_id, "Already processed. Skipping.")
                             elif text.upper() == "APPROVE":
-                                signal_data["status"] = "approved"
-                                send_message(chat_id, "Approved. Distributing to Telegram...")
+                                send_message(chat_id, "Approved. Distributing to Krib + X...")
                                 try:
-                                    distribute_signal(signal)
-                                    _ask_post_to_x(chat_id, signal, reply_id)
+                                    if entry.get("krib_status") == "pending":
+                                        entry["krib_status"] = "approved"
+                                        pending[cb_key] = entry
+                                        with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                            json.dump(pending, f, indent=2, default=str)
+                                        distribute_to_telegram(signal)
+                                    if entry.get("x_status") == "pending":
+                                        entry["x_status"] = "approved"
+                                        typefully_id = publish_to_x(signal, pending_entry=entry)
+                                        if typefully_id:
+                                            entry["typefully_id"] = typefully_id
+                                    # Backward compat
+                                    if "status" in entry:
+                                        entry["status"] = "approved"
+                                    pending[cb_key] = entry
                                 except Exception as e:
                                     print(f"  Distribution FAILED: {e}")
-                                    signal_data["status"] = "failed"
                                     send_message(chat_id, f"Distribution failed: {e}")
                             else:
-                                signal_data["status"] = "rejected"
+                                entry["krib_status"] = "rejected"
+                                entry["x_status"] = "rejected"
+                                if "status" in entry:
+                                    entry["status"] = "rejected"
+                                pending[cb_key] = entry
                                 send_message(chat_id, "Signal rejected.")
 
                             with open(PENDING_FILE, "w", encoding="utf-8") as f:
