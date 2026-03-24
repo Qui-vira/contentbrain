@@ -44,9 +44,11 @@ from market_data import (
 
 # --- CoinGecko Fallback ---
 
+# CoinGecko free /ohlc granularity: 1-2 days=30min, 3-30 days=4h, 31+ days=daily
+# Map timeframes to days that produce meaningfully DIFFERENT candle granularity
 COINGECKO_DAYS_MAP = {
     '1m': 1, '5m': 1, '15m': 1, '30m': 1,
-    '1h': 14, '4h': 30, '1d': 90, '1w': 180,
+    '1h': 2, '4h': 30, '1d': 90, '1w': 365,
 }
 
 _binance_unavailable = False  # Set True after first 451/connection failure
@@ -438,7 +440,7 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info):
             if not pd.isna(avg_width) and bb_width < avg_width * 0.6:
                 confluences.append({'factor': 'BB_squeeze', 'detail': 'Bollinger squeeze detected', 'direction': 'neutral'})
 
-    # 5. Volume
+    # 5. Volume (skip if no real volume data, e.g. CoinGecko fallback)
     if 'volume' in df.columns:
         vol_avg = df['volume'].tail(20).mean()
         vol_recent = df['volume'].tail(5).mean()
@@ -508,6 +510,8 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info):
             break
 
     # Count unique factor categories (max 1 per category)
+    # KillZone and Fibonacci are context — they don't count toward the confluence threshold
+    CONTEXT_FACTORS = {'KillZone', 'Fibonacci'}
     seen_factors = set()
     unique_confluences = []
     for c in confluences:
@@ -516,15 +520,48 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info):
             seen_factors.add(base_factor)
             unique_confluences.append(c)
 
-    count = len(unique_confluences)
+    # Directional confluences only (exclude neutral context factors from count)
+    directional = [c for c in unique_confluences if c['factor'] not in CONTEXT_FACTORS]
+    count = len(directional)
 
-    # Direction
-    bullish = sum(1 for c in unique_confluences if c['direction'] == 'bullish')
-    bearish = sum(1 for c in unique_confluences if c['direction'] == 'bearish')
-    direction = 'LONG' if bullish >= bearish else 'SHORT' if bearish > bullish else 'NEUTRAL'
+    # Direction (only from directional factors)
+    bullish = sum(1 for c in directional if c['direction'] == 'bullish')
+    bearish = sum(1 for c in directional if c['direction'] == 'bearish')
+    direction = 'LONG' if bullish > bearish else 'SHORT' if bearish > bullish else 'NEUTRAL'
+
+    # --- Contradiction check: chart patterns that oppose the signal direction ---
+    # A double top / descending channel should block a LONG signal
+    # A double bottom / ascending channel should block a SHORT signal
+    bearish_patterns = {'double_top', 'descending_channel', 'bearish_engulfing'}
+    bullish_patterns = {'double_bottom', 'ascending_channel', 'bullish_engulfing'}
+    pattern_names = {p.get('pattern', '') for p in patterns}
+
+    contradiction = False
+    contradiction_detail = []
+    if direction == 'LONG' and pattern_names & bearish_patterns:
+        contradiction = True
+        contradiction_detail = list(pattern_names & bearish_patterns)
+    elif direction == 'SHORT' and pattern_names & bullish_patterns:
+        contradiction = True
+        contradiction_detail = list(pattern_names & bullish_patterns)
+
+    # Also check: MSS/BOS opposing direction
+    for mss in ict.get('mss_bos', []):
+        if direction == 'LONG' and 'bearish' in mss['type']:
+            contradiction = True
+            contradiction_detail.append(mss['type'])
+        elif direction == 'SHORT' and 'bullish' in mss['type']:
+            contradiction = True
+            contradiction_detail.append(mss['type'])
+
+    # If contradicted: reduce count by number of opposing signals, cap confidence
+    if contradiction:
+        count = max(0, count - len(contradiction_detail))
 
     # Confidence
-    if count >= 5:
+    if contradiction:
+        confidence = 'LOW'  # Never HIGH/MEDIUM with active contradictions
+    elif count >= 5:
         confidence = 'HIGH'
     elif count >= 3:
         confidence = 'MEDIUM'
@@ -538,6 +575,8 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info):
         'confidence': confidence,
         'bullish_count': bullish,
         'bearish_count': bearish,
+        'contradiction': contradiction,
+        'contradiction_detail': contradiction_detail,
     }
 
 
@@ -598,6 +637,10 @@ def calculate_strength_score(confluence_result, rsi_val, macd_hist, trend, patte
     inst_count = sum(1 for c in confluence_result['confluences'] if c['factor'] in institutional_factors)
     score += inst_count * 0.5  # 0.5 per institutional factor (max 1.5)
 
+    # Contradiction penalty (-2 points)
+    if confluence_result.get('contradiction'):
+        score -= 2
+
     return max(1, min(10, round(score)))
 
 
@@ -606,19 +649,30 @@ def calculate_strength_score(confluence_result, rsi_val, macd_hist, trend, patte
 def determine_trend(df):
     """Determine trend from EMA alignment."""
     last = df.iloc[-1]
+    ema21 = last.get('ema_21')
     ema50 = last.get('ema_50')
     ema200 = last.get('ema_200')
     price = float(last['close'])
 
-    if pd.isna(ema50) or pd.isna(ema200):
-        return 'UNKNOWN'
+    # Primary: EMA50 + EMA200
+    if not pd.isna(ema50) and not pd.isna(ema200):
+        if price > ema50 > ema200:
+            return 'BULLISH'
+        elif price < ema50 < ema200:
+            return 'BEARISH'
+        else:
+            return 'RANGING'
 
-    if price > ema50 > ema200:
-        return 'BULLISH'
-    elif price < ema50 < ema200:
-        return 'BEARISH'
-    else:
-        return 'RANGING'
+    # Fallback: EMA21 + EMA50 (when EMA200 unavailable)
+    if not pd.isna(ema21) and not pd.isna(ema50):
+        if price > ema21 > ema50:
+            return 'BULLISH'
+        elif price < ema21 < ema50:
+            return 'BEARISH'
+        else:
+            return 'RANGING'
+
+    return 'UNKNOWN'
 
 
 # --- Auto-discover top altcoins ---
@@ -858,7 +912,8 @@ def run(pairs_override=None, timeframes_override=None):
         json.dump(output, f, indent=2, default=str)
 
     elapsed = time.time() - start_time
-    signals = [r for r in results if r['confluence']['confluence_count'] >= 3]
+    signals = [r for r in results if r['confluence']['confluence_count'] >= 3
+               and not r['confluence'].get('contradiction')]
 
     print(f"\nDone. {len(results)} analyses, {len(signals)} signals (3+ confluences), "
           f"{len(errors)} errors. Saved to {output_path} ({elapsed:.1f}s)")
@@ -1001,6 +1056,8 @@ def load_ta_signals(max_age_minutes=60):
         if confluence.get('confluence_count', 0) < 3:
             continue
         if confluence.get('direction') == 'NEUTRAL':
+            continue
+        if confluence.get('contradiction'):
             continue
 
         signal = build_trading_signal(result)
