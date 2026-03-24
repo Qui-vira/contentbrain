@@ -445,14 +445,18 @@ def distribute_to_telegram(signal):
         results["poly"] = "OK" if result and result.get("ok") else "FAIL"
         print(f"  Poly Channel: {results['poly']}")
 
-    # 3. Queue tweet draft file
-    if is_trading:
-        draft_path, _ = create_trading_twitter_draft(signal)
-    else:
-        draft_path, _ = create_twitter_draft(signal)
-    if draft_path:
-        results["twitter_draft"] = "QUEUED"
-        print(f"  X/Twitter Draft: QUEUED at {draft_path}")
+    # 3. Queue tweet draft file (non-critical — don't block distribution on file errors)
+    try:
+        if is_trading:
+            draft_path, _ = create_trading_twitter_draft(signal)
+        else:
+            draft_path, _ = create_twitter_draft(signal)
+        if draft_path:
+            results["twitter_draft"] = "QUEUED"
+            print(f"  X/Twitter Draft: QUEUED at {draft_path}")
+    except Exception as e:
+        results["twitter_draft"] = "FAIL"
+        print(f"  X/Twitter Draft: FAIL — {e}")
 
     # 4. Send to subscriber channels
     sub_count = _send_to_subscribers(card)
@@ -654,8 +658,9 @@ def create_trading_twitter_draft(signal):
     tweet = _get_trading_tweet_text(signal)
 
     pair = signal.get('pair', 'UNKNOWN')
+    safe_pair = pair.replace('/', '-')  # GBP/JPY -> GBP-JPY (avoid path separator in filename)
     now = datetime.now(timezone.utc)
-    filename = f"{now.strftime('%Y-%m-%d')}-ta-{pair}-{signal.get('timeframe', '4h')}.md"
+    filename = f"{now.strftime('%Y-%m-%d')}-ta-{safe_pair}-{signal.get('timeframe', '4h')}.md"
     filepath = os.path.join(TRADING_DRAFTS_DIR, filename)
 
     content = (
