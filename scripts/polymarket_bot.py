@@ -116,6 +116,7 @@ KRIB_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")                    # Hustler's 
 POLY_CHANNEL_ID = os.getenv("TELEGRAM_POLY_CHANNEL_ID", "")         # Dedicated Poly channel
 APPROVAL_CHANNEL_ID = os.getenv("TELEGRAM_APPROVAL_CHANNEL_ID", "") # Private approval
 ADMIN_CHAT_ID = os.getenv("TELEGRAM_ADMIN_CHAT_ID", "")             # Your personal DM with bot
+TEST_CHANNEL_ID = os.getenv("TELEGRAM_TEST_CHANNEL_ID", "")        # Signal testing/paper trade group
 
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
@@ -311,6 +312,7 @@ def test_bot():
         "Poly Channel": POLY_CHANNEL_ID,
         "Approval (channel)": APPROVAL_CHANNEL_ID,
         "Approval (your DM)": ADMIN_CHAT_ID,
+        "Test Channel": TEST_CHANNEL_ID,
     }
 
     for name, chat_id in channels.items():
@@ -1257,6 +1259,7 @@ BOT_COMMANDS = [
     {"command": "scan_all", "description": "Full crypto TA scan (all pairs, all TFs)"},
     {"command": "scan_pair", "description": "Scan one pair (e.g. /scan_pair BTCUSDT)"},
     {"command": "scan_custom", "description": "Custom scan (e.g. /scan_custom ETHUSDT 1h,4h)"},
+    {"command": "test_signals", "description": "Send signals to test channel (paper trade)"},
     {"command": "send_signals", "description": "Send TA signals to approval channel"},
     {"command": "send_signals_direct", "description": "Send TA signals directly (skip approval)"},
     {"command": "forex_scan", "description": "Full forex scan (all pairs, all TFs)"},
@@ -1295,6 +1298,7 @@ def handle_start(chat_id):
         "/scan_all — Full crypto scan (all pairs, all TFs)\n"
         "/scan_pair BTCUSDT — Scan one pair\n"
         "/scan_custom ETHUSDT 1h,4h — Custom scan\n"
+        "/test_signals — Send to test channel (paper trade)\n"
         "/send_signals — Send TA signals for approval\n"
         "/send_signals_direct — Send directly (skip approval)\n"
         "/top — Top 10 markets by volume\n"
@@ -1807,6 +1811,41 @@ def handle_scan_custom(chat_id, text=""):
         _send_ta_signals_to_approval(chat_id)
 
 
+def handle_test_signals(chat_id):
+    """Handle /test_signals — send signal cards to test channel for paper trading verification."""
+    if not TEST_CHANNEL_ID:
+        send_message(chat_id, "No test channel configured. Set TELEGRAM_TEST_CHANNEL_ID env var.")
+        return
+    send_message(chat_id, "Loading signals for test channel...")
+    try:
+        from binance_ta_runner import load_ta_signals
+        signals = load_ta_signals(max_age_minutes=90)
+        if not signals:
+            send_message(chat_id, "No qualifying signals (3+ confluences) in latest scan.")
+            return
+        sent = 0
+        for signal in signals:
+            if signal.get('signal_type') == 'trading':
+                from polymarket_scanner import format_trading_signal_card
+                card = format_trading_signal_card(signal, for_telegram=True)
+            else:
+                from polymarket_scanner import format_signal_card
+                card = format_signal_card(signal, for_telegram=True)
+
+            # Add test label and contradiction info
+            confluence = signal.get('confluences', [])
+            trend = signal.get('trend', '?')
+            header = f"🧪 <b>TEST SIGNAL — DO NOT TRADE</b>\n<b>Trend:</b> {trend}\n\n"
+            card = header + card
+
+            result = send_message(TEST_CHANNEL_ID, card)
+            if result and result.get("ok"):
+                sent += 1
+        send_message(chat_id, f"Sent <b>{sent}</b> signal(s) to test channel. Watch and verify before going live.")
+    except Exception as e:
+        send_message(chat_id, f"Test signal error: {e}")
+
+
 def handle_send_signals(chat_id):
     """Handle /send_signals — send qualifying TA signals to approval channel."""
     send_message(chat_id, "Loading latest TA signals...")
@@ -2053,6 +2092,7 @@ COMMAND_HANDLERS = {
     "/scan_all": handle_scan_all,
     "/scan_pair": handle_scan_pair,
     "/scan_custom": handle_scan_custom,
+    "/test_signals": handle_test_signals,
     "/send_signals": handle_send_signals,
     "/send_signals_direct": handle_send_signals_direct,
     "/forex_scan": handle_forex_scan,
