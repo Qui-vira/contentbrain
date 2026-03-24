@@ -388,19 +388,29 @@ def send_to_approval(signal):
 
     approval_dest = APPROVAL_CHANNEL_ID or ADMIN_CHAT_ID or KRIB_CHAT_ID
 
-    # --- Message 1: Krib approval (full signal card) ---
-    krib_card = f"📌 <b>VIP Hustlers Krib Signal</b>\n\n{card}"
-    krib_card += "\n\n---\nReply APPROVE or REJECT to this signal."
+    # --- Message 1: Krib approval (VIP group only) ---
+    krib_card = f"📌 <b>Hustler's Krib (VIP)</b>\n\n{card}"
     krib_markup = {
         "inline_keyboard": [[
             {"text": "✅ Send to Krib", "callback_data": f"appkrib_{callback_id}"},
-            {"text": "❌ Reject Krib", "callback_data": f"rejkrib_{callback_id}"},
+            {"text": "❌ Reject", "callback_data": f"rejkrib_{callback_id}"},
         ]]
     }
     krib_result = send_message(approval_dest, krib_card, reply_markup=krib_markup)
     krib_msg_id = krib_result["result"]["message_id"] if krib_result and krib_result.get("ok") else None
 
-    # --- Message 2: X/Twitter approval (tweet preview) ---
+    # --- Message 2: Public channels (Poly + subscribers) ---
+    pub_card = f"📢 <b>Public Channels (Alpha Plays + Subscribers)</b>\n\n{card}"
+    pub_markup = {
+        "inline_keyboard": [[
+            {"text": "✅ Send Public", "callback_data": f"apppub_{callback_id}"},
+            {"text": "❌ Skip Public", "callback_data": f"rejpub_{callback_id}"},
+        ]]
+    }
+    pub_result = send_message(approval_dest, pub_card, reply_markup=pub_markup)
+    pub_msg_id = pub_result["result"]["message_id"] if pub_result and pub_result.get("ok") else None
+
+    # --- Message 3: X/Twitter approval (tweet preview) ---
     is_trading = signal.get('signal_type') == 'trading'
     tweet_text = _get_trading_tweet_text(signal) if is_trading else _get_poly_tweet_text(signal)
     x_card = f"🐦 <b>X/Twitter Preview</b>\n\n<pre>{tweet_text}</pre>"
@@ -413,9 +423,9 @@ def send_to_approval(signal):
     x_result = send_message(approval_dest, x_card, reply_markup=x_markup)
     x_msg_id = x_result["result"]["message_id"] if x_result and x_result.get("ok") else None
 
-    if krib_msg_id or x_msg_id:
+    if krib_msg_id or pub_msg_id or x_msg_id:
         save_pending_signal(signal, callback_id, krib_msg_id=krib_msg_id, x_msg_id=x_msg_id)
-        print(f"Signal sent for approval (krib_msg: {krib_msg_id}, x_msg: {x_msg_id}, hash: {callback_id})")
+        print(f"Signal sent for approval (krib: {krib_msg_id}, pub: {pub_msg_id}, x: {x_msg_id}, hash: {callback_id})")
         return krib_msg_id
     else:
         print("Failed to send signal to approval channel")
@@ -2306,7 +2316,7 @@ def run_bot():
                     cb_chat_id = callback.get("message", {}).get("chat", {}).get("id")
                     pending = load_pending_signals()
 
-                    # --- New-format callbacks: appkrib_, rejkrib_, appx_, rejx_ ---
+                    # --- New-format callbacks: appkrib_, rejkrib_, apppub_, rejpub_, appx_, rejx_ ---
                     if data.startswith("appkrib_") or data.startswith("rejkrib_"):
                         cb_hash = data.split("_", 1)[1]
                         entry = pending.get(cb_hash)
@@ -2318,16 +2328,38 @@ def run_bot():
                                     send_message(cb_chat_id, f"Krib already {entry.get('krib_status')}. Skipping.")
                                 else:
                                     entry["krib_status"] = "approved"
-                                    pending[cb_hash] = entry
-                                    with open(PENDING_FILE, "w", encoding="utf-8") as f:
-                                        json.dump(pending, f, indent=2, default=str)
-                                    send_message(cb_chat_id, f"Approved for Krib: {label}\nDistributing...")
-                                    try:
-                                        distribute_to_telegram(signal)
-                                    except Exception as e:
-                                        print(f"  Krib distribution FAILED: {e}")
-                                        entry["krib_status"] = "failed"
-                                        send_message(cb_chat_id, f"Krib distribution failed: {e}")
+                                    # Send ONLY to Krib + log to tracker
+                                    is_trading = signal.get('signal_type') == 'trading'
+                                    if is_trading:
+                                        card = format_trading_signal_card(signal, for_telegram=True)
+                                    else:
+                                        card = format_signal_card(signal, for_telegram=True)
+                                    krib_ok = False
+                                    if KRIB_CHAT_ID:
+                                        r = send_message(KRIB_CHAT_ID, card)
+                                        krib_ok = r and r.get("ok")
+                                    # Log to tracker (once, on first approval)
+                                    if not entry.get("tracked"):
+                                        try:
+                                            if is_trading:
+                                                log_trading_to_tracker(signal)
+                                            else:
+                                                log_to_tracker(signal)
+                                            entry["tracked"] = True
+                                        except Exception as e:
+                                            print(f"  Tracker log error: {e}")
+                                    # Save draft (once)
+                                    if not entry.get("draft_saved"):
+                                        try:
+                                            if is_trading:
+                                                create_trading_twitter_draft(signal)
+                                            else:
+                                                create_twitter_draft(signal)
+                                            entry["draft_saved"] = True
+                                        except Exception as e:
+                                            print(f"  Draft save error: {e}")
+                                    status = "Sent to Krib" if krib_ok else "Krib send failed"
+                                    send_message(cb_chat_id, f"{status}: {label}")
                                     pending[cb_hash] = entry
                                     with open(PENDING_FILE, "w", encoding="utf-8") as f:
                                         json.dump(pending, f, indent=2, default=str)
@@ -2337,6 +2369,44 @@ def run_bot():
                                 with open(PENDING_FILE, "w", encoding="utf-8") as f:
                                     json.dump(pending, f, indent=2, default=str)
                                 send_message(cb_chat_id, "Krib signal rejected.")
+                        else:
+                            send_message(cb_chat_id, "Signal not found in pending list.")
+
+                    elif data.startswith("apppub_") or data.startswith("rejpub_"):
+                        cb_hash = data.split("_", 1)[1]
+                        entry = pending.get(cb_hash)
+                        if entry:
+                            signal = entry["signal"]
+                            label = signal.get('market_question', signal.get('pair', 'Signal'))[:50]
+                            if data.startswith("apppub_"):
+                                if entry.get("pub_status") not in (None, "pending"):
+                                    send_message(cb_chat_id, f"Public already {entry.get('pub_status')}. Skipping.")
+                                else:
+                                    entry["pub_status"] = "approved"
+                                    is_trading = signal.get('signal_type') == 'trading'
+                                    if is_trading:
+                                        card = format_trading_signal_card(signal, for_telegram=True)
+                                    else:
+                                        card = format_signal_card(signal, for_telegram=True)
+                                    sent_to = []
+                                    if POLY_CHANNEL_ID:
+                                        r = send_message(POLY_CHANNEL_ID, card)
+                                        if r and r.get("ok"):
+                                            sent_to.append("Alpha Plays")
+                                    sub_count = _send_to_subscribers(card)
+                                    if sub_count:
+                                        sent_to.append(f"{sub_count} subscribers")
+                                    status = f"Sent to: {', '.join(sent_to)}" if sent_to else "No public channels configured"
+                                    send_message(cb_chat_id, f"{status}: {label}")
+                                    pending[cb_hash] = entry
+                                    with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                        json.dump(pending, f, indent=2, default=str)
+                            else:  # rejpub_
+                                entry["pub_status"] = "skipped"
+                                pending[cb_hash] = entry
+                                with open(PENDING_FILE, "w", encoding="utf-8") as f:
+                                    json.dump(pending, f, indent=2, default=str)
+                                send_message(cb_chat_id, f"Public channels skipped: {label}")
                         else:
                             send_message(cb_chat_id, "Signal not found in pending list.")
 
