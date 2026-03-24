@@ -1008,13 +1008,15 @@ def _signal_monitor_cycle():
         if not _update_trading_signal_supabase(signal_id, updates):
             continue
 
-        # Send notification to Krib, Poly channel, and subscribers
+        # Send notification to Krib, Poly channel, test channel, and subscribers
         notification = _format_hit_notification(signal, current_price, new_status, check)
 
         if KRIB_CHAT_ID:
             send_message(KRIB_CHAT_ID, notification)
         if POLY_CHANNEL_ID:
             send_message(POLY_CHANNEL_ID, notification)
+        if TEST_CHANNEL_ID:
+            send_message(TEST_CHANNEL_ID, notification)
         _send_to_subscribers(notification)
 
     # Also auto-resolve Polymarket signals
@@ -1685,13 +1687,20 @@ def _run_ta_script(chat_id, args_list, label):
 
 
 def _send_ta_signals_to_approval(chat_id):
-    """Load TA signals from JSON and send qualifying ones for approval."""
+    """Load TA signals from JSON and send qualifying ones for approval + test channel."""
     try:
         from binance_ta_runner import load_ta_signals
         signals = load_ta_signals(max_age_minutes=90)
         if not signals:
             send_message(chat_id, "No qualifying signals (3+ confluences) in latest scan.")
             return 0
+
+        # Auto-send to test channel if configured (no approval needed, auto-tracked)
+        if TEST_CHANNEL_ID:
+            test_sent = _send_to_test_channel(signals)
+            if test_sent:
+                send_message(chat_id, f"Auto-sent <b>{test_sent}</b> signal(s) to test channel.")
+
         send_message(chat_id, f"Found <b>{len(signals)}</b> qualifying signal(s). Sending for approval...")
         sent = 0
         for signal in signals:
@@ -1736,13 +1745,20 @@ def _run_forex_script(chat_id, args_list, label):
 
 
 def _send_forex_signals_to_approval(chat_id):
-    """Load forex signals from JSON and send qualifying ones for approval."""
+    """Load forex signals from JSON and send qualifying ones for approval + test channel."""
     try:
         from forex_ta_runner import load_forex_signals
         signals = load_forex_signals(max_age_minutes=90)
         if not signals:
             send_message(chat_id, "No qualifying forex signals (3+ confluences) in latest scan.")
             return 0
+
+        # Auto-send to test channel if configured
+        if TEST_CHANNEL_ID:
+            test_sent = _send_to_test_channel(signals)
+            if test_sent:
+                send_message(chat_id, f"Auto-sent <b>{test_sent}</b> forex signal(s) to test channel.")
+
         send_message(chat_id, f"Found <b>{len(signals)}</b> qualifying forex signal(s). Sending for approval...")
         sent = 0
         for signal in signals:
@@ -1826,11 +1842,42 @@ def handle_scan_custom(chat_id, text=""):
         _send_ta_signals_to_approval(chat_id)
 
 
+def _send_to_test_channel(signals, chat_id=None):
+    """Send signals to test channel and log to tracker for automatic monitoring.
+    Returns number of signals sent. If chat_id provided, sends status messages there."""
+    if not TEST_CHANNEL_ID:
+        if chat_id:
+            send_message(chat_id, "No test channel configured. Set TELEGRAM_TEST_CHANNEL_ID env var.")
+        return 0
+
+    sent = 0
+    for signal in signals:
+        if signal.get('signal_type') == 'trading':
+            card = format_trading_signal_card(signal, for_telegram=True)
+        else:
+            card = format_signal_card(signal, for_telegram=True)
+
+        trend = signal.get('trend', '?')
+        header = f"🧪 <b>TEST SIGNAL</b>\n<b>Trend:</b> {trend}\n\n"
+        card = header + card
+
+        result = send_message(TEST_CHANNEL_ID, card)
+        if result and result.get("ok"):
+            sent += 1
+            # Log to tracker so the monitor auto-tracks TP/SL hits
+            try:
+                if signal.get('signal_type') == 'trading':
+                    log_trading_to_tracker(signal)
+                else:
+                    log_to_tracker(signal)
+            except Exception as e:
+                print(f"  [TEST] Tracker log error: {e}")
+
+    return sent
+
+
 def handle_test_signals(chat_id):
     """Handle /test_signals — send signal cards to test channel for paper trading verification."""
-    if not TEST_CHANNEL_ID:
-        send_message(chat_id, "No test channel configured. Set TELEGRAM_TEST_CHANNEL_ID env var.")
-        return
     send_message(chat_id, "Loading signals for test channel...")
     try:
         from binance_ta_runner import load_ta_signals
@@ -1838,25 +1885,8 @@ def handle_test_signals(chat_id):
         if not signals:
             send_message(chat_id, "No qualifying signals (3+ confluences) in latest scan.")
             return
-        sent = 0
-        for signal in signals:
-            if signal.get('signal_type') == 'trading':
-                from polymarket_scanner import format_trading_signal_card
-                card = format_trading_signal_card(signal, for_telegram=True)
-            else:
-                from polymarket_scanner import format_signal_card
-                card = format_signal_card(signal, for_telegram=True)
-
-            # Add test label and contradiction info
-            confluence = signal.get('confluences', [])
-            trend = signal.get('trend', '?')
-            header = f"🧪 <b>TEST SIGNAL — DO NOT TRADE</b>\n<b>Trend:</b> {trend}\n\n"
-            card = header + card
-
-            result = send_message(TEST_CHANNEL_ID, card)
-            if result and result.get("ok"):
-                sent += 1
-        send_message(chat_id, f"Sent <b>{sent}</b> signal(s) to test channel. Watch and verify before going live.")
+        sent = _send_to_test_channel(signals, chat_id)
+        send_message(chat_id, f"Sent <b>{sent}</b> signal(s) to test channel. Monitor will auto-track TP/SL hits.")
     except Exception as e:
         send_message(chat_id, f"Test signal error: {e}")
 
