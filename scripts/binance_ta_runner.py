@@ -54,10 +54,35 @@ COINGECKO_DAYS_MAP = {
 _binance_unavailable = False  # Set True after first 451/connection failure
 
 
+def _resolve_coingecko_id(symbol):
+    """Try to resolve a Binance symbol to a CoinGecko coin ID via search API."""
+    # Strip USDT suffix to get the ticker
+    ticker = symbol.replace('USDT', '').lower()
+    try:
+        resp = requests.get(
+            "https://api.coingecko.com/api/v3/search",
+            params={'query': ticker}, timeout=15
+        )
+        resp.raise_for_status()
+        coins = resp.json().get('coins', [])
+        for coin in coins:
+            if coin.get('symbol', '').lower() == ticker:
+                coin_id = coin['id']
+                # Cache it for the rest of this process
+                SYMBOL_TO_COINGECKO[symbol] = coin_id
+                print(f"  CoinGecko auto-resolved {symbol} -> {coin_id}")
+                return coin_id
+    except Exception as e:
+        print(f"  CoinGecko search failed for {symbol}: {e}")
+    return None
+
+
 def fetch_coingecko_ohlcv(symbol, interval, limit=200):
     """Fetch OHLCV candles from CoinGecko free API.
     Returns a DataFrame matching fetch_binance_klines format, or None on failure."""
     coin_id = SYMBOL_TO_COINGECKO.get(symbol)
+    if not coin_id:
+        coin_id = _resolve_coingecko_id(symbol)
     if not coin_id:
         return None
 
@@ -99,7 +124,7 @@ def fetch_coingecko_ohlcv(symbol, interval, limit=200):
 
 def fetch_coingecko_volume(symbol):
     """Fetch 24h volume from CoinGecko market_chart for a symbol. Returns float or 0."""
-    coin_id = SYMBOL_TO_COINGECKO.get(symbol)
+    coin_id = SYMBOL_TO_COINGECKO.get(symbol) or _resolve_coingecko_id(symbol)
     if not coin_id:
         return 0.0
     try:
