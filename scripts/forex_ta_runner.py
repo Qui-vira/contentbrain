@@ -252,10 +252,10 @@ def run(pairs_override=None, timeframes_override=None):
         json.dump(output, f, indent=2, default=str)
 
     elapsed = time.time() - start_time
-    signals = [r for r in results if r['confluence']['confluence_count'] >= 3
+    signals = [r for r in results if r['confluence']['confluence_count'] >= 4
                and not r['confluence'].get('contradiction')]
 
-    print(f"\nDone. {len(results)} analyses, {len(signals)} signals (3+ confluences), "
+    print(f"\nDone. {len(results)} analyses, {len(signals)} signals (4+ confluences), "
           f"{len(errors)} errors. Saved to {output_path} ({elapsed:.1f}s)")
 
 
@@ -287,9 +287,11 @@ def load_forex_signals(max_age_minutes=60):
 
     for result in results:
         confluence = result.get('confluence', {})
-        if confluence.get('confluence_count', 0) < 3:
+        if confluence.get('confluence_count', 0) < 4:
             continue
         if confluence.get('direction') == 'NEUTRAL':
+            continue
+        if confluence.get('contradiction'):
             continue
 
         signal = build_trading_signal(result)

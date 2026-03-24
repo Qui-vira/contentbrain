@@ -736,17 +736,16 @@ def calculate_model_probability(market, factor_results):
     else:
         agreement_ratio = 0.5
 
-    # Clamp total shift FIRST, then apply agreement boost (Bug #14)
-    total_shift = max(-MAX_TOTAL_SHIFT, min(MAX_TOTAL_SHIFT, total_shift))
-
-    # Adjust shift based on agreement
+    # Apply agreement multiplier BEFORE clamping
     if agreement_ratio > 0.70:
-        # Strong agreement — boost shift by up to 50% (can exceed normal cap)
         boost = 1.0 + (agreement_ratio - 0.70) * 1.67  # Max 1.5x at 100% agreement
         total_shift *= boost
     elif agreement_ratio < 0.30:
         # Strong disagreement — penalize
         total_shift *= (1.0 - CONFIDENCE_DISAGREEMENT_PENALTY)
+
+    # Clamp AFTER boost so shift never exceeds cap
+    total_shift = max(-MAX_TOTAL_SHIFT, min(MAX_TOTAL_SHIFT, total_shift))
 
     model_prob = yes_odds + total_shift
     model_prob = max(0.05, min(0.95, model_prob))
@@ -872,9 +871,12 @@ def analyze_market(market, price_history=None):
         signal["signal_strength"] = "weak"
         signal["claude_agrees"] = None
 
-    # Check thresholds
+    # Check thresholds — use combined_edge and require Claude not to disagree
+    effective_edge = signal.get("combined_edge", edge)
     signal["passes_threshold"] = (
-        confidence >= MIN_CONFIDENCE and edge >= MIN_EDGE
+        confidence >= MIN_CONFIDENCE
+        and effective_edge >= MIN_EDGE
+        and signal.get("claude_agrees") is not False
     )
 
     return signal

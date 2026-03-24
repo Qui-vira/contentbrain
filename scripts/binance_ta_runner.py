@@ -53,6 +53,64 @@ COINGECKO_DAYS_MAP = {
 
 _binance_unavailable = False  # Set True after first 451/connection failure
 
+# --- Bybit Fallback (public API, no geo-blocking, real volume) ---
+
+BYBIT_INTERVAL_MAP = {
+    '1m': '1', '5m': '5', '15m': '15', '30m': '30',
+    '1h': '60', '4h': '240', '1d': 'D', '1w': 'W',
+}
+
+
+def fetch_bybit_klines(symbol, interval, limit=200):
+    """Fetch OHLCV candles from Bybit public API (no auth, global access, real volume).
+    Returns a DataFrame matching fetch_binance_klines format, or None on failure."""
+    bybit_interval = BYBIT_INTERVAL_MAP.get(interval)
+    if not bybit_interval:
+        return None
+
+    params = {
+        'category': 'linear',
+        'symbol': symbol,
+        'interval': bybit_interval,
+        'limit': limit,
+    }
+
+    # Try primary and fallback Bybit domains
+    rows = None
+    for base_url in ["https://api.bybit.com", "https://api.bytick.com"]:
+        try:
+            resp = requests.get(f"{base_url}/v5/market/kline", params=params, timeout=15)
+            resp.raise_for_status()
+            result = resp.json()
+            rows = result.get('result', {}).get('list', [])
+            if rows:
+                break
+        except Exception:
+            continue
+
+    if not rows:
+        return None
+
+    if not rows or len(rows) < 10:
+        return None
+
+    # Bybit returns: [startTime, open, high, low, close, volume, turnover] newest first
+    df = pd.DataFrame(rows, columns=[
+        'open_time', 'open', 'high', 'low', 'close', 'volume', 'quote_volume'
+    ])
+    df = df.iloc[::-1].reset_index(drop=True)  # Reverse to oldest-first
+    df['open_time'] = pd.to_datetime(df['open_time'].astype(float), unit='ms')
+    df['close_time'] = df['open_time']
+    df['trades'] = 0
+    df['taker_buy_base'] = 0.0
+    df['taker_buy_quote'] = 0.0
+    df['ignore'] = 0
+
+    for col in ['open', 'high', 'low', 'close', 'volume', 'quote_volume']:
+        df[col] = df[col].astype(float)
+
+    return df
+
 
 def _resolve_coingecko_id(symbol):
     """Try to resolve a Binance symbol to a CoinGecko coin ID via search API."""
@@ -465,11 +523,11 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info, t
             if not pd.isna(avg_width) and bb_width < avg_width * 0.6:
                 confluences.append({'factor': 'BB_squeeze', 'detail': 'Bollinger squeeze detected', 'direction': 'neutral'})
 
-    # 5. Volume (skip if no real volume data, e.g. CoinGecko fallback)
+    # 5. Volume (skip if no real volume data, e.g. CoinGecko fallback where volume=0)
     if 'volume' in df.columns:
         vol_avg = df['volume'].tail(20).mean()
         vol_recent = df['volume'].tail(5).mean()
-        if vol_avg > 0 and vol_recent > vol_avg * 1.5:
+        if vol_avg > 100 and vol_recent > vol_avg * 1.5:
             confluences.append({'factor': 'Volume', 'detail': f"Volume surge {vol_recent/vol_avg:.1f}x average", 'direction': 'neutral'})
 
     # 6. Fibonacci OTE
@@ -535,7 +593,7 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info, t
             break
 
     # Count unique factor categories (max 1 per category)
-    # KillZone and Fibonacci are context — they don't count toward the confluence threshold
+    # Context factors don't count toward the confluence threshold
     CONTEXT_FACTORS = {'KillZone', 'Fibonacci'}
     seen_factors = set()
     unique_confluences = []
@@ -545,14 +603,24 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info, t
             seen_factors.add(base_factor)
             unique_confluences.append(c)
 
-    # Directional confluences only (exclude neutral context factors from count)
-    directional = [c for c in unique_confluences if c['factor'] not in CONTEXT_FACTORS]
-    count = len(directional)
+    # Directional confluences only — exclude context AND neutral-direction factors
+    # (BB_squeeze, Volume surges are context, not directional conviction)
+    directional = [c for c in unique_confluences
+                   if c['factor'] not in CONTEXT_FACTORS and c['direction'] != 'neutral']
 
-    # Direction (only from directional factors)
+    # Determine majority direction
     bullish = sum(1 for c in directional if c['direction'] == 'bullish')
     bearish = sum(1 for c in directional if c['direction'] == 'bearish')
     direction = 'LONG' if bullish > bearish else 'SHORT' if bearish > bullish else 'NEUTRAL'
+
+    # Only count confluences that AGREE with the dominant direction
+    # (3 bullish + 2 bearish should be count=3, not count=5)
+    if direction == 'LONG':
+        count = bullish
+    elif direction == 'SHORT':
+        count = bearish
+    else:
+        count = 0
 
     # --- Contradiction check: chart patterns that oppose the signal direction ---
     # A double top / descending channel should block a LONG signal
@@ -591,12 +659,12 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info, t
     if contradiction:
         count = max(0, count - len(contradiction_detail))
 
-    # Confidence
+    # Confidence — raised threshold: 4+ for MEDIUM, 6+ for HIGH
     if contradiction:
         confidence = 'LOW'  # Never HIGH/MEDIUM with active contradictions
-    elif count >= 5:
+    elif count >= 6:
         confidence = 'HIGH'
-    elif count >= 3:
+    elif count >= 4:
         confidence = 'MEDIUM'
     else:
         confidence = 'LOW'
@@ -751,18 +819,32 @@ def analyze_pair_tf(client, symbol, timeframe):
             df = fetch_binance_klines(client, symbol, interval, limit=200)
         except Exception as e:
             if _is_binance_geo_blocked(e):
-                print(f"\n  Binance geo-blocked (451). Switching to CoinGecko fallback.")
+                print(f"\n  Binance geo-blocked (451). Switching to Bybit fallback.")
                 _binance_unavailable = True
             else:
-                pass  # Try CoinGecko below
+                pass  # Try fallbacks below
 
-    # Fallback to CoinGecko
+    # Fallback 1: Bybit (public API, no geo-blocking, real volume data)
+    if df is None or len(df) < 10:
+        df = fetch_bybit_klines(symbol, interval, limit=200)
+        if df is not None and len(df) >= 10:
+            data_source = 'bybit'
+
+    # Fallback 2: CoinGecko (no volume, rate-limited, last resort)
     if df is None or len(df) < 10:
         df = fetch_coingecko_ohlcv(symbol, interval, limit=200)
         data_source = 'coingecko'
 
     if df is None or len(df) < 50:
         return {'error': f'Insufficient data (tried {data_source})'}
+
+    # Staleness check — reject if latest candle is too old for the timeframe
+    if data_source == 'coingecko' and 'timestamp' in df.columns:
+        last_ts = pd.to_datetime(df['timestamp'].iloc[-1], utc=True)
+        age_hours = (pd.Timestamp.now(tz='UTC') - last_ts).total_seconds() / 3600
+        max_age = {'1h': 3, '4h': 6, '1d': 36}.get(timeframe, 6)
+        if age_hours > max_age:
+            return {'error': f'Stale data ({data_source}): last candle is {age_hours:.1f}h old'}
 
     # Core indicators from market_data.py
     df = calculate_indicators(df)
@@ -886,7 +968,7 @@ def run(pairs_override=None, timeframes_override=None):
     global _binance_unavailable
     client = get_binance_client()
     if not client:
-        print("WARNING: Binance API unavailable. Using CoinGecko fallback for price data.")
+        print("WARNING: Binance API unavailable. Using Bybit -> CoinGecko fallback.")
         _binance_unavailable = True
 
     session, in_kz = get_kill_zone()
@@ -945,10 +1027,10 @@ def run(pairs_override=None, timeframes_override=None):
         json.dump(output, f, indent=2, default=str)
 
     elapsed = time.time() - start_time
-    signals = [r for r in results if r['confluence']['confluence_count'] >= 3
+    signals = [r for r in results if r['confluence']['confluence_count'] >= 4
                and not r['confluence'].get('contradiction')]
 
-    print(f"\nDone. {len(results)} analyses, {len(signals)} signals (3+ confluences), "
+    print(f"\nDone. {len(results)} analyses, {len(signals)} signals (4+ confluences), "
           f"{len(errors)} errors. Saved to {output_path} ({elapsed:.1f}s)")
 
 
@@ -1007,6 +1089,10 @@ def calculate_trade_levels(result):
 
     risk = abs(price - sl_level)
     if risk == 0:
+        return None
+
+    # Reject if SL is wider than 2x ATR (unreasonable risk)
+    if risk > 2.0 * atr:
         return None
 
     # TPs at 1:2, 1:3, 1:5 R:R
@@ -1094,7 +1180,7 @@ def load_ta_signals(max_age_minutes=60):
 
     for result in results:
         confluence = result.get('confluence', {})
-        if confluence.get('confluence_count', 0) < 3:
+        if confluence.get('confluence_count', 0) < 4:
             continue
         if confluence.get('direction') == 'NEUTRAL':
             continue

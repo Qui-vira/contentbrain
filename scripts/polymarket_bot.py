@@ -18,6 +18,7 @@ import os
 import sys
 import json
 import argparse
+import signal as _signal
 import threading
 import time
 from datetime import datetime, timezone
@@ -2427,6 +2428,8 @@ def run_bot():
     flush = get_updates(offset=-1, timeout=0)
     if flush:
         offset = flush[-1]["update_id"] + 1
+        # Immediately confirm with Telegram so no other instance can re-fetch
+        get_updates(offset=offset, timeout=0)
         print(f"Flushed {len(flush)} stale update(s). Starting from offset {offset}.")
     else:
         offset = None
@@ -2436,9 +2439,22 @@ def run_bot():
     _processed_ids = set()
     _DEDUP_MAX = 200
 
+    # SIGTERM handler — Railway sends SIGTERM before killing old instance.
+    # Stop polling immediately so the new instance doesn't compete for updates.
+    _shutdown = threading.Event()
+    def _handle_sigterm(signum, frame):
+        print("SIGTERM received — stopping polling loop.")
+        _shutdown.set()
+    _signal.signal(_signal.SIGTERM, _handle_sigterm)
+
+    # Startup delay — give Railway time to kill old instance before we poll.
+    # Prevents both instances from processing the same update simultaneously.
+    print("Waiting 8s for old instance to shut down...")
+    time.sleep(8)
+
     print("Bot is running. Press Ctrl+C to stop.\n")
 
-    while True:
+    while not _shutdown.is_set():
         try:
             updates = get_updates(offset=offset, timeout=30)
 
