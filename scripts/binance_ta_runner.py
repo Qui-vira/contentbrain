@@ -366,7 +366,7 @@ def detect_chart_patterns(df):
 
 # --- Confluence Scoring ---
 
-def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info):
+def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info, trend='UNKNOWN'):
     """Score confluences and determine signal direction + strength."""
     last = df.iloc[-1]
     price = float(last['close'])
@@ -468,12 +468,12 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info):
     if in_kz:
         confluences.append({'factor': 'KillZone', 'detail': f"{session} kill zone active", 'direction': 'neutral'})
 
-    # 8. Support/Resistance
+    # 8. Support/Resistance (require 2+ touches — 1 touch is not real S/R)
     nearest_support = sr_levels['support'][0] if sr_levels['support'] else None
     nearest_resistance = sr_levels['resistance'][-1] if sr_levels['resistance'] else None
-    if nearest_support and abs(price - nearest_support['price']) / price < 0.005:
+    if nearest_support and nearest_support.get('touches', 0) >= 2 and abs(price - nearest_support['price']) / price < 0.005:
         confluences.append({'factor': 'SR', 'detail': f"At support {nearest_support['price']:.2f} ({nearest_support['touches']} touches)", 'direction': 'bullish'})
-    if nearest_resistance and abs(price - nearest_resistance['price']) / price < 0.005:
+    if nearest_resistance and nearest_resistance.get('touches', 0) >= 2 and abs(price - nearest_resistance['price']) / price < 0.005:
         confluences.append({'factor': 'SR', 'detail': f"At resistance {nearest_resistance['price']:.2f} ({nearest_resistance['touches']} touches)", 'direction': 'bearish'})
 
     # 9. Market Structure (CHOCH + HH/HL/LH/LL)
@@ -553,6 +553,14 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info):
         elif direction == 'SHORT' and 'bullish' in mss['type']:
             contradiction = True
             contradiction_detail.append(mss['type'])
+
+    # Trend opposition: never trade against the trend
+    if direction == 'LONG' and trend == 'BEARISH':
+        contradiction = True
+        contradiction_detail.append('LONG_against_BEARISH_trend')
+    elif direction == 'SHORT' and trend == 'BULLISH':
+        contradiction = True
+        contradiction_detail.append('SHORT_against_BULLISH_trend')
 
     # If contradicted: reduce count by number of opposing signals, cap confidence
     if contradiction:
@@ -753,11 +761,11 @@ def analyze_pair_tf(client, symbol, timeframe):
     # Kill zone
     session_info = get_kill_zone()
 
-    # Confluence scoring
-    confluence_result = score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info)
-
-    # Trend
+    # Trend (must be computed before confluence scoring for trend filter)
     trend = determine_trend(df)
+
+    # Confluence scoring
+    confluence_result = score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info, trend)
 
     # Last values
     last = df.iloc[-1]
@@ -927,9 +935,17 @@ def calculate_trade_levels(result):
     atr = result['indicators'].get('atr')
     direction = result['confluence']['direction']
     sr = result.get('support_resistance', {})
+    timeframe = result.get('timeframe', '4h')
 
     if not atr or direction == 'NEUTRAL':
         return None
+
+    # Minimum SL distance scales by timeframe — 0.5% is noise for 4h crypto
+    MIN_SL_PCT = {
+        '1m': 0.003, '5m': 0.003, '15m': 0.005, '30m': 0.005,
+        '1h': 0.01, '4h': 0.02, '1d': 0.03, '1w': 0.05,
+    }
+    min_sl_pct = MIN_SL_PCT.get(timeframe, 0.02)
 
     supports = sr.get('support', [])
     resistances = sr.get('resistance', [])
@@ -941,8 +957,8 @@ def calculate_trade_levels(result):
             sl_level = supports[0]['price']
         else:
             sl_level = price - atr
-        # Enforce min 0.5% distance
-        min_sl = price * 0.995
+        # Enforce min distance by timeframe
+        min_sl = price * (1 - min_sl_pct)
         if sl_level > min_sl:
             sl_level = min_sl
         # Cap at 1.5x ATR
@@ -955,8 +971,8 @@ def calculate_trade_levels(result):
             sl_level = resistances[-1]['price']
         else:
             sl_level = price + atr
-        # Enforce min 0.5% distance
-        min_sl = price * 1.005
+        # Enforce min distance by timeframe
+        min_sl = price * (1 + min_sl_pct)
         if sl_level < min_sl:
             sl_level = min_sl
         # Cap at 1.5x ATR

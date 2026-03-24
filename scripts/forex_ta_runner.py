@@ -105,11 +105,11 @@ def analyze_forex_pair_tf(symbol, timeframe):
     # Kill zone
     session_info = get_kill_zone()
 
-    # Confluence scoring
-    confluence_result = score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info)
-
-    # Trend
+    # Trend (must be computed before confluence scoring for trend filter)
     trend = determine_trend(df)
+
+    # Confluence scoring
+    confluence_result = score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info, trend)
 
     # Last values
     last = df.iloc[-1]
@@ -252,7 +252,8 @@ def run(pairs_override=None, timeframes_override=None):
         json.dump(output, f, indent=2, default=str)
 
     elapsed = time.time() - start_time
-    signals = [r for r in results if r['confluence']['confluence_count'] >= 3]
+    signals = [r for r in results if r['confluence']['confluence_count'] >= 3
+               and not r['confluence'].get('contradiction')]
 
     print(f"\nDone. {len(results)} analyses, {len(signals)} signals (3+ confluences), "
           f"{len(errors)} errors. Saved to {output_path} ({elapsed:.1f}s)")
