@@ -216,7 +216,12 @@ def determine_winner(market):
 
 
 def auto_resolve():
-    """Check resolved markets and update signal statuses."""
+    """Check resolved markets and update signal statuses.
+
+    Matching priority:
+    1. Exact market_id (conditionId) from sidecar JSON — reliable, no false positives
+    2. Fallback: exact question match (lowercased) — for signals without a sidecar
+    """
     signals = parse_signals_log()
     active_signals = [s for s in signals if s["status"] == "ACTIVE"]
 
@@ -231,47 +236,68 @@ def auto_resolve():
         print("Could not fetch resolved markets.")
         return []
 
-    # Build lookup of resolved market questions
-    resolved_lookup = {}
+    # Build lookups by conditionId and by exact question
+    resolved_by_id = {}
+    resolved_by_question = {}
     for m in resolved_markets:
-        q = m.get("question", "").lower()
         winner = determine_winner(m)
-        if winner:
-            resolved_lookup[q] = winner
+        if not winner:
+            continue
+        cid = m.get("conditionId") or m.get("id", "")
+        if cid:
+            resolved_by_id[cid] = winner
+        q = m.get("question", "").strip().lower()
+        if q:
+            resolved_by_question[q] = winner
 
     updates = []
     for signal in active_signals:
-        market_name = signal["market"].lower()
-        # Try to match by partial question
-        for resolved_q, winner in resolved_lookup.items():
-            if market_name in resolved_q or resolved_q in market_name:
-                rec = signal["recommendation"]
-                won = (rec == winner)
-                new_status = "WON" if won else "LOST"
-                result = f"{winner} won"
+        winner = None
 
-                # Calculate P&L
-                try:
-                    odds_str = signal["odds_at_entry"].replace("%", "").split("/")[0]
-                    entry_odds = float(odds_str) / 100
-                    if won:
-                        pnl = f"+{((1/entry_odds - 1) * 100):.0f}%"
-                    else:
-                        pnl = "-100%"
-                except (ValueError, IndexError):
-                    pnl = "WON" if won else "LOST"
+        # Priority 1: exact market_id match via sidecar
+        details = load_signal_details(signal["num"])
+        if details and details.get("market_id"):
+            winner = resolved_by_id.get(details["market_id"])
 
-                update_signal_status(signal["num"], new_status, result, pnl)
-                updates.append({
-                    "signal": signal["num"],
-                    "market": signal["market"],
-                    "old_status": "ACTIVE",
-                    "new_status": new_status,
-                    "result": result,
-                    "pnl": pnl,
-                })
-                print(f"  #{signal['num']} {signal['market'][:40]}: {new_status} ({result})")
-                break
+        # Priority 2: exact question match (full question from sidecar, or truncated from log)
+        if not winner and details and details.get("market_question"):
+            winner = resolved_by_question.get(details["market_question"].strip().lower())
+
+        if not winner:
+            # Last resort: try the (possibly truncated) market name from the log
+            market_name = signal["market"].strip().lower()
+            winner = resolved_by_question.get(market_name)
+
+        if not winner:
+            continue
+
+        rec = signal["recommendation"]
+        won = (rec == winner)
+        new_status = "WON" if won else "LOST"
+        result = f"{winner} won"
+
+        # Calculate P&L
+        try:
+            odds_str = signal["odds_at_entry"].replace("%", "").split("/")[0]
+            entry_odds = float(odds_str) / 100
+            if won:
+                pnl = f"+{((1/entry_odds - 1) * 100):.0f}%"
+            else:
+                pnl = "-100%"
+        except (ValueError, IndexError):
+            pnl = "WON" if won else "LOST"
+
+        update_signal_status(signal["num"], new_status, result, pnl)
+        updates.append({
+            "signal": signal["num"],
+            "market": signal["market"],
+            "old_status": "ACTIVE",
+            "new_status": new_status,
+            "result": result,
+            "pnl": pnl,
+        })
+        match_method = "ID" if (details and details.get("market_id") and details["market_id"] in resolved_by_id) else "question"
+        print(f"  #{signal['num']} {signal['market'][:40]}: {new_status} ({result}) [matched by {match_method}]")
 
     if not updates:
         print("No signals resolved in this check.")

@@ -2189,24 +2189,16 @@ def handle_analyze(chat_id, text=""):
         cc = confluence.get('confluence_count', 0)
         contradiction = confluence.get('contradiction', False)
 
-        # Header
-        if direction == 'LONG':
-            dir_emoji = "\U0001f7e2"
-        elif direction == 'SHORT':
-            dir_emoji = "\U0001f534"
-        else:
-            dir_emoji = "\u26aa"
-
         lines = [
             f"<b>ANALYSIS: {pair} | {timeframe}</b>\n",
-            f"{dir_emoji} <b>Direction:</b> {direction} | <b>Confidence:</b> {confidence}",
+            f"<b>Direction:</b> {direction} | <b>Confidence:</b> {confidence}",
             f"<b>Strength:</b> {strength}/10 | <b>Confluences:</b> {cc}",
             f"<b>Trend:</b> {trend}",
         ]
 
         if contradiction:
             details = confluence.get('contradiction_detail', [])
-            lines.append(f"\u26a0\ufe0f <b>CONTRADICTION:</b> {', '.join(details)}")
+            lines.append(f"<b>CONTRADICTION:</b> {', '.join(details)}")
 
         # Price and indicators
         rsi = ind.get('rsi')
@@ -2225,11 +2217,11 @@ def handle_analyze(chat_id, text=""):
         resistances = sr.get('resistance', [])[:3]
         lines.append(f"\n<b>--- S/R LEVELS ---</b>")
         for s in supports:
-            lines.append(f"\U0001f7e2 Support: {pfmt(s['price'])} ({s.get('touches', 0)} touches)")
+            lines.append(f"  [S] {pfmt(s['price'])} ({s.get('touches', 0)} touches)")
         for r in resistances:
-            lines.append(f"\U0001f534 Resistance: {pfmt(r['price'])} ({r.get('touches', 0)} touches)")
+            lines.append(f"  [R] {pfmt(r['price'])} ({r.get('touches', 0)} touches)")
         if not supports and not resistances:
-            lines.append("No significant S/R levels detected.")
+            lines.append("  No significant S/R levels detected.")
 
         # ICT Concepts
         lines.append(f"\n<b>--- ICT CONCEPTS ---</b>")
@@ -2252,10 +2244,10 @@ def handle_analyze(chat_id, text=""):
         struct = ict.get('structure_labels', [])
         if struct:
             labels = [s['type'] for s in struct[-4:]]
-            ict_items.append(f"Structure: {' → '.join(labels)}")
+            ict_items.append(f"Structure: {' > '.join(labels)}")
         if ict_items:
             for item in ict_items:
-                lines.append(f"  • {item}")
+                lines.append(f"  - {item}")
         else:
             lines.append("  No ICT concepts detected.")
 
@@ -2263,32 +2255,41 @@ def handle_analyze(chat_id, text=""):
         if patterns:
             lines.append(f"\n<b>--- PATTERNS ---</b>")
             for p in patterns[:3]:
-                lines.append(f"  • {p.get('pattern', '?')} ({p.get('direction', '?')})")
+                lines.append(f"  - {p.get('pattern', '?')} ({p.get('direction', '?')})")
 
         # Confluences
         lines.append(f"\n<b>--- CONFLUENCES ({cc}) ---</b>")
         for c in confluence.get('confluences', []):
-            dir_tag = "\U0001f7e2" if c['direction'] == 'bullish' else "\U0001f534" if c['direction'] == 'bearish' else "\u26aa"
+            dir_tag = "[BULL]" if c['direction'] == 'bullish' else "[BEAR]" if c['direction'] == 'bearish' else "[—]"
             lines.append(f"  {dir_tag} {c['detail']}")
 
-        # Signal recommendation
+        # Signal recommendation + auto-track
         lines.append(f"\n<b>--- VERDICT ---</b>")
         if contradiction:
-            lines.append(f"\u274c <b>NO TRADE</b> — Contradictory signals detected.")
+            lines.append(f"NO TRADE — Contradictory signals detected.")
         elif cc >= 3 and direction != 'NEUTRAL':
-            from binance_ta_runner import calculate_trade_levels
+            from binance_ta_runner import calculate_trade_levels, build_trading_signal
             levels = calculate_trade_levels(result)
             if levels:
-                lines.append(f"\u2705 <b>SIGNAL: {direction}</b>")
+                lines.append(f"<b>SIGNAL: {direction}</b>")
                 lines.append(f"<b>Entry:</b> {pfmt(levels['entry'])}")
                 lines.append(f"<b>SL:</b> {pfmt(levels['stop_loss'])}")
                 lines.append(f"<b>TP1:</b> {pfmt(levels['tp1'])} ({levels['rr_tp1']})")
                 lines.append(f"<b>TP2:</b> {pfmt(levels['tp2'])} ({levels['rr_tp2']})")
                 lines.append(f"<b>TP3:</b> {pfmt(levels['tp3'])} ({levels['rr_tp3']})")
+
+                # Auto-log to tracker for monitoring
+                try:
+                    signal = build_trading_signal(result)
+                    if signal:
+                        log_trading_to_tracker(signal)
+                        lines.append("\nLogged to tracker — monitor will auto-track TP/SL.")
+                except Exception as e:
+                    print(f"  [ANALYZE] Tracker log error: {e}")
             else:
-                lines.append(f"\u26a0\ufe0f Direction is {direction} but could not calculate levels.")
+                lines.append(f"Direction is {direction} but could not calculate levels.")
         else:
-            lines.append(f"\u26a0\ufe0f <b>NO VALID SETUP</b> — {cc} confluences (need 3+)")
+            lines.append(f"NO VALID SETUP — {cc} confluences (need 3+)")
             if direction == 'NEUTRAL':
                 lines.append("Direction is neutral — wait for clearer signal.")
 
