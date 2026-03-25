@@ -2471,21 +2471,42 @@ def run_bot():
         get_updates(offset=offset, timeout=0)
         print(f"Post-delay flush: confirmed up to offset {offset}.")
 
-    print("Bot is running. Press Ctrl+C to stop.\n")
+    # Generate unique instance ID for debugging duplicate issues
+    import random
+    _instance_id = f"{random.randint(1000,9999)}"
+    print(f"Bot is running (instance {_instance_id}). Press Ctrl+C to stop.\n")
 
     while not _shutdown.is_set():
         try:
             # Short poll timeout (5s) so SIGTERM kills us quickly on next deploy
             updates = get_updates(offset=offset, timeout=5)
 
+            # Immediately confirm all updates before processing.
+            # Tells Telegram to never return these to ANY instance again.
+            if updates:
+                offset = updates[-1]["update_id"] + 1
+                get_updates(offset=offset, timeout=0)
+
             for update in updates:
                 uid = update["update_id"]
-                offset = uid + 1
 
-                # Skip if already processed (rolling-deploy overlap guard)
+                # Local dedup (same instance)
                 if uid in _processed_ids:
                     continue
                 _processed_ids.add(uid)
+
+                # Distributed dedup via Supabase (cross-instance).
+                # Atomic INSERT — only the first instance to claim wins.
+                if _supabase:
+                    try:
+                        _supabase.table('telegram_update_dedup').insert(
+                            {'update_id': uid}
+                        ).execute()
+                    except Exception as e:
+                        if 'duplicate' in str(e).lower() or '23505' in str(e):
+                            print(f"  [DEDUP] Update {uid} already claimed by another instance. Skipping.")
+                            continue
+                        # Non-dedup error — process anyway (don't drop updates)
                 if len(_processed_ids) > _DEDUP_MAX:
                     # Trim oldest IDs (update IDs are monotonically increasing)
                     oldest = sorted(_processed_ids)[:_DEDUP_MAX // 2]
