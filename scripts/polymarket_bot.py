@@ -1706,24 +1706,54 @@ def _run_ta_script(chat_id, args_list, label):
         return False
 
 
+def _is_duplicate_signal(signal):
+    """Check if this signal (pair+direction+timeframe) was already sent in the last 4 hours."""
+    if not _supabase:
+        return False
+    try:
+        pair = signal.get('pair', '')
+        direction = signal.get('direction', '')
+        timeframe = signal.get('timeframe', '')
+        resp = _supabase.table('trading_signals').select('id').eq(
+            'pair', pair
+        ).eq('direction', direction).eq('timeframe', timeframe).gte(
+            'created_at', (datetime.now(timezone.utc) - __import__('datetime').timedelta(hours=4)).isoformat()
+        ).limit(1).execute()
+        return len(resp.data) > 0
+    except Exception:
+        return False
+
+
 def _send_ta_signals_to_approval(chat_id):
     """Load TA signals from JSON and send qualifying ones for approval + test channel."""
     try:
         from binance_ta_runner import load_ta_signals
         signals = load_ta_signals(max_age_minutes=90)
         if not signals:
-            send_message(chat_id, "No qualifying signals (4+ confluences) in latest scan.")
+            send_message(chat_id, "No qualifying signals in latest scan.")
+            return 0
+
+        # Filter out signals already sent in the last 4 hours (prevents auto-scanner dupes)
+        fresh_signals = []
+        for s in signals:
+            if _is_duplicate_signal(s):
+                print(f"  [DEDUP] Skipping duplicate signal: {s.get('pair')} {s.get('direction')} {s.get('timeframe')}")
+            else:
+                fresh_signals.append(s)
+
+        if not fresh_signals:
+            send_message(chat_id, f"No new signals ({len(signals)} already sent recently).")
             return 0
 
         # Auto-send to test channel if configured (no approval needed, auto-tracked)
         if TEST_CHANNEL_ID:
-            test_sent = _send_to_test_channel(signals)
+            test_sent = _send_to_test_channel(fresh_signals)
             if test_sent:
                 send_message(chat_id, f"Auto-sent <b>{test_sent}</b> signal(s) to test channel.")
 
-        send_message(chat_id, f"Found <b>{len(signals)}</b> qualifying signal(s). Sending for approval...")
+        send_message(chat_id, f"Found <b>{len(fresh_signals)}</b> new signal(s). Sending for approval...")
         sent = 0
-        for signal in signals:
+        for signal in fresh_signals:
             msg_id = send_to_approval(signal)
             if msg_id:
                 sent += 1
@@ -2283,7 +2313,7 @@ def handle_analyze(chat_id, text=""):
         lines.append(f"\n<b>--- VERDICT ---</b>")
         if contradiction:
             lines.append(f"NO TRADE — Contradictory signals detected.")
-        elif cc >= 4 and direction != 'NEUTRAL':
+        elif cc >= confluence.get('min_count', 4) and direction != 'NEUTRAL':
             from binance_ta_runner import calculate_trade_levels, build_trading_signal
             levels = calculate_trade_levels(result)
             if levels:
@@ -2305,7 +2335,8 @@ def handle_analyze(chat_id, text=""):
             else:
                 lines.append(f"Direction is {direction} but could not calculate levels.")
         else:
-            lines.append(f"NO VALID SETUP — {cc} agreeing confluences (need 4+)")
+            needed = confluence.get('min_count', 4)
+            lines.append(f"NO VALID SETUP — {cc} agreeing confluences (need {needed}+)")
             if direction == 'NEUTRAL':
                 lines.append("Direction is neutral — wait for clearer signal.")
 
