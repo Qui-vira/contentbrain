@@ -1944,14 +1944,8 @@ def _send_to_test_channel(signals, chat_id=None):
         result = send_message(TEST_CHANNEL_ID, card)
         if result and result.get("ok"):
             sent += 1
-            # Log to tracker — tagged as 'test' so monitor only notifies test channel
-            try:
-                if signal.get('signal_type') == 'trading':
-                    log_trading_to_tracker(signal, approved_channels=['test'])
-                else:
-                    log_to_tracker(signal)
-            except Exception as e:
-                print(f"  [TEST] Tracker log error: {e}")
+            # Test signals are preview-only — do NOT log to tracker.
+            # Only approved signals should be tracked by the monitor.
 
     return sent
 
@@ -2360,14 +2354,8 @@ def handle_analyze(chat_id, text=""):
                 lines.append(f"<b>TP2:</b> {pfmt(levels['tp2'])} ({levels['rr_tp2']})")
                 lines.append(f"<b>TP3:</b> {pfmt(levels['tp3'])} ({levels['rr_tp3']})")
 
-                # Auto-log to tracker for monitoring (test-only, won't notify public channels)
-                try:
-                    signal = build_trading_signal(result)
-                    if signal:
-                        log_trading_to_tracker(signal, approved_channels=['test'])
-                        lines.append("\nLogged to tracker — monitor will auto-track TP/SL.")
-                except Exception as e:
-                    print(f"  [ANALYZE] Tracker log error: {e}")
+                # Analysis is preview-only — do NOT log to tracker.
+                # Only approved signals should be tracked by the monitor.
             else:
                 lines.append(f"Direction is {direction} but could not calculate levels.")
         else:
