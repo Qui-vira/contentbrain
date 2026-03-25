@@ -2263,17 +2263,27 @@ def handle_analyze(chat_id, text=""):
             for p in patterns[:3]:
                 lines.append(f"  - {p.get('pattern', '?')} ({p.get('direction', '?')})")
 
-        # Confluences
-        lines.append(f"\n<b>--- CONFLUENCES ({cc}) ---</b>")
-        for c in confluence.get('confluences', []):
-            dir_tag = "[BULL]" if c['direction'] == 'bullish' else "[BEAR]" if c['direction'] == 'bearish' else "[—]"
+        # Confluences — show agreeing factors first, then opposing/context
+        dir_key = 'bullish' if direction == 'LONG' else 'bearish' if direction == 'SHORT' else None
+        agreeing = [c for c in confluence.get('confluences', []) if c['direction'] == dir_key]
+        opposing = [c for c in confluence.get('confluences', []) if c['direction'] != dir_key and c['direction'] != 'neutral']
+        context = [c for c in confluence.get('confluences', []) if c['direction'] == 'neutral']
+
+        lines.append(f"\n<b>--- CONFLUENCES ({cc} agreeing) ---</b>")
+        for c in agreeing:
+            dir_tag = "[BULL]" if c['direction'] == 'bullish' else "[BEAR]"
             lines.append(f"  {dir_tag} {c['detail']}")
+        for c in opposing:
+            dir_tag = "[BULL]" if c['direction'] == 'bullish' else "[BEAR]"
+            lines.append(f"  {dir_tag} {c['detail']} (opposing)")
+        for c in context:
+            lines.append(f"  [--] {c['detail']}")
 
         # Signal recommendation + auto-track
         lines.append(f"\n<b>--- VERDICT ---</b>")
         if contradiction:
             lines.append(f"NO TRADE — Contradictory signals detected.")
-        elif cc >= 3 and direction != 'NEUTRAL':
+        elif cc >= 4 and direction != 'NEUTRAL':
             from binance_ta_runner import calculate_trade_levels, build_trading_signal
             levels = calculate_trade_levels(result)
             if levels:
@@ -2295,7 +2305,7 @@ def handle_analyze(chat_id, text=""):
             else:
                 lines.append(f"Direction is {direction} but could not calculate levels.")
         else:
-            lines.append(f"NO VALID SETUP — {cc} confluences (need 3+)")
+            lines.append(f"NO VALID SETUP — {cc} agreeing confluences (need 4+)")
             if direction == 'NEUTRAL':
                 lines.append("Direction is neutral — wait for clearer signal.")
 
