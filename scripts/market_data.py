@@ -43,7 +43,8 @@ def get_binance_client():
         client = Client(api_key, api_secret)
         client.ping()
         return client
-    except Exception:
+    except Exception as e:
+        print(f"Binance client init failed: {e}")
         return None
 
 
