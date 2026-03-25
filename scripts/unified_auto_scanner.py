@@ -28,6 +28,16 @@ except ImportError:
 
 from market_data import get_kill_zone
 
+# --- Supabase (for deploy-safe cooldown) ---
+_supabase = None
+try:
+    from supabase import create_client as _supabase_create_client
+    _sb_url = os.getenv("SUPABASE_URL", "")
+    _sb_key = os.getenv("SUPABASE_KEY", "")
+    _supabase = _supabase_create_client(_sb_url, _sb_key) if _sb_url and _sb_key else None
+except ImportError:
+    pass
+
 # --- Config ---
 
 VAULT_DIR = os.path.join(os.path.dirname(__file__), "..")
@@ -214,20 +224,45 @@ def run_auto_scan(dry_run=False):
     print(f"UNIFIED AUTO-SCANNER — {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
     print("=" * 50)
 
-    # 0. Cooldown check — skip if last scan was < 4 hours ago
+    # 0. Cooldown check — skip if last scan was < N hours ago
+    #    Uses Supabase trading_signals table (survives Railway redeploys)
+    #    Falls back to local state file if Supabase unavailable
     scan_interval_hours = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "4"))
     state = load_state()
-    last_scan = state.get('last_scan_at')
-    if last_scan:
+
+    cooldown_active = False
+    # Primary: check Supabase for most recent signal (deploy-safe)
+    if _supabase:
         try:
-            last_dt = datetime.fromisoformat(last_scan)
-            hours_since = (datetime.now(timezone.utc) - last_dt).total_seconds() / 3600
-            if hours_since < scan_interval_hours:
-                print(f"Cooldown active: last scan was {hours_since:.1f}h ago "
-                      f"(need {scan_interval_hours}h). Skipping.")
-                return
-        except (ValueError, TypeError):
-            pass  # corrupted timestamp, proceed with scan
+            cutoff = (datetime.now(timezone.utc) - __import__('datetime').timedelta(hours=scan_interval_hours)).isoformat()
+            resp = _supabase.table('trading_signals').select('created_at').gte(
+                'created_at', cutoff
+            ).order('created_at', desc=True).limit(1).execute()
+            if resp.data:
+                last_signal_at = resp.data[0]['created_at']
+                last_dt = datetime.fromisoformat(last_signal_at.replace('Z', '+00:00'))
+                hours_since = (datetime.now(timezone.utc) - last_dt).total_seconds() / 3600
+                print(f"Last signal was {hours_since:.1f}h ago (need {scan_interval_hours}h)")
+                if hours_since < scan_interval_hours:
+                    cooldown_active = True
+        except Exception as e:
+            print(f"  Supabase cooldown check failed: {e}")
+
+    # Fallback: local state file
+    if not cooldown_active:
+        last_scan = state.get('last_scan_at')
+        if last_scan:
+            try:
+                last_dt = datetime.fromisoformat(last_scan)
+                hours_since = (datetime.now(timezone.utc) - last_dt).total_seconds() / 3600
+                if hours_since < scan_interval_hours:
+                    cooldown_active = True
+            except (ValueError, TypeError):
+                pass
+
+    if cooldown_active:
+        print(f"Cooldown active. Skipping scan.")
+        return
 
     # 1. Check session
     session, is_active = get_kill_zone()
