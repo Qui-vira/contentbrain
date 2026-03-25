@@ -262,6 +262,36 @@ def run(pairs_override=None, timeframes_override=None):
           f"{len(errors)} errors. Saved to {output_path} ({elapsed:.1f}s)")
 
 
+# Per-cycle cache for LTF ICT data — avoids burning TwelveData credits on repeat pair+ltf
+_forex_ltf_ict_cache = {}
+
+
+def _clear_forex_ltf_cache():
+    """Clear the forex LTF ICT cache at the start of each signal loading cycle."""
+    _forex_ltf_ict_cache.clear()
+
+
+def _get_cached_forex_ltf_ict(pair, ltf):
+    """Fetch and cache LTF ICT data for forex. Reuses cached result on repeat calls."""
+    cache_key = (pair, ltf)
+    if cache_key in _forex_ltf_ict_cache:
+        return _forex_ltf_ict_cache[cache_key]
+
+    result = {'status': 'ok', 'ict': None}
+    try:
+        df = fetch_twelvedata_time_series(pair, ltf, outputsize=50)
+        if df is None or len(df) < 20:
+            result = {'status': 'skip', 'ict': None}
+        else:
+            df = calculate_indicators(df)
+            result = {'status': 'ok', 'ict': detect_ict_concepts(df)}
+    except Exception as e:
+        result = {'status': 'error', 'ict': None, 'error': str(e)}
+
+    _forex_ltf_ict_cache[cache_key] = result
+    return result
+
+
 def check_forex_ltf_sweep(pair, direction, signal_tf):
     """Check lower timeframe for sweep confirmation on forex pairs via Twelve Data.
 
@@ -273,47 +303,46 @@ def check_forex_ltf_sweep(pair, direction, signal_tf):
     ltf = '15min' if signal_tf == '1h' else '1h'
     ltf_label = '15m' if ltf == '15min' else '1h'
 
-    try:
-        df = fetch_twelvedata_time_series(pair, ltf, outputsize=50)
-        if df is None or len(df) < 20:
-            return True, f"LTF sweep check skipped (insufficient {ltf_label} data)"
+    cached = _get_cached_forex_ltf_ict(pair, ltf)
 
-        df = calculate_indicators(df)
-        ict = detect_ict_concepts(df)
-        sweeps = ict.get('liquidity_sweeps', [])
-        protected_lows = [p for p in ict.get('protected_lows', []) if p['status'] == 'protected']
-        protected_highs = [p for p in ict.get('protected_highs', []) if p['status'] == 'protected']
+    if cached['status'] == 'error':
+        return True, f"LTF sweep check error: {cached.get('error')}"
+    if cached['status'] == 'skip' or cached['ict'] is None:
+        return True, f"LTF sweep check skipped (insufficient {ltf_label} data)"
 
-        if direction == 'LONG':
-            has_bullish_sweep = any('bullish' in s['type'] for s in sweeps)
-            all_lows_swept = len(protected_lows) == 0 and len(ict.get('swing_lows', [])) >= 2
-            if has_bullish_sweep:
-                swept_level = next(s['swept_level'] for s in sweeps if 'bullish' in s['type'])
-                return True, f"Bullish sweep confirmed on {ltf_label} — swept {swept_level:.6g}, sellside liq taken"
-            elif all_lows_swept:
-                return True, f"All {ltf_label} swing lows already swept — sellside clear"
-            else:
-                return False, f"No bullish sweep on {ltf_label} — protected lows still untouched, high SL risk"
+    ict = cached['ict']
+    sweeps = ict.get('liquidity_sweeps', [])
+    protected_lows = [p for p in ict.get('protected_lows', []) if p['status'] == 'protected']
+    protected_highs = [p for p in ict.get('protected_highs', []) if p['status'] == 'protected']
 
-        elif direction == 'SHORT':
-            has_bearish_sweep = any('bearish' in s['type'] for s in sweeps)
-            all_highs_swept = len(protected_highs) == 0 and len(ict.get('swing_highs', [])) >= 2
-            if has_bearish_sweep:
-                swept_level = next(s['swept_level'] for s in sweeps if 'bearish' in s['type'])
-                return True, f"Bearish sweep confirmed on {ltf_label} — swept {swept_level:.6g}, buyside liq taken"
-            elif all_highs_swept:
-                return True, f"All {ltf_label} swing highs already swept — buyside clear"
-            else:
-                return False, f"No bearish sweep on {ltf_label} — protected highs still untouched, high SL risk"
+    if direction == 'LONG':
+        has_bullish_sweep = any('bullish' in s['type'] for s in sweeps)
+        all_lows_swept = len(protected_lows) == 0 and len(ict.get('swing_lows', [])) >= 2
+        if has_bullish_sweep:
+            swept_level = next(s['swept_level'] for s in sweeps if 'bullish' in s['type'])
+            return True, f"Bullish sweep confirmed on {ltf_label} — swept {swept_level:.6g}, sellside liq taken"
+        elif all_lows_swept:
+            return True, f"All {ltf_label} swing lows already swept — sellside clear"
+        else:
+            return False, f"No bullish sweep on {ltf_label} — protected lows still untouched, high SL risk"
 
-    except Exception as e:
-        return True, f"LTF sweep check error: {e}"
+    elif direction == 'SHORT':
+        has_bearish_sweep = any('bearish' in s['type'] for s in sweeps)
+        all_highs_swept = len(protected_highs) == 0 and len(ict.get('swing_highs', [])) >= 2
+        if has_bearish_sweep:
+            swept_level = next(s['swept_level'] for s in sweeps if 'bearish' in s['type'])
+            return True, f"Bearish sweep confirmed on {ltf_label} — swept {swept_level:.6g}, buyside liq taken"
+        elif all_highs_swept:
+            return True, f"All {ltf_label} swing highs already swept — buyside clear"
+        else:
+            return False, f"No bearish sweep on {ltf_label} — protected highs still untouched, high SL risk"
 
     return True, "Sweep check passed"
 
 
 def load_forex_signals(max_age_minutes=60):
     """Read forex_ta_summary.json, check freshness, filter 3+ confluences, return signal dicts."""
+    _clear_forex_ltf_cache()  # Fresh cache each cycle
     output_path = os.path.abspath(OUTPUT_FILE)
     if not os.path.exists(output_path):
         print(f"Forex TA summary not found: {output_path}")

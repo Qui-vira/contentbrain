@@ -1228,6 +1228,35 @@ def build_trading_signal(result):
     }
 
 
+# Per-cycle cache for LTF ICT data — avoids re-fetching the same pair+timeframe
+_ltf_ict_cache = {}
+
+
+def clear_ltf_cache():
+    """Clear the LTF ICT cache at the start of each signal loading cycle."""
+    _ltf_ict_cache.clear()
+
+
+def _get_cached_ltf_ict(pair, ltf, fetch_fn):
+    """Fetch and cache LTF ICT data. Returns cached result on repeat calls for same pair+ltf."""
+    cache_key = (pair, ltf)
+    if cache_key in _ltf_ict_cache:
+        return _ltf_ict_cache[cache_key]
+
+    result = {'status': 'ok', 'ict': None}
+    try:
+        df = fetch_fn()
+        if df is None or len(df) < 20:
+            result = {'status': 'skip', 'ict': None}
+        else:
+            result = {'status': 'ok', 'ict': detect_ict_concepts(df)}
+    except Exception as e:
+        result = {'status': 'error', 'ict': None, 'error': str(e)}
+
+    _ltf_ict_cache[cache_key] = result
+    return result
+
+
 def check_ltf_sweep_confirmation(pair, direction, signal_tf):
     """Check lower timeframe for sweep confirmation before entry.
 
@@ -1242,50 +1271,46 @@ def check_ltf_sweep_confirmation(pair, direction, signal_tf):
     ltf = '15m' if signal_tf == '1h' else '1h'
     ltf_interval = BYBIT_INTERVAL_MAP.get(ltf, '60')
 
-    try:
-        df = fetch_bybit_klines(pair, ltf_interval, limit=50)
-        if df is None or len(df) < 20:
-            # Can't confirm — let signal through with a note
-            return True, f"LTF sweep check skipped (insufficient {ltf} data)"
+    cached = _get_cached_ltf_ict(pair, ltf, lambda: fetch_bybit_klines(pair, ltf_interval, limit=50))
 
-        ict = detect_ict_concepts(df)
-        sweeps = ict.get('liquidity_sweeps', [])
-        protected_lows = [p for p in ict.get('protected_lows', []) if p['status'] == 'protected']
-        protected_highs = [p for p in ict.get('protected_highs', []) if p['status'] == 'protected']
+    if cached['status'] == 'error':
+        return True, f"LTF sweep check error: {cached.get('error')}"
+    if cached['status'] == 'skip' or cached['ict'] is None:
+        return True, f"LTF sweep check skipped (insufficient {ltf} data)"
 
-        if direction == 'LONG':
-            # Need bullish sweep OR a recently formed protected low (liquidity already taken below)
-            has_bullish_sweep = any('bullish' in s['type'] for s in sweeps)
-            # Also accept if all recent lows are swept (no protected lows = sellside already cleared)
-            all_lows_swept = len(protected_lows) == 0 and len(ict.get('swing_lows', [])) >= 2
-            if has_bullish_sweep:
-                swept_level = next(s['swept_level'] for s in sweeps if 'bullish' in s['type'])
-                return True, f"Bullish sweep confirmed on {ltf} — swept {swept_level:.6g}, sellside liq taken"
-            elif all_lows_swept:
-                return True, f"All {ltf} swing lows already swept — sellside clear"
-            else:
-                return False, f"No bullish sweep on {ltf} — protected lows still untouched, high SL risk"
+    ict = cached['ict']
+    sweeps = ict.get('liquidity_sweeps', [])
+    protected_lows = [p for p in ict.get('protected_lows', []) if p['status'] == 'protected']
+    protected_highs = [p for p in ict.get('protected_highs', []) if p['status'] == 'protected']
 
-        elif direction == 'SHORT':
-            has_bearish_sweep = any('bearish' in s['type'] for s in sweeps)
-            all_highs_swept = len(protected_highs) == 0 and len(ict.get('swing_highs', [])) >= 2
-            if has_bearish_sweep:
-                swept_level = next(s['swept_level'] for s in sweeps if 'bearish' in s['type'])
-                return True, f"Bearish sweep confirmed on {ltf} — swept {swept_level:.6g}, buyside liq taken"
-            elif all_highs_swept:
-                return True, f"All {ltf} swing highs already swept — buyside clear"
-            else:
-                return False, f"No bearish sweep on {ltf} — protected highs still untouched, high SL risk"
+    if direction == 'LONG':
+        has_bullish_sweep = any('bullish' in s['type'] for s in sweeps)
+        all_lows_swept = len(protected_lows) == 0 and len(ict.get('swing_lows', [])) >= 2
+        if has_bullish_sweep:
+            swept_level = next(s['swept_level'] for s in sweeps if 'bullish' in s['type'])
+            return True, f"Bullish sweep confirmed on {ltf} — swept {swept_level:.6g}, sellside liq taken"
+        elif all_lows_swept:
+            return True, f"All {ltf} swing lows already swept — sellside clear"
+        else:
+            return False, f"No bullish sweep on {ltf} — protected lows still untouched, high SL risk"
 
-    except Exception as e:
-        # Don't block signals on fetch errors — let them through
-        return True, f"LTF sweep check error: {e}"
+    elif direction == 'SHORT':
+        has_bearish_sweep = any('bearish' in s['type'] for s in sweeps)
+        all_highs_swept = len(protected_highs) == 0 and len(ict.get('swing_highs', [])) >= 2
+        if has_bearish_sweep:
+            swept_level = next(s['swept_level'] for s in sweeps if 'bearish' in s['type'])
+            return True, f"Bearish sweep confirmed on {ltf} — swept {swept_level:.6g}, buyside liq taken"
+        elif all_highs_swept:
+            return True, f"All {ltf} swing highs already swept — buyside clear"
+        else:
+            return False, f"No bearish sweep on {ltf} — protected highs still untouched, high SL risk"
 
     return True, "Sweep check passed"
 
 
 def load_ta_signals(max_age_minutes=60):
     """Read binance_ta_summary.json, check freshness, filter 3+ confluences, return signal dicts."""
+    clear_ltf_cache()  # Fresh cache each cycle
     output_path = os.path.abspath(OUTPUT_FILE)
     if not os.path.exists(output_path):
         print(f"TA summary not found: {output_path}")
