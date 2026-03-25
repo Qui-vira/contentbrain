@@ -2307,6 +2307,12 @@ def handle_analyze(chat_id, text=""):
             ict_items.append(f"Liq pool: {pool['type']} at {pfmt(pool['price'])}")
         for bb in ict.get('breaker_blocks', [])[:2]:
             ict_items.append(f"Breaker: {bb['type']} at {pfmt(bb['low'])}-{pfmt(bb['high'])}")
+        for ph in ict.get('protected_highs', []):
+            if ph['status'] == 'protected':
+                ict_items.append(f"Protected high at {pfmt(ph['price'])} — buyside liq untouched")
+        for pl in ict.get('protected_lows', []):
+            if pl['status'] == 'protected':
+                ict_items.append(f"Protected low at {pfmt(pl['price'])} — sellside liq untouched")
         struct = ict.get('structure_labels', [])
         if struct:
             labels = [s['type'] for s in struct[-4:]]

@@ -490,6 +490,30 @@ def detect_ict_concepts(df):
 
     results['liquidity_sweeps'] = sweeps
 
+    # --- Protected Highs / Lows ---
+    # A protected high is a swing high that has NOT been swept (wicked above) by any
+    # subsequent candle — liquidity still rests above it, making it a target.
+    # A protected low is a swing low that has NOT been swept (wicked below) by any
+    # subsequent candle — liquidity still rests below it, making it a target.
+    protected_highs = []
+    protected_lows = []
+    for sh in swing_highs:
+        idx = sh['index']
+        swept = any(high[k] > sh['price'] for k in range(idx + 1, len(df)))
+        if not swept:
+            protected_highs.append({'price': sh['price'], 'index': idx, 'status': 'protected'})
+        else:
+            protected_highs.append({'price': sh['price'], 'index': idx, 'status': 'swept'})
+    for sl in swing_lows:
+        idx = sl['index']
+        swept = any(low[k] < sl['price'] for k in range(idx + 1, len(df)))
+        if not swept:
+            protected_lows.append({'price': sl['price'], 'index': idx, 'status': 'protected'})
+        else:
+            protected_lows.append({'price': sl['price'], 'index': idx, 'status': 'swept'})
+    results['protected_highs'] = protected_highs[-3:]
+    results['protected_lows'] = protected_lows[-3:]
+
     # --- CHOCH (Change of Character) ---
     # CHOCH = break of the most recent swing low in uptrend (bearish)
     #       or break of the most recent swing high in downtrend (bullish)

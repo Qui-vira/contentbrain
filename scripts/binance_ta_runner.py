@@ -622,7 +622,21 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info, t
                 confluences.append({'factor': 'Liquidity', 'detail': f"Equal lows liquidity at {pool['price']:.2f} (sellside target)", 'direction': 'bearish'})
             break
 
-    # 11. Breaker Blocks (failed OBs acting as S/R in opposite direction)
+    # 11. Protected Highs / Lows (untouched swing points = resting liquidity)
+    for ph in ict.get('protected_highs', []):
+        if ph['status'] == 'protected':
+            dist = abs(price - ph['price']) / price if price > 0 else 1
+            if dist < 0.015:  # Within 1.5% of protected high
+                confluences.append({'factor': 'Protected', 'detail': f"Protected high at {ph['price']:.2f} — buyside liquidity untouched", 'direction': 'bearish'})
+                break
+    for pl in ict.get('protected_lows', []):
+        if pl['status'] == 'protected':
+            dist = abs(price - pl['price']) / price if price > 0 else 1
+            if dist < 0.015:  # Within 1.5% of protected low
+                confluences.append({'factor': 'Protected', 'detail': f"Protected low at {pl['price']:.2f} — sellside liquidity untouched", 'direction': 'bullish'})
+                break
+
+    # 12. Breaker Blocks (failed OBs acting as S/R in opposite direction)
     for bb in ict.get('breaker_blocks', []):
         if bb['type'] == 'bullish_breaker' and bb['low'] <= price <= bb['high'] * 1.005:
             confluences.append({'factor': 'Breaker', 'detail': f"Bullish breaker block at {bb['low']:.2f}-{bb['high']:.2f}", 'direction': 'bullish'})
@@ -792,7 +806,7 @@ def calculate_strength_score(confluence_result, rsi_val, macd_hist, trend, patte
 
     # Institutional factors bonus (0-1.5 points)
     # CHOCH, liquidity pools, breaker blocks — nephew_sam_ methodology
-    institutional_factors = {'Structure', 'Liquidity', 'Breaker'}
+    institutional_factors = {'Structure', 'Liquidity', 'Breaker', 'Protected'}
     inst_count = sum(1 for c in confluence_result['confluences'] if c['factor'] in institutional_factors)
     score += inst_count * 0.5  # 0.5 per institutional factor (max 1.5)
 
@@ -1005,6 +1019,8 @@ def analyze_pair_tf(client, symbol, timeframe):
             'fvgs': ict.get('fvgs', [])[-3:],
             'mss_bos': ict.get('mss_bos', []),
             'liquidity_sweeps': ict.get('liquidity_sweeps', []),
+            'protected_highs': ict.get('protected_highs', []),
+            'protected_lows': ict.get('protected_lows', []),
             'swing_highs': ict.get('swing_highs', [])[-3:],
             'swing_lows': ict.get('swing_lows', [])[-3:],
         },
@@ -1212,6 +1228,62 @@ def build_trading_signal(result):
     }
 
 
+def check_ltf_sweep_confirmation(pair, direction, signal_tf):
+    """Check lower timeframe for sweep confirmation before entry.
+
+    For LONG: require a bullish sweep (wick below prior low that reversed) on 15m/1h.
+              This means sellside liquidity was taken — SL below is now protected.
+    For SHORT: require a bearish sweep (wick above prior high that reversed) on 15m/1h.
+               This means buyside liquidity was taken — SL above is now protected.
+
+    Returns (confirmed: bool, detail: str)
+    """
+    # LTF to check: 1h signals check 15m, 4h/1d signals check 1h
+    ltf = '15m' if signal_tf == '1h' else '1h'
+    ltf_interval = BYBIT_INTERVAL_MAP.get(ltf, '60')
+
+    try:
+        df = fetch_bybit_klines(pair, ltf_interval, limit=50)
+        if df is None or len(df) < 20:
+            # Can't confirm — let signal through with a note
+            return True, f"LTF sweep check skipped (insufficient {ltf} data)"
+
+        ict = detect_ict_concepts(df)
+        sweeps = ict.get('liquidity_sweeps', [])
+        protected_lows = [p for p in ict.get('protected_lows', []) if p['status'] == 'protected']
+        protected_highs = [p for p in ict.get('protected_highs', []) if p['status'] == 'protected']
+
+        if direction == 'LONG':
+            # Need bullish sweep OR a recently formed protected low (liquidity already taken below)
+            has_bullish_sweep = any('bullish' in s['type'] for s in sweeps)
+            # Also accept if all recent lows are swept (no protected lows = sellside already cleared)
+            all_lows_swept = len(protected_lows) == 0 and len(ict.get('swing_lows', [])) >= 2
+            if has_bullish_sweep:
+                swept_level = next(s['swept_level'] for s in sweeps if 'bullish' in s['type'])
+                return True, f"Bullish sweep confirmed on {ltf} — swept {swept_level:.6g}, sellside liq taken"
+            elif all_lows_swept:
+                return True, f"All {ltf} swing lows already swept — sellside clear"
+            else:
+                return False, f"No bullish sweep on {ltf} — protected lows still untouched, high SL risk"
+
+        elif direction == 'SHORT':
+            has_bearish_sweep = any('bearish' in s['type'] for s in sweeps)
+            all_highs_swept = len(protected_highs) == 0 and len(ict.get('swing_highs', [])) >= 2
+            if has_bearish_sweep:
+                swept_level = next(s['swept_level'] for s in sweeps if 'bearish' in s['type'])
+                return True, f"Bearish sweep confirmed on {ltf} — swept {swept_level:.6g}, buyside liq taken"
+            elif all_highs_swept:
+                return True, f"All {ltf} swing highs already swept — buyside clear"
+            else:
+                return False, f"No bearish sweep on {ltf} — protected highs still untouched, high SL risk"
+
+    except Exception as e:
+        # Don't block signals on fetch errors — let them through
+        return True, f"LTF sweep check error: {e}"
+
+    return True, "Sweep check passed"
+
+
 def load_ta_signals(max_age_minutes=60):
     """Read binance_ta_summary.json, check freshness, filter 3+ confluences, return signal dicts."""
     output_path = os.path.abspath(OUTPUT_FILE)
@@ -1273,9 +1345,17 @@ def load_ta_signals(max_age_minutes=60):
         if htf_block:
             continue
 
+        # Sweep confirmation gate — require LTF sweep before entry
+        # LONG needs bullish sweep (sellside liq taken), SHORT needs bearish sweep (buyside liq taken)
+        sweep_confirmed, sweep_detail = check_ltf_sweep_confirmation(pair, direction, tf)
+        if not sweep_confirmed:
+            print(f"  [SWEEP] Blocked {pair} {tf} {direction} — {sweep_detail}")
+            continue
+
         signal = build_trading_signal(result)
         if signal:
             signal['generated_at'] = generated_at
+            signal['sweep_confirmation'] = sweep_detail
             signals.append(signal)
 
     print(f"Loaded {len(signals)} trading signals from TA summary ({len(results)} total analyses)")

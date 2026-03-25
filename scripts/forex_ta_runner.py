@@ -187,6 +187,8 @@ def analyze_forex_pair_tf(symbol, timeframe):
             'fvgs': ict.get('fvgs', [])[-3:],
             'mss_bos': ict.get('mss_bos', []),
             'liquidity_sweeps': ict.get('liquidity_sweeps', []),
+            'protected_highs': ict.get('protected_highs', []),
+            'protected_lows': ict.get('protected_lows', []),
             'swing_highs': ict.get('swing_highs', [])[-3:],
             'swing_lows': ict.get('swing_lows', [])[-3:],
         },
@@ -260,6 +262,56 @@ def run(pairs_override=None, timeframes_override=None):
           f"{len(errors)} errors. Saved to {output_path} ({elapsed:.1f}s)")
 
 
+def check_forex_ltf_sweep(pair, direction, signal_tf):
+    """Check lower timeframe for sweep confirmation on forex pairs via Twelve Data.
+
+    For LONG: require a bullish sweep (sellside liq taken) on 15m/1h.
+    For SHORT: require a bearish sweep (buyside liq taken) on 15m/1h.
+
+    Returns (confirmed: bool, detail: str)
+    """
+    ltf = '15min' if signal_tf == '1h' else '1h'
+    ltf_label = '15m' if ltf == '15min' else '1h'
+
+    try:
+        df = fetch_twelvedata_time_series(pair, ltf, outputsize=50)
+        if df is None or len(df) < 20:
+            return True, f"LTF sweep check skipped (insufficient {ltf_label} data)"
+
+        df = calculate_indicators(df)
+        ict = detect_ict_concepts(df)
+        sweeps = ict.get('liquidity_sweeps', [])
+        protected_lows = [p for p in ict.get('protected_lows', []) if p['status'] == 'protected']
+        protected_highs = [p for p in ict.get('protected_highs', []) if p['status'] == 'protected']
+
+        if direction == 'LONG':
+            has_bullish_sweep = any('bullish' in s['type'] for s in sweeps)
+            all_lows_swept = len(protected_lows) == 0 and len(ict.get('swing_lows', [])) >= 2
+            if has_bullish_sweep:
+                swept_level = next(s['swept_level'] for s in sweeps if 'bullish' in s['type'])
+                return True, f"Bullish sweep confirmed on {ltf_label} — swept {swept_level:.6g}, sellside liq taken"
+            elif all_lows_swept:
+                return True, f"All {ltf_label} swing lows already swept — sellside clear"
+            else:
+                return False, f"No bullish sweep on {ltf_label} — protected lows still untouched, high SL risk"
+
+        elif direction == 'SHORT':
+            has_bearish_sweep = any('bearish' in s['type'] for s in sweeps)
+            all_highs_swept = len(protected_highs) == 0 and len(ict.get('swing_highs', [])) >= 2
+            if has_bearish_sweep:
+                swept_level = next(s['swept_level'] for s in sweeps if 'bearish' in s['type'])
+                return True, f"Bearish sweep confirmed on {ltf_label} — swept {swept_level:.6g}, buyside liq taken"
+            elif all_highs_swept:
+                return True, f"All {ltf_label} swing highs already swept — buyside clear"
+            else:
+                return False, f"No bearish sweep on {ltf_label} — protected highs still untouched, high SL risk"
+
+    except Exception as e:
+        return True, f"LTF sweep check error: {e}"
+
+    return True, "Sweep check passed"
+
+
 def load_forex_signals(max_age_minutes=60):
     """Read forex_ta_summary.json, check freshness, filter 3+ confluences, return signal dicts."""
     output_path = os.path.abspath(OUTPUT_FILE)
@@ -320,10 +372,17 @@ def load_forex_signals(max_age_minutes=60):
         if htf_block:
             continue
 
+        # Sweep confirmation gate — require LTF sweep before entry
+        sweep_confirmed, sweep_detail = check_forex_ltf_sweep(pair, direction, tf)
+        if not sweep_confirmed:
+            print(f"  [SWEEP] Blocked {pair} {tf} {direction} — {sweep_detail}")
+            continue
+
         signal = build_trading_signal(result)
         if signal:
             signal['generated_at'] = generated_at
             signal['market_type'] = 'FOREX'
+            signal['sweep_confirmation'] = sweep_detail
             signals.append(signal)
 
     print(f"Loaded {len(signals)} forex signals from TA summary ({len(results)} total analyses)")
