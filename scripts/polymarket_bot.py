@@ -377,6 +377,14 @@ def load_pending_signals():
 
 def send_to_approval(signal):
     """Send signal to approval channel with separate Krib and X approval messages."""
+    # Dedup gate: skip if same pair+direction+timeframe was already sent in the last 4h
+    if signal.get('signal_type') == 'trading' and _is_duplicate_signal(signal):
+        pair = signal.get('pair', '?')
+        direction = signal.get('direction', '?')
+        tf = signal.get('timeframe', '?')
+        print(f"  [DEDUP] Skipping {pair} {direction} {tf} — already sent in last 4h")
+        return None
+
     if signal.get('signal_type') == 'trading':
         card = format_trading_signal_card(signal, for_telegram=True)
         raw_id = f"{signal['pair']}_{signal['timeframe']}_{int(datetime.now(timezone.utc).timestamp())}"
