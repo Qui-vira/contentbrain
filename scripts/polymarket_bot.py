@@ -1712,7 +1712,7 @@ def _send_ta_signals_to_approval(chat_id):
         from binance_ta_runner import load_ta_signals
         signals = load_ta_signals(max_age_minutes=90)
         if not signals:
-            send_message(chat_id, "No qualifying signals (3+ confluences) in latest scan.")
+            send_message(chat_id, "No qualifying signals (4+ confluences) in latest scan.")
             return 0
 
         # Auto-send to test channel if configured (no approval needed, auto-tracked)
@@ -1770,7 +1770,7 @@ def _send_forex_signals_to_approval(chat_id):
         from forex_ta_runner import load_forex_signals
         signals = load_forex_signals(max_age_minutes=90)
         if not signals:
-            send_message(chat_id, "No qualifying forex signals (3+ confluences) in latest scan.")
+            send_message(chat_id, "No qualifying forex signals (4+ confluences) in latest scan.")
             return 0
 
         # Auto-send to test channel if configured
@@ -1903,7 +1903,7 @@ def handle_test_signals(chat_id):
         from binance_ta_runner import load_ta_signals
         signals = load_ta_signals(max_age_minutes=90)
         if not signals:
-            send_message(chat_id, "No qualifying signals (3+ confluences) in latest scan.")
+            send_message(chat_id, "No qualifying signals (4+ confluences) in latest scan.")
             return
         sent = _send_to_test_channel(signals, chat_id)
         send_message(chat_id, f"Sent <b>{sent}</b> signal(s) to test channel. Monitor will auto-track TP/SL hits.")
@@ -1924,7 +1924,7 @@ def handle_send_signals_direct(chat_id):
         from binance_ta_runner import load_ta_signals
         signals = load_ta_signals(max_age_minutes=90)
         if not signals:
-            send_message(chat_id, "No qualifying signals (3+ confluences) in latest scan.")
+            send_message(chat_id, "No qualifying signals (4+ confluences) in latest scan.")
             return
         sent = 0
         for signal in signals:
@@ -2448,15 +2448,25 @@ def run_bot():
     _signal.signal(_signal.SIGTERM, _handle_sigterm)
 
     # Startup delay — give Railway time to kill old instance before we poll.
-    # Prevents both instances from processing the same update simultaneously.
-    print("Waiting 8s for old instance to shut down...")
-    time.sleep(8)
+    # Must exceed Railway's SIGTERM grace period (default 10s) so old instance
+    # is fully dead before we start polling.
+    print("Waiting 15s for old instance to shut down...")
+    time.sleep(15)
+
+    # Re-flush after delay — catch any updates the old instance fetched but
+    # didn't confirm before being killed.
+    reflush = get_updates(offset=-1, timeout=0)
+    if reflush:
+        offset = reflush[-1]["update_id"] + 1
+        get_updates(offset=offset, timeout=0)
+        print(f"Post-delay flush: confirmed up to offset {offset}.")
 
     print("Bot is running. Press Ctrl+C to stop.\n")
 
     while not _shutdown.is_set():
         try:
-            updates = get_updates(offset=offset, timeout=30)
+            # Short poll timeout (5s) so SIGTERM kills us quickly on next deploy
+            updates = get_updates(offset=offset, timeout=5)
 
             for update in updates:
                 uid = update["update_id"]
