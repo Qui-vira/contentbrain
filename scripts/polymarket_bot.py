@@ -1745,15 +1745,20 @@ def _send_ta_signals_to_approval(chat_id):
             send_message(chat_id, f"No new signals ({len(signals)} already sent recently).")
             return 0
 
+        # Rank by strength_score, send top 3 only
+        fresh_signals.sort(key=lambda s: (s.get('strength_score', 0), s.get('confluence_count', 0)), reverse=True)
+        top_signals = fresh_signals[:3]
+
         # Auto-send to test channel if configured (no approval needed, auto-tracked)
         if TEST_CHANNEL_ID:
-            test_sent = _send_to_test_channel(fresh_signals)
+            test_sent = _send_to_test_channel(top_signals)
             if test_sent:
                 send_message(chat_id, f"Auto-sent <b>{test_sent}</b> signal(s) to test channel.")
 
-        send_message(chat_id, f"Found <b>{len(fresh_signals)}</b> new signal(s). Sending for approval...")
+        rank_note = f" (top {len(top_signals)} of {len(fresh_signals)} by strength)" if len(fresh_signals) > 3 else ""
+        send_message(chat_id, f"Found <b>{len(top_signals)}</b> signal(s){rank_note}. Sending for approval...")
         sent = 0
-        for signal in fresh_signals:
+        for signal in top_signals:
             msg_id = send_to_approval(signal)
             if msg_id:
                 sent += 1
@@ -1800,18 +1805,35 @@ def _send_forex_signals_to_approval(chat_id):
         from forex_ta_runner import load_forex_signals
         signals = load_forex_signals(max_age_minutes=90)
         if not signals:
-            send_message(chat_id, "No qualifying forex signals (4+ confluences) in latest scan.")
+            send_message(chat_id, "No qualifying forex signals in latest scan.")
             return 0
+
+        # Filter duplicates already sent recently
+        fresh_signals = []
+        for s in signals:
+            if _is_duplicate_signal(s):
+                print(f"  [DEDUP] Skipping duplicate forex signal: {s.get('pair')} {s.get('direction')} {s.get('timeframe')}")
+            else:
+                fresh_signals.append(s)
+
+        if not fresh_signals:
+            send_message(chat_id, f"No new forex signals ({len(signals)} already sent recently).")
+            return 0
+
+        # Rank by strength_score, send top 3 only
+        fresh_signals.sort(key=lambda s: (s.get('strength_score', 0), s.get('confluence_count', 0)), reverse=True)
+        top_signals = fresh_signals[:3]
 
         # Auto-send to test channel if configured
         if TEST_CHANNEL_ID:
-            test_sent = _send_to_test_channel(signals)
+            test_sent = _send_to_test_channel(top_signals)
             if test_sent:
                 send_message(chat_id, f"Auto-sent <b>{test_sent}</b> forex signal(s) to test channel.")
 
-        send_message(chat_id, f"Found <b>{len(signals)}</b> qualifying forex signal(s). Sending for approval...")
+        rank_note = f" (top {len(top_signals)} of {len(fresh_signals)} by strength)" if len(fresh_signals) > 3 else ""
+        send_message(chat_id, f"Found <b>{len(top_signals)}</b> forex signal(s){rank_note}. Sending for approval...")
         sent = 0
-        for signal in signals:
+        for signal in top_signals:
             msg_id = send_to_approval(signal)
             if msg_id:
                 sent += 1

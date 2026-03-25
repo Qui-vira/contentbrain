@@ -286,6 +286,14 @@ def load_forex_signals(max_age_minutes=60):
     results = data.get('results', [])
     signals = []
 
+    # Build HTF trend lookup for cross-timeframe alignment
+    htf_trends = {}
+    for r in results:
+        if 'error' not in r:
+            htf_trends[(r['pair'], r['timeframe'])] = r.get('trend', 'UNKNOWN')
+
+    HTF_REQUIRED = {'1h': ['4h', '1d'], '4h': ['1d']}
+
     for result in results:
         confluence = result.get('confluence', {})
         min_count = confluence.get('min_count', 4)
@@ -294,6 +302,22 @@ def load_forex_signals(max_age_minutes=60):
         if confluence.get('direction') == 'NEUTRAL':
             continue
         if confluence.get('contradiction'):
+            continue
+
+        # HTF Alignment check — block if higher timeframe trend opposes signal
+        pair = result.get('pair', '')
+        tf = result.get('timeframe', '')
+        direction = confluence.get('direction', '')
+        htf_block = False
+        for htf in HTF_REQUIRED.get(tf, []):
+            htf_trend = htf_trends.get((pair, htf))
+            if htf_trend and htf_trend != 'UNKNOWN' and htf_trend != 'RANGING':
+                if (direction == 'LONG' and htf_trend == 'BEARISH') or \
+                   (direction == 'SHORT' and htf_trend == 'BULLISH'):
+                    print(f"  [HTF] Blocked {pair} {tf} {direction} — {htf} trend is {htf_trend}")
+                    htf_block = True
+                    break
+        if htf_block:
             continue
 
         signal = build_trading_signal(result)

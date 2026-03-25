@@ -238,6 +238,45 @@ def calculate_rsi(df, period=14):
     return rsi
 
 
+def detect_rsi_divergence(df, lookback=20):
+    """Detect bullish/bearish RSI divergence using swing highs/lows.
+    Returns: 'bullish', 'bearish', or None."""
+    if len(df) < lookback or 'rsi' not in df.columns:
+        return None
+
+    close = df['close'].iloc[-lookback:].values
+    rsi = df['rsi'].iloc[-lookback:].values
+
+    if np.any(np.isnan(rsi)):
+        return None
+
+    # Find swing lows (2-bar pivot) for bullish divergence
+    swing_lows = []
+    for i in range(2, len(close) - 2):
+        if close[i] <= close[i-1] and close[i] <= close[i-2] and close[i] <= close[i+1] and close[i] <= close[i+2]:
+            swing_lows.append(i)
+
+    if len(swing_lows) >= 2:
+        a, b = swing_lows[-2], swing_lows[-1]
+        # Price lower low but RSI higher low = bullish divergence
+        if close[b] < close[a] and rsi[b] > rsi[a]:
+            return 'bullish'
+
+    # Find swing highs for bearish divergence
+    swing_highs = []
+    for i in range(2, len(close) - 2):
+        if close[i] >= close[i-1] and close[i] >= close[i-2] and close[i] >= close[i+1] and close[i] >= close[i+2]:
+            swing_highs.append(i)
+
+    if len(swing_highs) >= 2:
+        a, b = swing_highs[-2], swing_highs[-1]
+        # Price higher high but RSI lower high = bearish divergence
+        if close[b] > close[a] and rsi[b] < rsi[a]:
+            return 'bearish'
+
+    return None
+
+
 def calculate_atr(df, period=14):
     """Calculate ATR (Average True Range)."""
     high = df['high']
@@ -592,6 +631,13 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info, t
             confluences.append({'factor': 'Breaker', 'detail': f"Bearish breaker block at {bb['low']:.2f}-{bb['high']:.2f}", 'direction': 'bearish'})
             break
 
+    # 12. RSI Divergence (price vs RSI disagreement = reversal signal)
+    rsi_div = detect_rsi_divergence(df)
+    if rsi_div == 'bullish':
+        confluences.append({'factor': 'RSI_divergence', 'detail': 'Bullish RSI divergence (price lower low, RSI higher low)', 'direction': 'bullish'})
+    elif rsi_div == 'bearish':
+        confluences.append({'factor': 'RSI_divergence', 'detail': 'Bearish RSI divergence (price higher high, RSI lower high)', 'direction': 'bearish'})
+
     # Count unique factor categories (max 1 per category)
     # Context factors don't count toward the confluence threshold
     CONTEXT_FACTORS = {'KillZone', 'Fibonacci'}
@@ -734,6 +780,14 @@ def calculate_strength_score(confluence_result, rsi_val, macd_hist, trend, patte
         if (direction == 'LONG' and p.get('direction') == 'bullish') or \
            (direction == 'SHORT' and p.get('direction') == 'bearish'):
             score += 0.5
+            break
+
+    # RSI divergence bonus (0-1 point) — strong reversal signal
+    rsi_div_factors = [c for c in confluence_result['confluences'] if c['factor'] == 'RSI_divergence']
+    for c in rsi_div_factors:
+        if (direction == 'LONG' and c['direction'] == 'bullish') or \
+           (direction == 'SHORT' and c['direction'] == 'bearish'):
+            score += 1
             break
 
     # Institutional factors bonus (0-1.5 points)
@@ -1183,6 +1237,16 @@ def load_ta_signals(max_age_minutes=60):
     results = data.get('results', [])
     signals = []
 
+    # Build HTF trend lookup for cross-timeframe alignment
+    # Key: (pair, timeframe) → trend
+    htf_trends = {}
+    for r in results:
+        if 'error' not in r:
+            htf_trends[(r['pair'], r['timeframe'])] = r.get('trend', 'UNKNOWN')
+
+    # HTF hierarchy: 1h must align with 4h+1d, 4h must align with 1d
+    HTF_REQUIRED = {'1h': ['4h', '1d'], '4h': ['1d']}
+
     for result in results:
         confluence = result.get('confluence', {})
         min_count = confluence.get('min_count', 4)
@@ -1191,6 +1255,22 @@ def load_ta_signals(max_age_minutes=60):
         if confluence.get('direction') == 'NEUTRAL':
             continue
         if confluence.get('contradiction'):
+            continue
+
+        # HTF Alignment check — block if higher timeframe trend opposes signal
+        pair = result.get('pair', '')
+        tf = result.get('timeframe', '')
+        direction = confluence.get('direction', '')
+        htf_block = False
+        for htf in HTF_REQUIRED.get(tf, []):
+            htf_trend = htf_trends.get((pair, htf))
+            if htf_trend and htf_trend != 'UNKNOWN' and htf_trend != 'RANGING':
+                if (direction == 'LONG' and htf_trend == 'BEARISH') or \
+                   (direction == 'SHORT' and htf_trend == 'BULLISH'):
+                    print(f"  [HTF] Blocked {pair} {tf} {direction} — {htf} trend is {htf_trend}")
+                    htf_block = True
+                    break
+        if htf_block:
             continue
 
         signal = build_trading_signal(result)
