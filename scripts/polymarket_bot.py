@@ -51,6 +51,17 @@ from urllib3.util.retry import Retry
 sys.path.insert(0, os.path.dirname(__file__))
 
 from polymarket_scanner import format_signal_card, format_trading_signal_card
+from telegram_learner import (
+    process_telegram_photo,
+    process_telegram_text,
+    format_insights,
+    aggregate_learnings,
+    classify_message,
+    analyze_chart_image,
+    download_telegram_photo,
+    parse_signal_text,
+    store_learning,
+)
 
 # --- HTTP Session with retry ---
 
@@ -120,6 +131,20 @@ ADMIN_CHAT_ID = os.getenv("TELEGRAM_ADMIN_CHAT_ID", "")             # Your perso
 TEST_CHANNEL_ID = os.getenv("TELEGRAM_TEST_CHANNEL_ID", "")        # Signal testing/paper trade group
 
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
+
+# --- Adaptive Learning Config ---
+LEARNING_ENABLED = os.getenv("LEARNING_ENABLED", "true").lower() == "true"
+# Chat IDs where the bot passively learns from charts/signals dropped by users.
+# Comma-separated. Defaults to Krib + Admin DM + Approval channel.
+_learn_chats_env = os.getenv("LEARNING_CHAT_IDS", "")
+LEARNING_CHAT_IDS = set()
+if _learn_chats_env:
+    LEARNING_CHAT_IDS = {c.strip() for c in _learn_chats_env.split(",") if c.strip()}
+else:
+    # Auto-populate from known channel IDs
+    for _cid in (KRIB_CHAT_ID, ADMIN_CHAT_ID, APPROVAL_CHANNEL_ID, TEST_CHANNEL_ID):
+        if _cid:
+            LEARNING_CHAT_IDS.add(str(_cid))
 
 # Typefully
 TYPEFULLY_API_KEY = os.getenv("TYPEFULLY_API_KEY", "")
@@ -2372,6 +2397,40 @@ def handle_analyze(chat_id, text=""):
         traceback.print_exc()
 
 
+# --- Learning Command Handlers ---
+
+def handle_learn(chat_id, text):
+    """Force-analyze a replied-to photo or signal text. Usage: reply to a message with /learn"""
+    send_message(chat_id, "To use /learn, reply to a chart image or signal message.\n\n"
+                 "The bot also learns automatically from charts and signals "
+                 "dropped in monitored groups.")
+
+
+def handle_insights(chat_id):
+    """Show what the bot has learned from charts and signals."""
+    msg = format_insights()
+    send_message(chat_id, msg)
+
+
+def handle_aggregate(chat_id):
+    """Force learning aggregation — compute win rates and update signal weights."""
+    send_message(chat_id, "Aggregating learnings...")
+    result = aggregate_learnings()
+    if not result:
+        send_message(chat_id, "Aggregation failed — check Supabase connection.")
+        return
+    if result.get('status') == 'insufficient_data':
+        send_message(chat_id, f"Need more data: {result['message']}")
+        return
+    overall = result.get('overall', {})
+    send_message(chat_id,
+                 f"<b>Aggregation complete</b>\n\n"
+                 f"Analyzed: {overall.get('total', 0)} closed trades\n"
+                 f"Win rate: {overall.get('win_rate', 0)*100:.1f}%\n"
+                 f"Record: {overall.get('wins', 0)}W / {overall.get('losses', 0)}L\n\n"
+                 f"Weights saved to signal_weights.json")
+
+
 COMMAND_HANDLERS = {
     "/start": handle_start,
     "/chatid": handle_chatid,
@@ -2396,12 +2455,15 @@ COMMAND_HANDLERS = {
     "/approve_channel": handle_approve_channel,
     "/remove_channel": handle_remove_channel,
     "/subscribers": handle_subscribers,
+    "/learn": handle_learn,
+    "/insights": handle_insights,
+    "/aggregate": handle_aggregate,
     "/help": handle_start,
 }
 
 # Commands that need the full text (for argument parsing)
 _COMMANDS_WITH_ARGS = {"/setcap", "/scan_pair", "/scan_custom", "/forex_pair", "/forex_custom",
-                       "/analyze", "/approve_channel", "/remove_channel"}
+                       "/analyze", "/approve_channel", "/remove_channel", "/learn"}
 
 
 def _unified_cron_cycle():
@@ -2433,6 +2495,15 @@ def _cron_loop():
     # Signal monitor: check TP/SL hits every 30 minutes
     schedule.every(30).minutes.do(_signal_monitor_cycle)
     print("[CRON] Signal monitor scheduled every 30 minutes.")
+
+    # Learning aggregation: analyze patterns every 24 hours
+    def _safe_aggregate():
+        try:
+            aggregate_learnings()
+        except Exception as e:
+            print(f"[CRON] Learning aggregation error: {e}")
+    schedule.every(24).hours.do(_safe_aggregate)
+    print("[CRON] Learning aggregation scheduled every 24 hours.")
 
     # Run initial monitor check after first scan
     try:
@@ -2606,6 +2677,38 @@ def run_bot():
 
                             with open(PENDING_FILE, "w", encoding="utf-8") as f:
                                 json.dump(pending, f, indent=2, default=str)
+
+                # --- Passive Learning: analyze photos + signal text in monitored groups ---
+                if LEARNING_ENABLED and msg and str(msg.get("chat", {}).get("id", "")) in LEARNING_CHAT_IDS:
+                    try:
+                        # Photo handler — chart images
+                        if msg.get("photo"):
+                            process_telegram_photo(update)
+                        # Text handler — signal/outcome text (skip commands)
+                        elif text and not text.startswith("/"):
+                            msg_type = classify_message(text)
+                            if msg_type in ('signal', 'outcome'):
+                                process_telegram_text(update)
+                    except Exception as e:
+                        print(f"  [LEARNER] Error processing update: {e}")
+
+                # Handle /learn when replying to a message
+                if text and text.split()[0].split("@")[0].lower() == "/learn" and msg.get("reply_to_message"):
+                    try:
+                        reply = msg["reply_to_message"]
+                        reply_update = {"message": reply}
+                        if reply.get("photo"):
+                            ok = process_telegram_photo(reply_update)
+                            send_message(chat_id, "Chart analyzed and stored." if ok
+                                        else "Could not analyze — not a chart or download failed.")
+                        elif reply.get("text"):
+                            ok = process_telegram_text(reply_update)
+                            send_message(chat_id, "Signal/outcome extracted and stored." if ok
+                                        else "Could not extract signal from that message.")
+                        else:
+                            send_message(chat_id, "Reply to a chart image or signal text.")
+                    except Exception as e:
+                        send_message(chat_id, f"Learn error: {e}")
 
                 # Handle inline button callbacks (Approve/Reject buttons)
                 callback = update.get("callback_query")

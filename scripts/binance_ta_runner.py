@@ -1492,8 +1492,21 @@ def apply_signal_gates(result, htf_trends, HTF_REQUIRED):
         if risk <= 0 or reward / risk < 2.0:
             return False, f"[RISK] {pair} {tf} {direction} — RR {reward/risk:.1f}:1 < minimum 2:1"
 
-    # All 9 gates passed — store score for the signal
+    # All 9 gates passed — store score + feature snapshot for learning
     result['_signal_score'] = score
+    result['_gate_features'] = {
+        'rsi': rsi_val,
+        'atr': atr,
+        'signal_score': score,
+        'confluence_count': confluence.get('confluence_count', 0),
+        'displacement': displacement.get('detected', False),
+        'displacement_ratio': displacement.get('body_atr_ratio'),
+        'trend': trend,
+        'direction': direction,
+        'has_sweep': bool(any(dir_tag in s.get('type', '') for s in ict.get('liquidity_sweeps', []))),
+        'structure_labels': [l['type'] for l in ict.get('structure_labels', [])[-4:]],
+        'setup_factors': [c['factor'] for c in confluence.get('confluences', [])],
+    }
     return True, None
 
 
@@ -1530,6 +1543,7 @@ def build_trading_signal(result):
         'rsi': result['indicators'].get('rsi'),
         'atr': result['indicators'].get('atr'),
         'displacement': result.get('displacement', {}).get('detected', False),
+        'gate_features': result.get('_gate_features', {}),
         'generated_at': result.get('generated_at', datetime.now(timezone.utc).isoformat()),
     }
 
