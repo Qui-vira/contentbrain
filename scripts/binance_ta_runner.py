@@ -42,6 +42,27 @@ from market_data import (
     SYMBOL_TO_COINGECKO,
 )
 
+# --- Learned Signal Weights (adaptive learning) ---
+
+_cached_weights = None
+_weights_loaded_at = 0
+
+def _get_signal_weights():
+    """Load signal weights with 5-minute cache to avoid disk reads per signal."""
+    global _cached_weights, _weights_loaded_at
+    now = time.time()
+    if _cached_weights is not None and (now - _weights_loaded_at) < 300:
+        return _cached_weights
+    try:
+        from telegram_learner import load_signal_weights
+        _cached_weights = load_signal_weights()
+        _weights_loaded_at = now
+    except ImportError:
+        _cached_weights = {}
+        _weights_loaded_at = now
+    return _cached_weights
+
+
 # --- CoinGecko Fallback ---
 
 # CoinGecko free /ohlc granularity: 1-2 days=30min, 3-30 days=4h, 31+ days=daily
@@ -1332,16 +1353,24 @@ def calculate_signal_score(result):
                 if nearest_sup < price and (price - nearest_sup) >= atr:
                     score += 1
 
+    # --- 6. Learned bonus (0-1) — reward setups that historically win ---
+    weights = _get_signal_weights()
+    if weights and weights.get('overall', {}).get('total', 0) >= 10:
+        pair_name = result.get('pair', '')
+        pair_wr = weights.get('pair_win_rates', {}).get(pair_name)
+        if pair_wr and pair_wr >= 0.65:
+            score += 1  # High-WR pair bonus
+
     return min(10, max(0, score))
 
 
 def apply_signal_gates(result, htf_trends, HTF_REQUIRED):
     """Institutional-grade signal filter. Returns (passed, reason | None).
 
-    Nine gates — all must pass. Rejects >= 80% of setups.
+    Ten gates — all must pass. Rejects >= 80% of setups.
     1. Structure   2. Mid-range   3. Entry location   4. ATR proximity
     5. Liquidity   6. Momentum    7. Score >= 8        8. HTF alignment
-    9. Risk management
+    9. Risk management  10. Learned weights (adaptive)
     """
     confluence = result.get('confluence', {})
     direction = confluence.get('direction', 'NEUTRAL')
@@ -1492,7 +1521,39 @@ def apply_signal_gates(result, htf_trends, HTF_REQUIRED):
         if risk <= 0 or reward / risk < 2.0:
             return False, f"[RISK] {pair} {tf} {direction} — RR {reward/risk:.1f}:1 < minimum 2:1"
 
-    # All 9 gates passed — store score + feature snapshot for learning
+    # ── Gate 10: Learned Weight Check (adaptive) ──
+    weights = _get_signal_weights()
+    if weights and weights.get('overall', {}).get('total', 0) >= 10:
+        # Block pairs with proven low win rate (< 30% over 5+ samples)
+        pair_wr = weights.get('pair_win_rates', {})
+        if pair in pair_wr and pair_wr[pair] < 0.30:
+            return False, (f"[LEARNED] {pair} {tf} {direction} — pair win rate "
+                           f"{pair_wr[pair]*100:.0f}% < 30% (learned from {weights['overall']['total']} trades)")
+
+        # Block setup types with proven low win rate
+        # Check if dominant confluence factors match a losing setup
+        setup_wr = weights.get('setup_win_rates', {})
+        factor_wr = weights.get('factor_win_rates', {})
+        losing_factors = [f for f, wr in factor_wr.items() if wr < 0.25]
+        conf_factors = [c['factor'] for c in confluence.get('confluences', [])]
+        dominant_losing = [f for f in conf_factors if f in losing_factors]
+        if len(dominant_losing) >= 2:
+            return False, (f"[LEARNED] {pair} {tf} {direction} — {dominant_losing} are losing factors "
+                           f"(< 25% WR each)")
+
+        # Block direction if heavily skewed (< 25% WR over 5+ samples)
+        dir_wr = weights.get('direction_win_rates', {})
+        if direction in dir_wr and dir_wr[direction] < 0.25:
+            return False, (f"[LEARNED] {pair} {tf} {direction} — {direction} direction win rate "
+                           f"{dir_wr[direction]*100:.0f}% < 25%")
+
+        # Timeframe with < 20% win rate blocked
+        tf_wr = weights.get('timeframe_win_rates', {})
+        if tf in tf_wr and tf_wr[tf] < 0.20:
+            return False, (f"[LEARNED] {pair} {tf} {direction} — {tf} timeframe win rate "
+                           f"{tf_wr[tf]*100:.0f}% < 20%")
+
+    # All gates passed — store score + feature snapshot for learning
     result['_signal_score'] = score
     result['_gate_features'] = {
         'rsi': rsi_val,
