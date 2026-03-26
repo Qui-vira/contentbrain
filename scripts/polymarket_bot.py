@@ -17,6 +17,7 @@ Usage:
 import os
 import sys
 import json
+import html
 import argparse
 import signal as _signal
 import threading
@@ -2357,12 +2358,12 @@ def handle_analyze(chat_id, text=""):
         lines.append(f"\n<b>--- CONFLUENCES ({cc} agreeing) ---</b>")
         for c in agreeing:
             dir_tag = "[BULL]" if c['direction'] == 'bullish' else "[BEAR]"
-            lines.append(f"  {dir_tag} {c['detail']}")
+            lines.append(f"  {dir_tag} {html.escape(c['detail'])}")
         for c in opposing:
             dir_tag = "[BULL]" if c['direction'] == 'bullish' else "[BEAR]"
-            lines.append(f"  {dir_tag} {c['detail']} (opposing)")
+            lines.append(f"  {dir_tag} {html.escape(c['detail'])} (opposing)")
         for c in context:
-            lines.append(f"  [--] {c['detail']}")
+            lines.append(f"  [--] {html.escape(c['detail'])}")
 
         # Signal recommendation + auto-track
         lines.append(f"\n<b>--- VERDICT ---</b>")
