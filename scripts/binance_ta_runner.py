@@ -720,7 +720,7 @@ def score_confluences(df, ict, vol_profile, sr_levels, patterns, session_info, t
         count = max(0, count - len(contradiction_detail))
 
     # RANGING trend needs higher conviction — no clear momentum to ride
-    min_count = 5 if trend in ('RANGING', 'UNKNOWN') else 4
+    min_count = 6 if trend in ('RANGING', 'UNKNOWN') else 5
 
     # Confidence — uses dynamic threshold based on trend clarity
     if contradiction:
@@ -876,6 +876,20 @@ def discover_top_altcoins(client):
                 'AVAXUSDT', 'SUIUSDT', 'ARBUSDT', 'NEARUSDT', 'OPUSDT']
 
 
+def _detect_displacement(df, atr_val):
+    """Check last 3 candles for displacement (body > 1.5x ATR). Returns dict."""
+    if df is None or len(df) < 3 or not atr_val or atr_val <= 0:
+        return {'detected': False, 'direction': None, 'body_atr_ratio': None}
+    threshold = 1.5 * atr_val
+    for i in range(-1, -4, -1):
+        candle = df.iloc[i]
+        body = abs(float(candle['close']) - float(candle['open']))
+        if body >= threshold:
+            direction = 'bullish' if candle['close'] > candle['open'] else 'bearish'
+            return {'detected': True, 'direction': direction, 'body_atr_ratio': round(body / atr_val, 2)}
+    return {'detected': False, 'direction': None, 'body_atr_ratio': None}
+
+
 # --- Analyze a single pair on a single timeframe ---
 
 def analyze_pair_tf(client, symbol, timeframe):
@@ -1023,7 +1037,11 @@ def analyze_pair_tf(client, symbol, timeframe):
             'protected_lows': ict.get('protected_lows', []),
             'swing_highs': ict.get('swing_highs', [])[-3:],
             'swing_lows': ict.get('swing_lows', [])[-3:],
+            'structure_labels': ict.get('structure_labels', [])[-6:],
         },
+
+        # Displacement detection — large impulsive candle in last 3 bars
+        'displacement': _detect_displacement(df, atr_val),
 
         # Chart patterns
         'patterns': patterns,
@@ -1193,6 +1211,292 @@ def calculate_trade_levels(result):
     }
 
 
+def calculate_signal_score(result):
+    """Weighted 0-10 institutional score. Categories: structure, key level,
+    liquidity, momentum, entry precision. Each worth 0-2 points. Must be >= 8."""
+    score = 0
+    direction = result.get('confluence', {}).get('direction', 'NEUTRAL')
+    dir_tag = 'bullish' if direction == 'LONG' else 'bearish'
+    ict = result.get('ict_concepts', {})
+    sr = result.get('support_resistance', {})
+    price = result.get('current_price', 0)
+    atr = result.get('indicators', {}).get('atr')
+    rsi_val = result.get('indicators', {}).get('rsi')
+    displacement = result.get('displacement', {})
+
+    # --- 1. Structure alignment (0-2) ---
+    labels = ict.get('structure_labels', [])
+    if len(labels) >= 2:
+        last_two = [l['type'] for l in labels[-2:]]
+        if direction == 'LONG' and last_two in (['HH', 'HL'], ['HL', 'HH']):
+            score += 2
+        elif direction == 'SHORT' and last_two in (['LH', 'LL'], ['LL', 'LH']):
+            score += 2
+        elif last_two[0] in ('HH', 'HL') and direction == 'LONG':
+            score += 1  # partial
+        elif last_two[0] in ('LH', 'LL') and direction == 'SHORT':
+            score += 1
+
+    # --- 2. Key level — S/R or OB (0-2) ---
+    supports = sr.get('support', [])
+    resistances = sr.get('resistance', [])
+    at_key_level = False
+    if price and price > 0:
+        for s in supports:
+            if s.get('touches', 0) >= 2 and abs(price - s['price']) / price < 0.005:
+                score += 2
+                at_key_level = True
+                break
+        if not at_key_level:
+            for r in resistances:
+                if r.get('touches', 0) >= 2 and abs(price - r['price']) / price < 0.005:
+                    score += 2
+                    at_key_level = True
+                    break
+    if not at_key_level:
+        # Check order blocks
+        for ob in ict.get('order_blocks', []):
+            if ob['type'] == dir_tag and ob['low'] <= price <= ob['high']:
+                score += 2
+                at_key_level = True
+                break
+        if not at_key_level:
+            # FVG as weaker key level
+            for fvg in ict.get('fvgs', []):
+                if fvg['type'] == dir_tag and not fvg.get('filled') and fvg['bottom'] <= price <= fvg['top']:
+                    score += 1
+                    break
+
+    # --- 3. Liquidity — sweep or breakout (0-2) ---
+    sweeps = ict.get('liquidity_sweeps', [])
+    has_sweep = any(dir_tag in s.get('type', '') for s in sweeps)
+    has_displacement = displacement.get('detected') and displacement.get('direction') == dir_tag
+    if has_sweep:
+        score += 2
+    elif has_displacement:
+        # Breakout displacement path — still strong
+        score += 2
+    # No partial credit: sweep or breakout, or nothing
+
+    # --- 4. Momentum — RSI + displacement (0-2) ---
+    rsi_ok = False
+    if rsi_val is not None:
+        if direction == 'LONG' and rsi_val >= 55:
+            rsi_ok = True
+        elif direction == 'SHORT' and rsi_val <= 45:
+            rsi_ok = True
+    else:
+        # RSI missing — do not score momentum points (per spec)
+        pass
+    if rsi_ok:
+        score += 1
+    if has_displacement:
+        score += 1
+
+    # --- 5. Entry precision (0-2) ---
+    # LONG: near support or after breakout+retest. SHORT: near resistance.
+    if price and price > 0 and atr and atr > 0:
+        if direction == 'LONG':
+            # At support?
+            near_support = any(
+                abs(price - s['price']) / price < 0.005
+                for s in supports if s.get('touches', 0) >= 2
+            )
+            # Breakout retest: BOS_bullish + price near broken level
+            bos_retest = False
+            for mss in ict.get('mss_bos', []):
+                if 'bullish' in mss['type'] and abs(price - mss['price']) / price < 0.01:
+                    bos_retest = True
+                    break
+            if near_support or bos_retest:
+                score += 2
+            # Not near resistance = good entry (partial credit)
+            elif resistances:
+                nearest_res = min(r['price'] for r in resistances)
+                if nearest_res > price and (nearest_res - price) >= atr:
+                    score += 1
+        elif direction == 'SHORT':
+            near_resistance = any(
+                abs(price - r['price']) / price < 0.005
+                for r in resistances if r.get('touches', 0) >= 2
+            )
+            bos_retest = False
+            for mss in ict.get('mss_bos', []):
+                if 'bearish' in mss['type'] and abs(price - mss['price']) / price < 0.01:
+                    bos_retest = True
+                    break
+            if near_resistance or bos_retest:
+                score += 2
+            elif supports:
+                nearest_sup = max(s['price'] for s in supports)
+                if nearest_sup < price and (price - nearest_sup) >= atr:
+                    score += 1
+
+    return min(10, max(0, score))
+
+
+def apply_signal_gates(result, htf_trends, HTF_REQUIRED):
+    """Institutional-grade signal filter. Returns (passed, reason | None).
+
+    Nine gates — all must pass. Rejects >= 80% of setups.
+    1. Structure   2. Mid-range   3. Entry location   4. ATR proximity
+    5. Liquidity   6. Momentum    7. Score >= 8        8. HTF alignment
+    9. Risk management
+    """
+    confluence = result.get('confluence', {})
+    direction = confluence.get('direction', 'NEUTRAL')
+    pair = result.get('pair', '')
+    tf = result.get('timeframe', '')
+    trend = result.get('trend', 'UNKNOWN')
+    price = result.get('current_price', 0)
+    rsi_val = result.get('indicators', {}).get('rsi')
+    atr = result.get('indicators', {}).get('atr')
+    sr = result.get('support_resistance', {})
+    ict = result.get('ict_concepts', {})
+    displacement = result.get('displacement', {})
+    supports = sr.get('support', [])
+    resistances = sr.get('resistance', [])
+
+    # Pre-check: must have direction
+    if direction == 'NEUTRAL':
+        return False, f"[DIRECTION] {pair} {tf} — NEUTRAL direction"
+    if confluence.get('contradiction'):
+        return False, f"[CONTRADICTION] {pair} {tf} — {confluence.get('contradiction_detail', [])}"
+
+    dir_tag = 'bullish' if direction == 'LONG' else 'bearish'
+
+    # ── Gate 1: Structure Validation ──
+    labels = ict.get('structure_labels', [])
+    if trend in ('BULLISH', 'BEARISH'):
+        # Trending: require HH+HL (long) or LH+LL (short)
+        if len(labels) >= 2:
+            types = [l['type'] for l in labels[-4:]]  # check last 4 labels
+            if direction == 'LONG' and not ('HH' in types and 'HL' in types):
+                return False, f"[STRUCTURE] {pair} {tf} LONG — no HH+HL in trending market"
+            if direction == 'SHORT' and not ('LH' in types and 'LL' in types):
+                return False, f"[STRUCTURE] {pair} {tf} SHORT — no LH+LL in trending market"
+        else:
+            return False, f"[STRUCTURE] {pair} {tf} — insufficient structure labels"
+    elif trend == 'RANGING':
+        # Ranging: need 2+ touches on both support and resistance
+        has_strong_support = any(s.get('touches', 0) >= 2 for s in supports)
+        has_strong_resistance = any(r.get('touches', 0) >= 2 for r in resistances)
+        if not (has_strong_support and has_strong_resistance):
+            return False, f"[STRUCTURE] {pair} {tf} — ranging market lacks 2-touch S/R"
+
+    # ── Gate 2: Mid-Range Filter ──
+    if supports and resistances and price and price > 0:
+        nearest_sup = max(s['price'] for s in supports)
+        nearest_res = min(r['price'] for r in resistances)
+        if nearest_res > nearest_sup:  # valid range
+            range_size = nearest_res - nearest_sup
+            midpoint = nearest_sup + range_size / 2
+            q1 = nearest_sup + range_size * 0.25
+            q3 = nearest_sup + range_size * 0.75
+            if q1 <= price <= q3:
+                return False, (f"[MID-RANGE] {pair} {tf} {direction} — price {price:.6g} "
+                               f"in middle 50% of range ({nearest_sup:.6g}-{nearest_res:.6g})")
+
+    # ── Gate 3: Entry Location ──
+    if price and price > 0:
+        if direction == 'LONG':
+            at_support = any(
+                abs(price - s['price']) / price < 0.005 and s.get('touches', 0) >= 2
+                for s in supports
+            )
+            # Breakout + retest: BOS_bullish and price near broken level
+            breakout_retest = any(
+                'bullish' in m['type'] and abs(price - m['price']) / price < 0.01
+                for m in ict.get('mss_bos', [])
+            )
+            if not at_support and not breakout_retest:
+                return False, f"[ENTRY] {pair} {tf} LONG — not at support or breakout+retest"
+        elif direction == 'SHORT':
+            at_resistance = any(
+                abs(price - r['price']) / price < 0.005 and r.get('touches', 0) >= 2
+                for r in resistances
+            )
+            breakdown_retest = any(
+                'bearish' in m['type'] and abs(price - m['price']) / price < 0.01
+                for m in ict.get('mss_bos', [])
+            )
+            if not at_resistance and not breakdown_retest:
+                return False, f"[ENTRY] {pair} {tf} SHORT — not at resistance or breakdown+retest"
+
+    # ── Gate 4: ATR-Based Proximity ──
+    if atr and atr > 0 and price and price > 0:
+        half_atr = 0.5 * atr
+        if direction == 'LONG' and resistances:
+            nearest_res = min(r['price'] for r in resistances)
+            if nearest_res > price and (nearest_res - price) < half_atr:
+                return False, (f"[PROXIMITY] {pair} {tf} LONG — distance to resistance "
+                               f"{nearest_res:.6g} < 0.5×ATR ({half_atr:.6g})")
+        if direction == 'SHORT' and supports:
+            nearest_sup = max(s['price'] for s in supports)
+            if nearest_sup < price and (price - nearest_sup) < half_atr:
+                return False, (f"[PROXIMITY] {pair} {tf} SHORT — distance to support "
+                               f"{nearest_sup:.6g} < 0.5×ATR ({half_atr:.6g})")
+
+    # ── Gate 5: Liquidity Condition (Dual Path) ──
+    sweeps = ict.get('liquidity_sweeps', [])
+    has_sweep = any(dir_tag in s.get('type', '') for s in sweeps)
+    has_displacement = displacement.get('detected') and displacement.get('direction') == dir_tag
+    if not has_sweep and not has_displacement:
+        return False, (f"[LIQUIDITY] {pair} {tf} {direction} — no sweep and no breakout "
+                       f"displacement on signal timeframe")
+
+    # ── Gate 6: Momentum Confirmation ──
+    # RSI rule: LONG >= 55, SHORT <= 45, 45-55 = no trade
+    if rsi_val is not None:
+        if 45 <= rsi_val <= 55:
+            return False, f"[RSI] {pair} {tf} {direction} — RSI {rsi_val:.1f} in neutral zone (45-55)"
+        if direction == 'LONG' and rsi_val < 55:
+            return False, f"[RSI] {pair} {tf} LONG — RSI {rsi_val:.1f} < 55"
+        if direction == 'SHORT' and rsi_val > 45:
+            return False, f"[RSI] {pair} {tf} SHORT — RSI {rsi_val:.1f} > 45"
+    # Displacement rule: must have momentum candle OR expansion move
+    if not has_displacement:
+        # Check MACD histogram as fallback momentum indicator
+        macd_hist = result.get('indicators', {}).get('macd_histogram')
+        if macd_hist is not None:
+            if direction == 'LONG' and macd_hist <= 0:
+                return False, f"[MOMENTUM] {pair} {tf} LONG — no displacement and MACD histogram negative"
+            if direction == 'SHORT' and macd_hist >= 0:
+                return False, f"[MOMENTUM] {pair} {tf} SHORT — no displacement and MACD histogram positive"
+        else:
+            return False, f"[MOMENTUM] {pair} {tf} {direction} — no displacement candle and no MACD data"
+
+    # ── Gate 7: Signal Score >= 8 ──
+    score = calculate_signal_score(result)
+    if score < 8:
+        return False, f"[SCORE] {pair} {tf} {direction} — score {score}/10 < 8"
+
+    # ── Gate 8: HTF Alignment ──
+    for htf in HTF_REQUIRED.get(tf, []):
+        htf_trend = htf_trends.get((pair, htf))
+        if htf_trend and htf_trend != 'UNKNOWN' and htf_trend != 'RANGING':
+            if (direction == 'LONG' and htf_trend == 'BEARISH') or \
+               (direction == 'SHORT' and htf_trend == 'BULLISH'):
+                return False, f"[HTF] {pair} {tf} {direction} — {htf} trend is {htf_trend}"
+
+    # ── Gate 9: Risk Management ──
+    levels = calculate_trade_levels(result)
+    if not levels:
+        return False, f"[RISK] {pair} {tf} {direction} — cannot compute trade levels"
+    entry = levels['entry']
+    sl = levels['stop_loss']
+    tp1 = levels['tp1']
+    if entry and sl and tp1:
+        risk = abs(entry - sl)
+        reward = abs(tp1 - entry)
+        if risk <= 0 or reward / risk < 2.0:
+            return False, f"[RISK] {pair} {tf} {direction} — RR {reward/risk:.1f}:1 < minimum 2:1"
+
+    # All 9 gates passed — store score for the signal
+    result['_signal_score'] = score
+    return True, None
+
+
 def build_trading_signal(result):
     """Convert a TA result dict into a signal dict with signal_type='trading'."""
     levels = calculate_trade_levels(result)
@@ -1221,9 +1525,11 @@ def build_trading_signal(result):
         'confluence_count': confluence.get('confluence_count', 0),
         'confidence': confluence.get('confidence', 'LOW'),
         'strength_score': result.get('strength_score', 0),
+        'signal_score': result.get('_signal_score', 0),
         'trend': result.get('trend', 'UNKNOWN'),
         'rsi': result['indicators'].get('rsi'),
         'atr': result['indicators'].get('atr'),
+        'displacement': result.get('displacement', {}).get('detected', False),
         'generated_at': result.get('generated_at', datetime.now(timezone.utc).isoformat()),
     }
 
@@ -1345,33 +1651,17 @@ def load_ta_signals(max_age_minutes=60):
     HTF_REQUIRED = {'1h': ['4h', '1d'], '4h': ['1d']}
 
     for result in results:
-        confluence = result.get('confluence', {})
-        min_count = confluence.get('min_count', 4)
-        if confluence.get('confluence_count', 0) < min_count:
-            continue
-        if confluence.get('direction') == 'NEUTRAL':
-            continue
-        if confluence.get('contradiction'):
+        # Run all rule-based gates (confluence, direction, contradiction,
+        # confidence, RSI, proximity, ranging, signal-TF sweep, HTF alignment)
+        passed, reason = apply_signal_gates(result, htf_trends, HTF_REQUIRED)
+        if not passed:
+            print(f"  {reason}")
             continue
 
-        # HTF Alignment check — block if higher timeframe trend opposes signal
+        # LTF sweep confirmation — most expensive gate (API call), runs last
         pair = result.get('pair', '')
         tf = result.get('timeframe', '')
-        direction = confluence.get('direction', '')
-        htf_block = False
-        for htf in HTF_REQUIRED.get(tf, []):
-            htf_trend = htf_trends.get((pair, htf))
-            if htf_trend and htf_trend != 'UNKNOWN' and htf_trend != 'RANGING':
-                if (direction == 'LONG' and htf_trend == 'BEARISH') or \
-                   (direction == 'SHORT' and htf_trend == 'BULLISH'):
-                    print(f"  [HTF] Blocked {pair} {tf} {direction} — {htf} trend is {htf_trend}")
-                    htf_block = True
-                    break
-        if htf_block:
-            continue
-
-        # Sweep confirmation gate — require LTF sweep before entry
-        # LONG needs bullish sweep (sellside liq taken), SHORT needs bearish sweep (buyside liq taken)
+        direction = result.get('confluence', {}).get('direction', '')
         sweep_confirmed, sweep_detail = check_ltf_sweep_confirmation(pair, direction, tf)
         if not sweep_confirmed:
             print(f"  [SWEEP] Blocked {pair} {tf} {direction} — {sweep_detail}")

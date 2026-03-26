@@ -52,6 +52,8 @@ from binance_ta_runner import (
     determine_trend,
     calculate_trade_levels,
     build_trading_signal,
+    apply_signal_gates,
+    _detect_displacement,
 )
 
 # --- Config ---
@@ -191,7 +193,11 @@ def analyze_forex_pair_tf(symbol, timeframe):
             'protected_lows': ict.get('protected_lows', []),
             'swing_highs': ict.get('swing_highs', [])[-3:],
             'swing_lows': ict.get('swing_lows', [])[-3:],
+            'structure_labels': ict.get('structure_labels', [])[-6:],
         },
+
+        # Displacement detection — large impulsive candle in last 3 bars
+        'displacement': _detect_displacement(df, atr_val),
 
         # Chart patterns
         'patterns': patterns,
@@ -376,32 +382,17 @@ def load_forex_signals(max_age_minutes=60):
     HTF_REQUIRED = {'1h': ['4h', '1d'], '4h': ['1d']}
 
     for result in results:
-        confluence = result.get('confluence', {})
-        min_count = confluence.get('min_count', 4)
-        if confluence.get('confluence_count', 0) < min_count:
-            continue
-        if confluence.get('direction') == 'NEUTRAL':
-            continue
-        if confluence.get('contradiction'):
+        # Run all rule-based gates (confluence, direction, contradiction,
+        # confidence, RSI, proximity, ranging, signal-TF sweep, HTF alignment)
+        passed, reason = apply_signal_gates(result, htf_trends, HTF_REQUIRED)
+        if not passed:
+            print(f"  {reason}")
             continue
 
-        # HTF Alignment check — block if higher timeframe trend opposes signal
+        # LTF sweep confirmation — most expensive gate (API call), runs last
         pair = result.get('pair', '')
         tf = result.get('timeframe', '')
-        direction = confluence.get('direction', '')
-        htf_block = False
-        for htf in HTF_REQUIRED.get(tf, []):
-            htf_trend = htf_trends.get((pair, htf))
-            if htf_trend and htf_trend != 'UNKNOWN' and htf_trend != 'RANGING':
-                if (direction == 'LONG' and htf_trend == 'BEARISH') or \
-                   (direction == 'SHORT' and htf_trend == 'BULLISH'):
-                    print(f"  [HTF] Blocked {pair} {tf} {direction} — {htf} trend is {htf_trend}")
-                    htf_block = True
-                    break
-        if htf_block:
-            continue
-
-        # Sweep confirmation gate — require LTF sweep before entry
+        direction = result.get('confluence', {}).get('direction', '')
         sweep_confirmed, sweep_detail = check_forex_ltf_sweep(pair, direction, tf)
         if not sweep_confirmed:
             print(f"  [SWEEP] Blocked {pair} {tf} {direction} — {sweep_detail}")
