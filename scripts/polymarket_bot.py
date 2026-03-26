@@ -2479,7 +2479,7 @@ def _unified_cron_cycle():
 
 def _cron_loop():
     """Background thread: runs unified auto-scanner every N hours."""
-    scan_interval = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "4"))
+    scan_interval = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "2"))
 
     # Brief wait to let bot stabilize before first scan
     time.sleep(5)
@@ -2552,7 +2552,7 @@ def run_bot():
     if enable_cron and schedule is not None:
         cron_thread = threading.Thread(target=_cron_loop, daemon=True)
         cron_thread.start()
-        scan_interval = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "4"))
+        scan_interval = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "2"))
         print(f"Embedded cron scheduler started (unified scan every {scan_interval}h).")
     elif enable_cron and schedule is None:
         print("WARNING: 'schedule' package not installed — cron disabled.")
