@@ -2335,7 +2335,7 @@ def handle_analyze(chat_id, text=""):
         struct = ict.get('structure_labels', [])
         if struct:
             labels = [s['type'] for s in struct[-4:]]
-            ict_items.append(f"Structure: {' > '.join(labels)}")
+            ict_items.append(f"Structure: {' → '.join(labels)}")
         if ict_items:
             for item in ict_items:
                 lines.append(f"  - {item}")
