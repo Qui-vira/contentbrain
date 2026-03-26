@@ -2477,6 +2477,69 @@ def _unified_cron_cycle():
         run_full_cycle()
 
 
+def _forex_killzone_cycle():
+    """Forex-only scan timed to kill zone opens."""
+    try:
+        from unified_auto_scanner import (
+            run_scanner, collect_forex_signals, rank_signals,
+            load_state, save_state, get_cap, log_scan_run,
+        )
+        from market_data import get_kill_zone
+
+        session, is_active = get_kill_zone()
+        if not is_active:
+            print(f"[FOREX-KZ] Not in kill zone ({session}), skipping.")
+            return
+
+        print(f"[FOREX-KZ] {session} kill zone — running forex scan...")
+        forex_ran = run_scanner('forex_ta_runner.py', 'FOREX')
+        if not forex_ran:
+            return
+
+        forex_signals = collect_forex_signals()
+        if not forex_signals:
+            print("[FOREX-KZ] No qualifying forex signals.")
+            return
+
+        for s in forex_signals:
+            s['source'] = 'auto'
+
+        state = load_state()
+        cap = get_cap(state)
+        remaining = cap - state['signals_sent']
+        if remaining <= 0:
+            print(f"[FOREX-KZ] Daily cap reached ({state['signals_sent']}/{cap}).")
+            return
+
+        ranked = rank_signals(forex_signals)
+        to_send = ranked[:remaining]
+
+        print(f"[FOREX-KZ] Sending {len(to_send)} forex signal(s) for approval...")
+        sent_count = 0
+        from polymarket_bot import send_to_approval, _send_to_test_channel, TEST_CHANNEL_ID
+
+        if TEST_CHANNEL_ID and to_send:
+            test_sent = _send_to_test_channel(to_send)
+            print(f"  [TEST] Auto-sent {test_sent} forex signal(s) to test channel.")
+
+        for s in to_send:
+            s['auto_scan_prefix'] = f"[AUTO] [FOREX] SIGNAL"
+            s['auto_scan_footer'] = f"Source: Forex kill-zone scan | Session: {session} | Daily cap: {state['signals_sent'] + sent_count + 1}/{cap}"
+            msg_id = send_to_approval(s)
+            if msg_id:
+                sent_count += 1
+                print(f"  Sent: [FOREX] {s.get('pair', '?')} {s.get('direction', '?')} (msg:{msg_id})")
+
+        state['signals_sent'] += sent_count
+        state['last_scan_at'] = datetime.now(timezone.utc).isoformat()
+        save_state(state)
+        log_scan_run(session, 0, len(forex_signals), 0, sent_count, cap)
+        print(f"[FOREX-KZ] Done. {sent_count} sent.")
+
+    except Exception as e:
+        print(f"[FOREX-KZ] Error: {e}")
+
+
 def _cron_loop():
     """Background thread: runs unified auto-scanner every N hours."""
     scan_interval = int(os.getenv("TA_SCAN_INTERVAL_HOURS", "2"))
@@ -2492,6 +2555,12 @@ def _cron_loop():
     # Single schedule: unified scanner every N hours (crypto + forex + polymarket)
     schedule.every(scan_interval).hours.do(_unified_cron_cycle)
     print(f"[CRON] Unified auto-scan scheduled every {scan_interval} hours.")
+
+    # Forex kill-zone scans at fixed UTC times (Asia 23:00, London 06:00, New York 11:00)
+    schedule.every().day.at("23:00").do(_forex_killzone_cycle)
+    schedule.every().day.at("06:00").do(_forex_killzone_cycle)
+    schedule.every().day.at("11:00").do(_forex_killzone_cycle)
+    print("[CRON] Forex kill-zone scans scheduled at 23:00, 06:00, 11:00 UTC.")
 
     # Signal monitor: check TP/SL hits every 30 minutes
     schedule.every(30).minutes.do(_signal_monitor_cycle)
