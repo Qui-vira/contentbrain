@@ -279,15 +279,9 @@ def run_auto_scan(dry_run=False):
 
     print(f"Daily cap: {state['signals_sent']}/{cap} used, {remaining} remaining")
 
-    # 3. Run scanners
-    # Crypto runs 24/7 (market never closes). Forex only during kill zones.
+    # 3. Run scanners (both run every cycle; kill zone is a confluence factor, not a gate)
     crypto_ran = run_scanner('binance_ta_runner.py', 'CRYPTO')
-    forex_ran = False
-
-    if is_active:
-        forex_ran = run_scanner('forex_ta_runner.py', 'FOREX')
-    else:
-        print(f"  Skipping forex scanner (off-session: {session})")
+    forex_ran = run_scanner('forex_ta_runner.py', 'FOREX')
 
     # 4. Collect signals
     print("\nCollecting signals...")
