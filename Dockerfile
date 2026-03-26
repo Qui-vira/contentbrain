@@ -16,13 +16,17 @@ COPY scripts/binance_ta_runner.py scripts/
 COPY scripts/forex_ta_runner.py scripts/
 COPY scripts/market_data.py scripts/
 COPY scripts/unified_auto_scanner.py scripts/
+COPY scripts/telegram_learner.py scripts/
 
 # Create data directories the scripts expect
-RUN mkdir -p 07-Analytics/signal-performance \
+RUN mkdir -p 07-Analytics/signal-performance/signal-details \
              07-Analytics/polymarket \
-             06-Drafts/polymarket
+             06-Drafts/polymarket \
+             06-Drafts/trading
 
-# Copy .env if present (for API keys)
-COPY .env* ./
+# Don't copy .env — use Railway env vars instead
+# Set working dir so scripts/ imports work
+ENV PYTHONPATH=/app/scripts
+WORKDIR /app
 
 CMD ["python", "scripts/polymarket_bot.py", "--run"]

@@ -3,7 +3,7 @@
 
 # Allow only what we need
 !requirements.txt
-!.env
+# Do NOT include .env — use Railway env vars instead
 !scripts/polymarket_bot.py
 !scripts/polymarket_cron.py
 !scripts/polymarket_scanner.py
@@ -13,3 +13,4 @@
 !scripts/forex_ta_runner.py
 !scripts/market_data.py
 !scripts/unified_auto_scanner.py
+!scripts/telegram_learner.py
