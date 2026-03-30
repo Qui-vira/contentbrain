@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac } from "crypto";
 
+// Blockradar pings this with GET to validate the URL
+export async function GET() {
+  return NextResponse.json({ status: "ok", webhook: "blockradar" });
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.text();
