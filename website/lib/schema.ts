@@ -67,6 +67,8 @@ export const personalServices = sqliteTable("personal_services", {
   name: text("name").notNull(),
   price: text("price").notNull(),
   detail: text("detail").notNull(),
+  ctaText: text("cta_text"),   // nullable — e.g. "Pay Now", "Book Session"
+  ctaHref: text("cta_href"),   // nullable — keyword or URL; if null, opens PaymentModal
   sortOrder: integer("sort_order").notNull().default(0),
 });
 

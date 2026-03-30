@@ -1,5 +1,6 @@
 import { getCaseStudies, getTestimonials, getCtaBanner, getStats, getClientLogos } from "@/lib/queries";
 import { PortfolioClient } from "@/components/PortfolioClient";
+import { resolveHref } from "@/lib/resolve-href";
 
 export const revalidate = 60;
 
@@ -18,7 +19,7 @@ export default async function PortfolioPage() {
       testimonials={testimonials}
       portfolioStats={portfolioStats}
       clientLogos={clientLogos}
-      cta={cta}
+      cta={cta ? { ...cta, buttonHref: await resolveHref(cta.buttonHref) } : null}
     />
   );
 }
