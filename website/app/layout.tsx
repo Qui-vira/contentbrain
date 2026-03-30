@@ -1,10 +1,16 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { PublicNavbar, PublicWrapper } from "@/components/PublicShell";
 import { FooterServer } from "@/components/FooterServer";
 import { ParticleFieldLoader } from "@/components/ParticleFieldLoader";
 import { CustomCursor } from "@/components/CustomCursor";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 const inter = Inter({ subsets: ["latin"] });
 

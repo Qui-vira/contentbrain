@@ -72,7 +72,7 @@ export function HomeClient({
             </motion.div>
 
             <motion.div variants={fadeUp}>
-              <h1 className="text-5xl font-extrabold leading-[1.08] tracking-tight text-text-primary md:text-7xl">
+              <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-text-primary sm:text-5xl md:text-7xl">
                 Build. <KeywordRotator />. Dominate.
               </h1>
             </motion.div>

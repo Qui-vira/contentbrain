@@ -21,8 +21,8 @@ export function GlobeHero({ children, className = "" }: GlobeHeroProps) {
       <style jsx>{`
         .globe-orb {
           position: absolute;
-          width: 500px;
-          height: 500px;
+          width: min(500px, 85vw);
+          height: min(500px, 85vw);
           border-radius: 50%;
           border: 1px solid rgba(230, 57, 70, 0.12);
           animation: globe-spin 20s linear infinite;
@@ -43,8 +43,8 @@ export function GlobeHero({ children, className = "" }: GlobeHeroProps) {
           transform: rotateY(60deg);
         }
         .globe-orb-outer {
-          width: 600px;
-          height: 600px;
+          width: min(600px, 100vw);
+          height: min(600px, 100vw);
           opacity: 0.5;
           animation-duration: 30s;
           animation-direction: reverse;
