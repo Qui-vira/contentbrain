@@ -210,7 +210,7 @@ export function HomeClient({
       <SectionWrapper className="py-16 md:py-24">
         <div className="mx-auto max-w-[1200px] px-6">
           <h2 className="text-center text-3xl font-bold tracking-tight text-text-primary md:text-5xl md:leading-tight">
-            The Numbers Speak
+            Proof. Not Promises.
           </h2>
 
           <div className="mt-14 grid grid-cols-2 gap-6 md:grid-cols-4">
@@ -224,7 +224,10 @@ export function HomeClient({
             ))}
           </div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          <h3 className="mt-16 mb-10 text-center text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
+            What People Say
+          </h3>
+          <div className="grid gap-8 md:grid-cols-3">
             {testimonials.map((t) => (
               <TestimonialCard key={t.attribution} quote={t.quote} attribution={t.attribution} images={t.allImages} rating={t.rating} avatar={t.avatar} />
             ))}
