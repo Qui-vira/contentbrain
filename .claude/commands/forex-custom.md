@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Scan a forex pair on specific timeframes. Usage: /forex-custom EUR/USD 1h,4h. Triggers: '/forex-custom [PAIR] [TIMEFRAMES]'"
 allowed-tools: ["Bash", "Read"]
 ---

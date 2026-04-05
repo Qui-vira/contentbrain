@@ -1,0 +1,778 @@
+{
+  "225": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "USD/JPY",
+      "timeframe": "4h",
+      "direction": "LONG",
+      "current_price": 159.14213,
+      "entry": 159.14213,
+      "stop_loss": 158.772556,
+      "tp1": 159.881279,
+      "tp2": 160.250854,
+      "tp3": 160.990003,
+      "risk": 0.369574,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bullish FVG at 158.89-159.16",
+        "Price > EMA21 (159.10) > EMA50 (159.03)",
+        "Bullish crossover, positive histogram",
+        "Price at upper band (159.89)",
+        "Price at Fib 0.382 (159.11)",
+        "New York kill zone active",
+        "At support 158.66 (2 touches)"
+      ],
+      "confluence_count": 7,
+      "confidence": "HIGH",
+      "strength_score": 8,
+      "trend": "BULLISH",
+      "rsi": 51.21,
+      "atr": 0.246383,
+      "generated_at": "2026-03-22T12:45:36.057323+00:00",
+      "market_type": "FOREX",
+      "source": "auto",
+      "auto_scan_prefix": "[AUTO] [FOREX] SIGNAL",
+      "auto_scan_footer": "Source: Auto-scan | Session: New York | Daily cap: 1/3"
+    },
+    "sent_at": "2026-03-22T12:46:09.760039+00:00",
+    "status": "pending"
+  },
+  "226": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "GBP/JPY",
+      "timeframe": "1d",
+      "direction": "LONG",
+      "current_price": 212.32486,
+      "entry": 212.32486,
+      "stop_loss": 211.263236,
+      "tp1": 214.448109,
+      "tp2": 215.509733,
+      "tp3": 217.632982,
+      "risk": 1.061624,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bullish order block at 210.61-211.68",
+        "Price > EMA21 (211.69) > EMA50 (211.16)",
+        "Bullish crossover, positive histogram",
+        "Price at upper band (213.35)",
+        "Price at Fib 0.382 (212.05)",
+        "New York kill zone active",
+        "At support 211.30 (5 touches)"
+      ],
+      "confluence_count": 7,
+      "confidence": "HIGH",
+      "strength_score": 8,
+      "trend": "BULLISH",
+      "rsi": 55.81,
+      "atr": 1.249466,
+      "generated_at": "2026-03-22T12:45:36.057323+00:00",
+      "market_type": "FOREX",
+      "source": "auto",
+      "auto_scan_prefix": "[AUTO] [FOREX] SIGNAL",
+      "auto_scan_footer": "Source: Auto-scan | Session: New York | Daily cap: 2/3"
+    },
+    "sent_at": "2026-03-22T12:46:10.019448+00:00",
+    "status": "pending"
+  },
+  "260": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "EUR/USD",
+      "timeframe": "1h",
+      "direction": "LONG",
+      "current_price": 1.15864,
+      "entry": 1.15864,
+      "stop_loss": 1.157866,
+      "tp1": 1.160188,
+      "tp2": 1.160962,
+      "tp3": 1.16251,
+      "risk": 0.000774,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bullish FVG at 1.16-1.16",
+        "Bearish crossover, negative histogram",
+        "Price at lower band (1.16)",
+        "Price at Fib 0.382 (1.16)",
+        "New York kill zone active",
+        "At support 1.16 (5 touches)"
+      ],
+      "confluence_count": 6,
+      "confidence": "HIGH",
+      "strength_score": 8,
+      "trend": "BULLISH",
+      "rsi": 46.52,
+      "atr": 0.000516,
+      "generated_at": "2026-03-22T13:49:46.101990+00:00",
+      "market_type": "FOREX",
+      "source": "auto",
+      "auto_scan_prefix": "[AUTO] [FOREX] SIGNAL",
+      "auto_scan_footer": "Source: Auto-scan | Session: New York | Daily cap: 3/3"
+    },
+    "sent_at": "2026-03-22T13:50:20.707565+00:00",
+    "status": "pending"
+  },
+  "338": {
+    "signal": {
+      "market_id": "0x6c310d728433d9a05226274b29ca4540cb908e4e94bf9795f25c69f9d5a72d70",
+      "market_question": "Will Crude Oil (CL) hit (LOW) $90 by end of March?",
+      "category": "other",
+      "current_odds": {
+        "yes": 0.866,
+        "no": 0.134
+      },
+      "recommendation": "YES",
+      "model_probability": 0.95,
+      "edge": 0.084,
+      "confidence": 76.8,
+      "factors": {
+        "price_momentum": 100,
+        "volume_analysis": 100,
+        "market_efficiency": 75,
+        "smart_money": 60,
+        "time_decay": 70,
+        "odds_compression": 40,
+        "contrarian": 35
+      },
+      "factor_details": {
+        "price_momentum": {
+          "score": 100,
+          "direction": 0.8255502511360546,
+          "slope": 0.0587,
+          "acceleration": 0.032652692307692306,
+          "volatility": 0.24851511503327117
+        },
+        "volume_analysis": {
+          "score": 100,
+          "direction": 0.9999993111616136,
+          "surge_ratio": 3.13
+        },
+        "market_efficiency": {
+          "score": 75,
+          "direction": 0.0,
+          "spread_inefficiency": 0.0
+        },
+        "smart_money": {
+          "score": 60,
+          "direction": 0.9957592129456293,
+          "sharp_moves": 2
+        },
+        "time_decay": {
+          "score": 70,
+          "direction": 0.44921334690672915,
+          "days_left": 7.254966469340277,
+          "phase": "mid"
+        },
+        "odds_compression": {
+          "score": 40,
+          "direction": 0.0,
+          "compressing": false
+        },
+        "contrarian": {
+          "score": 35,
+          "direction": 0.0,
+          "extreme": true
+        }
+      },
+      "factor_agreement": "4/4",
+      "reasoning": "Price action is showing strong bullish momentum right now. Volume is surging at 3.1x the average, which tells us new information is hitting this market. We're seeing some inefficiency in the pricing here, which creates opportunity. There's a contrarian play toward NO here since volume is thinning at extreme odds. 4/4 of our factors agree on a bullish lean. We're going YES with a +8.4% edge over what the market is pricing.",
+      "resolution_date": "2026-03-31T00:00:00Z",
+      "volume_24h": 340661.41216400004,
+      "liquidity": 32739.20856,
+      "created_at": "2026-03-23T17:52:50.897049+00:00",
+      "slug": "will-crude-oil-cl-hit-low-90-by-end-of-march-217",
+      "claude_estimate": {
+        "claude_probability": 0.866,
+        "confidence": "low",
+        "reasoning": "Claude estimate unavailable: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CZLSPL7M72GJw3pTWaC1n'}",
+        "direction": "YES",
+        "claude_edge": 0.0,
+        "agrees_with_model": true,
+        "combined_edge": 0.084,
+        "signal_strength": "weak",
+        "error": "Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CZLSPL7M72GJw3pTWaC1n'}"
+      },
+      "combined_edge": 0.084,
+      "signal_strength": "weak",
+      "claude_agrees": true,
+      "passes_threshold": true
+    },
+    "sent_at": "2026-03-23T17:53:20.798610+00:00",
+    "status": "pending"
+  },
+  "339": {
+    "signal": {
+      "market_id": "0xc10e534fc502ef71730b3bd829c51d1d73d2caa40b547b0ae3899f23a23223bb",
+      "market_question": "Will Crude Oil (CL) hit (LOW) $85 by end of March?",
+      "category": "other",
+      "current_odds": {
+        "yes": 0.445,
+        "no": 0.555
+      },
+      "recommendation": "YES",
+      "model_probability": 0.5159,
+      "edge": 0.0709,
+      "confidence": 69.8,
+      "factors": {
+        "price_momentum": 81,
+        "volume_analysis": 100,
+        "market_efficiency": 75,
+        "smart_money": 70,
+        "time_decay": 52,
+        "odds_compression": 40,
+        "contrarian": 30
+      },
+      "factor_details": {
+        "price_momentum": {
+          "score": 81,
+          "direction": 0.5278376097872749,
+          "slope": 0.02935714285714286,
+          "acceleration": 0.016949450549450556,
+          "volatility": 0.12105635051495646
+        },
+        "volume_analysis": {
+          "score": 100,
+          "direction": 0.9999999999958618,
+          "surge_ratio": 2.78
+        },
+        "market_efficiency": {
+          "score": 75,
+          "direction": 0.0,
+          "spread_inefficiency": 0.0
+        },
+        "smart_money": {
+          "score": 70,
+          "direction": 0.9943471960391392,
+          "sharp_moves": 3
+        },
+        "time_decay": {
+          "score": 52,
+          "direction": -0.1082590307465144,
+          "days_left": 7.254766108240741,
+          "phase": "mid"
+        },
+        "odds_compression": {
+          "score": 40,
+          "direction": 0.0,
+          "compressing": false
+        },
+        "contrarian": {
+          "score": 30,
+          "direction": 0.0,
+          "extreme": false
+        }
+      },
+      "factor_agreement": "3/4",
+      "reasoning": "Price action is showing strong bullish momentum right now. Volume is surging at 2.8x the average, which tells us new information is hitting this market. We're seeing some inefficiency in the pricing here, which creates opportunity. Smart money is active with 3 sharp moves detected recently. 3/4 of our factors agree on a bullish lean. We're going YES with a +7.1% edge over what the market is pricing.",
+      "resolution_date": "2026-03-31T00:00:00Z",
+      "volume_24h": 192263.28381899986,
+      "liquidity": 17516.8747,
+      "created_at": "2026-03-23T17:53:08.208248+00:00",
+      "slug": "will-crude-oil-cl-hit-low-85-by-end-of-march-893-949-456",
+      "claude_estimate": {
+        "claude_probability": 0.445,
+        "confidence": "low",
+        "reasoning": "Claude estimate unavailable: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CZLSQc645aPAtyr8RkpMn'}",
+        "direction": "NO",
+        "claude_edge": 0.0,
+        "agrees_with_model": true,
+        "combined_edge": 0.0709,
+        "signal_strength": "weak",
+        "error": "Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CZLSQc645aPAtyr8RkpMn'}"
+      },
+      "combined_edge": 0.0709,
+      "signal_strength": "weak",
+      "claude_agrees": true,
+      "passes_threshold": true
+    },
+    "sent_at": "2026-03-23T17:53:21.221712+00:00",
+    "status": "pending"
+  },
+  "340": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "EUR/USD",
+      "timeframe": "1h",
+      "direction": "LONG",
+      "current_price": 1.15961,
+      "entry": 1.15961,
+      "stop_loss": 1.155386,
+      "tp1": 1.168058,
+      "tp2": 1.172282,
+      "tp3": 1.18073,
+      "risk": 0.004224,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "BOS_bullish at 1.16",
+        "Price > EMA21 (1.16) > EMA50 (1.16)",
+        "Bullish crossover, positive histogram",
+        "Price at upper band (1.16)",
+        "Price at Fib 0.382 (1.16)",
+        "At support 1.16 (9 touches)"
+      ],
+      "confluence_count": 6,
+      "confidence": "HIGH",
+      "strength_score": 8,
+      "trend": "BULLISH",
+      "rsi": 57.52,
+      "atr": 0.002816,
+      "generated_at": "2026-03-23T17:52:42.884567+00:00",
+      "market_type": "FOREX"
+    },
+    "sent_at": "2026-03-23T17:53:51.596347+00:00",
+    "status": "pending"
+  },
+  "341": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "EUR/USD",
+      "timeframe": "4h",
+      "direction": "SHORT",
+      "current_price": 1.15961,
+      "entry": 1.15961,
+      "stop_loss": 1.165342,
+      "tp1": 1.148147,
+      "tp2": 1.142416,
+      "tp3": 1.130953,
+      "risk": 0.005732,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "BOS_bullish at 1.16",
+        "Price > EMA21 (1.16) > EMA50 (1.15)",
+        "Bearish crossover, negative histogram",
+        "Price at upper band (1.16)",
+        "At resistance 1.16 (4 touches)"
+      ],
+      "confluence_count": 5,
+      "confidence": "HIGH",
+      "strength_score": 7,
+      "trend": "RANGING",
+      "rsi": 58.49,
+      "atr": 0.003821,
+      "generated_at": "2026-03-23T17:52:42.884567+00:00",
+      "market_type": "FOREX"
+    },
+    "sent_at": "2026-03-23T17:53:52.429415+00:00",
+    "status": "pending"
+  },
+  "342": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "EUR/USD",
+      "timeframe": "1d",
+      "direction": "LONG",
+      "current_price": 1.15956,
+      "entry": 1.15956,
+      "stop_loss": 1.152903,
+      "tp1": 1.172874,
+      "tp2": 1.179531,
+      "tp3": 1.192845,
+      "risk": 0.006657,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bullish order block at 1.15-1.16",
+        "Bullish crossover, positive histogram",
+        "Price at Fib 0.5 (1.16)"
+      ],
+      "confluence_count": 3,
+      "confidence": "MEDIUM",
+      "strength_score": 6,
+      "trend": "BEARISH",
+      "rsi": 49.6,
+      "atr": 0.008603,
+      "generated_at": "2026-03-23T17:52:42.884567+00:00",
+      "market_type": "FOREX"
+    },
+    "sent_at": "2026-03-23T17:53:52.855112+00:00",
+    "status": "pending"
+  },
+  "343": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "GBP/USD",
+      "timeframe": "1h",
+      "direction": "SHORT",
+      "current_price": 1.34141,
+      "entry": 1.34141,
+      "stop_loss": 1.347317,
+      "tp1": 1.329596,
+      "tp2": 1.323689,
+      "tp3": 1.311875,
+      "risk": 0.005907,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bearish order block at 1.34-1.35",
+        "Price > EMA21 (1.34) > EMA50 (1.33)",
+        "Bullish crossover, positive histogram",
+        "Price at upper band (1.34)",
+        "Price at Fib 0.382 (1.34)",
+        "At resistance 1.35 (2 touches)"
+      ],
+      "confluence_count": 6,
+      "confidence": "HIGH",
+      "strength_score": 7,
+      "trend": "BULLISH",
+      "rsi": 60.86,
+      "atr": 0.003938,
+      "generated_at": "2026-03-23T17:52:42.884567+00:00",
+      "market_type": "FOREX"
+    },
+    "sent_at": "2026-03-23T17:53:53.269308+00:00",
+    "status": "pending"
+  },
+  "344": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "GBP/USD",
+      "timeframe": "4h",
+      "direction": "LONG",
+      "current_price": 1.34141,
+      "entry": 1.34141,
+      "stop_loss": 1.334251,
+      "tp1": 1.355729,
+      "tp2": 1.362888,
+      "tp3": 1.377207,
+      "risk": 0.007159,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bullish FVG at 1.34-1.34",
+        "Price > EMA21 (1.33) > EMA50 (1.33)",
+        "Bullish crossover, positive histogram",
+        "Price at upper band (1.34)",
+        "Price at Fib 0.382 (1.33)",
+        "At resistance 1.35 (2 touches)"
+      ],
+      "confluence_count": 6,
+      "confidence": "HIGH",
+      "strength_score": 7,
+      "trend": "RANGING",
+      "rsi": 63.08,
+      "atr": 0.004773,
+      "generated_at": "2026-03-23T17:52:42.884567+00:00",
+      "market_type": "FOREX"
+    },
+    "sent_at": "2026-03-23T17:53:53.722521+00:00",
+    "status": "pending"
+  },
+  "345": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "GBP/USD",
+      "timeframe": "1d",
+      "direction": "LONG",
+      "current_price": 1.34141,
+      "entry": 1.34141,
+      "stop_loss": 1.32613,
+      "tp1": 1.37197,
+      "tp2": 1.38725,
+      "tp3": 1.41781,
+      "risk": 0.01528,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bullish order block at 1.33-1.34",
+        "Bullish crossover, positive histogram",
+        "Price at upper band (1.35)",
+        "Price at Fib 0.5 (1.34)",
+        "At resistance 1.34 (1 touches)"
+      ],
+      "confluence_count": 5,
+      "confidence": "HIGH",
+      "strength_score": 6,
+      "trend": "BEARISH",
+      "rsi": 52.31,
+      "atr": 0.010834,
+      "generated_at": "2026-03-23T17:52:42.884567+00:00",
+      "market_type": "FOREX"
+    },
+    "sent_at": "2026-03-23T17:53:57.189591+00:00",
+    "status": "pending"
+  },
+  "346": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "USD/JPY",
+      "timeframe": "1h",
+      "direction": "LONG",
+      "current_price": 158.53824,
+      "entry": 158.53824,
+      "stop_loss": 158.115939,
+      "tp1": 159.382842,
+      "tp2": 159.805143,
+      "tp3": 160.649745,
+      "risk": 0.422301,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bullish FVG at 158.50-158.58",
+        "Price < EMA21 (159.03) < EMA50 (159.14)",
+        "Bearish crossover, negative histogram",
+        "Price at lower band (158.32)",
+        "Price in OTE zone (158.54-158.77)",
+        "At support 158.30 (2 touches)"
+      ],
+      "confluence_count": 6,
+      "confidence": "HIGH",
+      "strength_score": 7,
+      "trend": "BEARISH",
+      "rsi": 34.53,
+      "atr": 0.281534,
+      "generated_at": "2026-03-23T17:52:42.884567+00:00",
+      "market_type": "FOREX"
+    },
+    "sent_at": "2026-03-23T17:53:57.643516+00:00",
+    "status": "pending"
+  },
+  "347": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "USD/JPY",
+      "timeframe": "4h",
+      "direction": "SHORT",
+      "current_price": 158.53824,
+      "entry": 158.53824,
+      "stop_loss": 159.135447,
+      "tp1": 157.343826,
+      "tp2": 156.746619,
+      "tp3": 155.552205,
+      "risk": 0.597207,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bearish order block at 158.24-158.68",
+        "Bearish crossover, negative histogram",
+        "Price at lower band (158.73)",
+        "Price at Fib 0.382 (159.11)",
+        "At resistance 159.16 (9 touches)"
+      ],
+      "confluence_count": 5,
+      "confidence": "HIGH",
+      "strength_score": 6,
+      "trend": "RANGING",
+      "rsi": 39.09,
+      "atr": 0.398138,
+      "generated_at": "2026-03-23T17:52:42.884567+00:00",
+      "market_type": "FOREX"
+    },
+    "sent_at": "2026-03-23T17:53:58.085199+00:00",
+    "status": "pending"
+  },
+  "348": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "USD/JPY",
+      "timeframe": "1d",
+      "direction": "LONG",
+      "current_price": 158.53788,
+      "entry": 158.53788,
+      "stop_loss": 157.37398,
+      "tp1": 160.86568,
+      "tp2": 162.02958,
+      "tp3": 164.35738,
+      "risk": 1.1639,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bullish order block at 156.89-157.87",
+        "Price > EMA21 (158.42) > EMA50 (157.34)",
+        "Bearish crossover, negative histogram"
+      ],
+      "confluence_count": 3,
+      "confidence": "MEDIUM",
+      "strength_score": 5,
+      "trend": "BULLISH",
+      "rsi": 52.93,
+      "atr": 1.03046,
+      "generated_at": "2026-03-23T17:52:42.884567+00:00",
+      "market_type": "FOREX"
+    },
+    "sent_at": "2026-03-23T17:53:58.520154+00:00",
+    "status": "pending"
+  },
+  "349": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "GBP/JPY",
+      "timeframe": "1h",
+      "direction": "LONG",
+      "current_price": 212.67188,
+      "entry": 212.67188,
+      "stop_loss": 211.966607,
+      "tp1": 214.082426,
+      "tp2": 214.787699,
+      "tp3": 216.198245,
+      "risk": 0.705273,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "MSS_bearish at 213.33",
+        "Price > EMA21 (212.42) > EMA50 (212.36)",
+        "Bullish crossover, positive histogram",
+        "Price at lower band (211.71)",
+        "Price at Fib 0.382 (212.47)",
+        "At support 212.47 (15 touches)"
+      ],
+      "confluence_count": 6,
+      "confidence": "HIGH",
+      "strength_score": 8,
+      "trend": "BULLISH",
+      "rsi": 54.83,
+      "atr": 0.470182,
+      "generated_at": "2026-03-23T17:52:42.884567+00:00",
+      "market_type": "FOREX"
+    },
+    "sent_at": "2026-03-23T17:53:59.286459+00:00",
+    "status": "pending"
+  },
+  "350": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "BTCUSDT",
+      "timeframe": "1h",
+      "direction": "LONG",
+      "current_price": 70124.0,
+      "entry": 70124.0,
+      "stop_loss": 69517.0,
+      "tp1": 71338.0,
+      "tp2": 71945.0,
+      "tp3": 73159.0,
+      "risk": 607.0,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bearish order block at 70256.00-70931.00",
+        "Bullish crossover, positive histogram",
+        "Price in OTE zone (69355.82-70762.49)"
+      ],
+      "confluence_count": 3,
+      "confidence": "MEDIUM",
+      "strength_score": 4,
+      "trend": "UNKNOWN",
+      "rsi": 52.25,
+      "atr": 1056.534604,
+      "generated_at": "2026-03-23T17:55:57.500709+00:00"
+    },
+    "sent_at": "2026-03-23T17:56:46.447392+00:00",
+    "status": "pending"
+  },
+  "351": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "BTCUSDT",
+      "timeframe": "4h",
+      "direction": "LONG",
+      "current_price": 70124.0,
+      "entry": 70124.0,
+      "stop_loss": 69517.0,
+      "tp1": 71338.0,
+      "tp2": 71945.0,
+      "tp3": 73159.0,
+      "risk": 607.0,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bearish order block at 70256.00-70931.00",
+        "Bullish crossover, positive histogram",
+        "Price in OTE zone (69355.82-70762.49)"
+      ],
+      "confluence_count": 3,
+      "confidence": "MEDIUM",
+      "strength_score": 4,
+      "trend": "UNKNOWN",
+      "rsi": 52.26,
+      "atr": 1056.435913,
+      "generated_at": "2026-03-23T17:55:57.500709+00:00"
+    },
+    "sent_at": "2026-03-23T17:56:46.861235+00:00",
+    "status": "pending"
+  },
+  "352": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "ETHUSDT",
+      "timeframe": "1h",
+      "direction": "LONG",
+      "current_price": 2126.17,
+      "entry": 2126.17,
+      "stop_loss": 2115.53915,
+      "tp1": 2147.4317,
+      "tp2": 2158.06255,
+      "tp3": 2179.32425,
+      "risk": 10.63085,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bullish order block at 2078.05-2155.93",
+        "Bullish crossover, positive histogram",
+        "Price in OTE zone (2104.87-2163.18)",
+        "At support 2118.34 (1 touches)"
+      ],
+      "confluence_count": 4,
+      "confidence": "MEDIUM",
+      "strength_score": 6,
+      "trend": "UNKNOWN",
+      "rsi": 50.5,
+      "atr": 42.915318,
+      "generated_at": "2026-03-23T17:55:57.500709+00:00"
+    },
+    "sent_at": "2026-03-23T17:56:47.284497+00:00",
+    "status": "pending"
+  },
+  "353": {
+    "signal": {
+      "signal_type": "trading",
+      "pair": "ETHUSDT",
+      "timeframe": "4h",
+      "direction": "LONG",
+      "current_price": 2126.17,
+      "entry": 2126.17,
+      "stop_loss": 2115.53915,
+      "tp1": 2147.4317,
+      "tp2": 2158.06255,
+      "tp3": 2179.32425,
+      "risk": 10.63085,
+      "rr_tp1": "1:2",
+      "rr_tp2": "1:3",
+      "rr_tp3": "1:5",
+      "confluences": [
+        "Bullish order block at 2078.05-2155.93",
+        "Bullish crossover, positive histogram",
+        "Price in OTE zone (2104.87-2163.18)",
+        "At support 2118.34 (1 touches)"
+      ],
+      "confluence_count": 4,
+      "confidence": "MEDIUM",
+      "strength_score": 6,
+      "trend": "UNKNOWN",
+      "rsi": 50.51,
+      "atr": 42.901174,
+      "generated_at": "2026-03-23T17:55:57.500709+00:00"
+    },
+    "sent_at": "2026-03-23T17:56:47.693624+00:00",
+    "status": "pending"
+  }
+}

@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Push approved drafts to Notion Content Calendar. Triggers: publish, push to notion, sync drafts"
 allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "mcp__notion__notion-create-pages", "mcp__notion__notion-update-page", "mcp__notion__notion-search"]
 ---
@@ -7,7 +8,7 @@ allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "mcp__notion__n
 
 ## NOTION CONTENT CALENDAR
 
-Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Database ID: 8f52ebd2efac4eecb05ec4783e924346
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
 This skill pushes approved drafts to the Notion Content Calendar. Use the database and data source IDs above for all Notion operations.
@@ -19,6 +20,21 @@ This skill pushes approved drafts to the Notion Content Calendar. Use the databa
 4. For each selected draft, create a page in Notion Content Calendar (data source: 9081ce06-1802-4b43-a988-62c5e384fcfd) with all properties: Title, Platform, Status "Scheduled", Content Type, Post Date (with time, is_datetime 1), Content (full text), Goal, Production Status (for video), Hook Used, Monetization, Source Skill, Notes
 5. Update each draft frontmatter to "status: synced-to-notion" and add "notion_page_id: [page ID]"
 6. Show summary of what was pushed
+
+## MEDIA DETECTION
+
+After finding approved drafts, scan for associated media:
+
+1. Check each draft's frontmatter for `media_dir` — if present, that directory contains the visual assets.
+2. Also scan `06-Drafts/visuals/` for directories whose name matches the draft's topic slug.
+3. For each matched media directory:
+   - If it contains `slide-*.png` files → Carousel. Attach all slides in order.
+   - If it contains `*-final.mp4` → Video. Attach the final render.
+   - If it contains `voiceover.mp3` → Include as voiceover asset.
+   - If it contains `manifest.json` → Remotion project, video content.
+4. Upload each media file to fal.ai storage via `fal_client.upload_file()` to get public URLs.
+5. Attach the URLs to the Notion entry's Files property and include in Notes field.
+6. If a draft has `production_status` in frontmatter, carry it to the Notion entry's "Production Status" property.
 
 ## RULES
 - Never push without "status: approved"
@@ -32,7 +48,11 @@ When publishing content that has an associated media file (image or video):
 
 1. Check if the draft in 06-Drafts/ references a media file path in its frontmatter or body (e.g., "media: 08-Media/images/chart.png" or "Media: Desktop/content-studio/out/topic-final.mp4")
 2. If a media file exists:
-   - Upload it to fal.ai storage using fal.storage.upload() to get a public URL
+   - Upload it to fal.ai storage to get a public URL:
+     ```python
+     import fal_client
+     public_url = fal_client.upload_file(local_file_path)
+     ```
    - Attach the URL to the Notion entry's Files property
    - Include the media type in the Notes field: "Media: [image/video], URL: [public URL]"
 3. If no media file exists, skip this step silently.

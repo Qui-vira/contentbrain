@@ -1,0 +1,18 @@
+{
+  "name": "CLEARED DM Automation — SEC 16 Tokens Carousel",
+  "keyword": "CLEARED",
+  "trigger_post": "16 Tokens The SEC Just Cleared — IG Carousel",
+  "comment_replies": [
+    "Sent! Check your DMs 🔥",
+    "Just dropped it in your inbox. Go check.",
+    "Done! It's in your DMs. Don't sleep on page 6.",
+    "Sent the full breakdown. Check your DMs now.",
+    "You're gonna want to read this. Check your DMs."
+  ],
+  "opening_dm": "Yo! You commented CLEARED so here's the full breakdown most people missed.",
+  "delivery_dm": "This is the complete list of all 16 tokens the SEC just classified as commodities — what it actually means, which 3 to watch closest, and what happens next.\n\nDownload it here: https://iwiqldudksmbbjxpqgsj.supabase.co/storage/v1/object/public/lead-magnets/sec-16-tokens-cleared-breakdown.pdf\n\nRead it. Bookmark it. This changes the game for your portfolio.",
+  "follow_up_dm": "Hey, did you get a chance to read the SEC breakdown?\n\nIf you want the actual trade setups that come from rulings like this — not just the news, but the entries, stop losses, and targets — that's what we do inside Hustler's Krib Signal.\n\nDM me \"KRIB\" if you want access. No pressure, just signal.",
+  "follow_up_delay_hours": 24,
+  "link_url": "https://iwiqldudksmbbjxpqgsj.supabase.co/storage/v1/object/public/lead-magnets/sec-16-tokens-cleared-breakdown.pdf",
+  "link_label": "SEC 16 Tokens Full Breakdown (PDF)"
+}

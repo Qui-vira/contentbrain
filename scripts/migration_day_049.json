@@ -1,0 +1,149 @@
+{
+  "date": "2026-05-19",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] May 19 - 7AM WAT",
+      "old_entry_title": "[TK-1] ContentBrain for DeFi: research to posts in minutes",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] ContentBrain for DeFi: research to posts in minutes",
+        "Notes": "Phase 5 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] May 19 - 12PM WAT",
+      "old_entry_title": "[TK-2] Phase 3 highlights: 20 days of demos in 60 seconds",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Phase 3 highlights: 20 days of demos in 60 seconds",
+        "Notes": "Phase 5 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] May 19 - 5PM WAT",
+      "old_entry_title": "[TK-3] To everyone following for 60+ days: thank you.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] To everyone following for 60+ days: thank you.",
+        "Notes": "Phase 5 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] May 19 - 8PM WAT",
+      "old_entry_title": "[TK-4] Workshop live: building what takes most teams a week",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] Workshop live: building what takes most teams a week",
+        "Notes": "Phase 5 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] May 19 - 8AM WAT",
+      "old_entry_title": "[IG-1] Workshop preview: what you'll learn + build in 45 minutes",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Workshop preview: what you'll learn + build in 45 minutes",
+        "Hook Used": "Workshop preview: what you'll learn + build in 45 minutes",
+        "Notes": "Phase 5 | IG-1 | C-49 | [v1 hook] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] May 19 - 6PM WAT",
+      "old_entry_title": "[IG-2] Speed run: entire week across 4 platforms",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Speed run: entire week across 4 platforms",
+        "Notes": "Phase 5 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] May 19 - 9AM WAT",
+      "old_entry_title": "[X-AM] Thursday at 2PM EST: Free live workshop — How to build a 30-day content engine t...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] Thursday at 2PM EST: Free live workshop — How to build a 30-day content engine t...",
+        "Hook Used": "Thursday at 2PM EST: Free live workshop — How to build a 30-day content engine that runs without you. No slides. No fluff. Just a live build.",
+        "Notes": "Phase 5 | X-AM | C-49 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] May 19 - 1PM WAT",
+      "old_entry_title": "[X-PM] The gap between 12 hrs/week on content and 2 hrs/week? A system. That's the enti...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] The gap between 12 hrs/week on content and 2 hrs/week? A system. That's the enti...",
+        "Hook Used": "The gap between 12 hrs/week on content and 2 hrs/week? A system. That's the entire difference.",
+        "Notes": "Phase 5 | X-PM | C-49 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] May 19 - 10AM WAT",
+      "old_entry_title": "[LI-1] Workshop announcement: Build a content engine that runs without you. Thursday 2P...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] Workshop announcement: Build a content engine that runs without you. Thursday 2P...",
+        "Hook Used": "Workshop announcement: Build a content engine that runs without you. Thursday 2PM EST. 100 live spots.",
+        "Notes": "Phase 5 | LI-1 | C-49 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] May 19 - 5PM WAT",
+      "old_entry_title": "[LI-2] The DeFi niche demo: research to published posts",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] The DeFi niche demo: research to published posts",
+        "Notes": "Phase 5 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] May 19 - 9AM WAT",
+    "[TG-2] May 19 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "date": "2026-04-15",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 15 - 7AM WAT",
+      "old_entry_title": "[TK-1] What happens when you automate your content workflow",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] What happens when you automate your content workflow",
+        "Notes": "Phase 2 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 15 - 12PM WAT",
+      "old_entry_title": "[TK-2] Why I stopped chasing viral content",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Why I stopped chasing viral content",
+        "Notes": "Phase 2 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 15 - 5PM WAT",
+      "old_entry_title": "[TK-3] Drop your content stack. I'll rate it.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Drop your content stack. I'll rate it.",
+        "Notes": "Phase 2 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 15 - 8PM WAT",
+      "old_entry_title": "[TK-4] Phase 1: trader. Phase 2: creator. Phase 3: architect.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] Phase 1: trader. Phase 2: creator. Phase 3: architect.",
+        "Hook Used": "Phase 1: trader. Phase 2: creator. Phase 3: architect.",
+        "Notes": "Phase 2 | TK-4 | B-20 | [v1 hook] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 15 - 8AM WAT",
+      "old_entry_title": "[IG-1] The 3-hour content week: how it actually works",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] The 3-hour content week: how it actually works",
+        "Notes": "Phase 2 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 15 - 6PM WAT",
+      "old_entry_title": "[IG-2] Quote: 'Stop broadcasting. Start conversations.'",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Quote: 'Stop broadcasting. Start conversations.'",
+        "Notes": "Phase 2 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Community Post",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 15 - 9AM WAT",
+      "old_entry_title": "[X-AM] When I first got into crypto: wanted to be a trader. Then a KOL. Now: an archite...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] When I first got into crypto: wanted to be a trader. Then a KOL. Now: an archite...",
+        "Hook Used": "When I first got into crypto: wanted to be a trader. Then a KOL. Now: an architect. The shift changed everything.",
+        "Notes": "Phase 2 | X-AM | B-20 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 15 - 1PM WAT",
+      "old_entry_title": "[X-PM] 7-day challenge: post one piece of content every day for the next 7 days. Tag me...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] 7-day challenge: post one piece of content every day for the next 7 days. Tag me...",
+        "Hook Used": "7-day challenge: post one piece of content every day for the next 7 days. Tag me. I'll engage with every post.",
+        "Notes": "Phase 2 | X-PM | B-20 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 15 - 10AM WAT",
+      "old_entry_title": "[LI-1] Consistency isn't discipline. It's design.",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] Consistency isn't discipline. It's design.",
+        "Notes": "Phase 2 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 15 - 5PM WAT",
+      "old_entry_title": "[LI-2] The content system that runs without the creator",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] The content system that runs without the creator",
+        "Notes": "Phase 2 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 15 - 9AM WAT",
+    "[TG-2] Apr 15 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "date": "2026-04-01",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 1 - 7AM WAT",
+      "old_entry_title": "[TK-1] This was my chart: 8 indicators, zero clarity. Then I stripped it down to 3.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] This was my chart: 8 indicators, zero clarity. Then I stripped it down to 3.",
+        "Hook Used": "This was my chart: 8 indicators, zero clarity. Then I stripped it down to 3.",
+        "Notes": "Phase 1 | TK-1 | B-6 | [v1 hook] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 1 - 12PM WAT",
+      "old_entry_title": "[TK-2] The worst crypto advice I ever followed",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] The worst crypto advice I ever followed",
+        "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 1 - 5PM WAT",
+      "old_entry_title": "[TK-3] What's the one thing you'd change about crypto culture?",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] What's the one thing you'd change about crypto culture?",
+        "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 1 - 8PM WAT",
+      "old_entry_title": "[TK-4] 3 market signals most traders completely ignore",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] 3 market signals most traders completely ignore",
+        "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 1 - 8AM WAT",
+      "old_entry_title": "[IG-1] SEC cleared tokens: the update nobody is covering",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] SEC cleared tokens: the update nobody is covering",
+        "Notes": "Phase 1 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 1 - 6PM WAT",
+      "old_entry_title": "[IG-2] 5 beginner trading mistakes that cost $10K+",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] 5 beginner trading mistakes that cost $10K+",
+        "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 1 - 9AM WAT",
+      "old_entry_title": "[X-AM] The SEC told you which tokens are safe — 10 days later, here's what actually cha...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] The SEC told you which tokens are safe — 10 days later, here's what actually cha...",
+        "Hook Used": "The SEC told you which tokens are safe — 10 days later, here's what actually changed",
+        "Notes": "Phase 1 | X-AM | A-1 | [DRAFT READY] | v2",
+        "Content Type": "Thread",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "High"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 1 - 1PM WAT",
+      "old_entry_title": "[X-PM] I built my entire system during a bear market. Now I just approve signals.",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] I built my entire system during a bear market. Now I just approve signals.",
+        "Hook Used": "I built my entire system during a bear market. Now I just approve signals.",
+        "Notes": "Phase 1 | X-PM | A-7 | [DRAFT READY] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "High"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 1 - 10AM WAT",
+      "old_entry_title": "[LI-1] The 3 data points I check before any decision — how less became more",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] The 3 data points I check before any decision — how less became more",
+        "Notes": "Phase 1 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 1 - 5PM WAT",
+      "old_entry_title": "[LI-2] From 30 hours/week researching to 3. The architecture shift.",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] From 30 hours/week researching to 3. The architecture shift.",
+        "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 1 - 9AM WAT",
+    "[TG-2] Apr 1 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

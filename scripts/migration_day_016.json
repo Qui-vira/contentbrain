@@ -1,0 +1,149 @@
+{
+  "date": "2026-04-16",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 16 - 7AM WAT",
+      "old_entry_title": "[TK-1] My content costs dropped 80%. Quality stayed the same.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] My content costs dropped 80%. Quality stayed the same.",
+        "Notes": "Phase 2 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 16 - 12PM WAT",
+      "old_entry_title": "[TK-2] The content game is rigged. Here's how to win anyway.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] The content game is rigged. Here's how to win anyway.",
+        "Notes": "Phase 2 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 16 - 5PM WAT",
+      "old_entry_title": "[TK-3] Challenge: post every day this week. Tag me.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Challenge: post every day this week. Tag me.",
+        "Notes": "Phase 2 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 16 - 8PM WAT",
+      "old_entry_title": "[TK-4] AI without human context is expensive noise",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] AI without human context is expensive noise",
+        "Notes": "Phase 2 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 16 - 8AM WAT",
+      "old_entry_title": "[IG-1] AI Agents vs AI Workflows — infographic comparison",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] AI Agents vs AI Workflows — infographic comparison",
+        "Hook Used": "AI Agents vs AI Workflows — infographic comparison",
+        "Notes": "Phase 2 | IG-1 | B-21 | [v1 hook] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 16 - 6PM WAT",
+      "old_entry_title": "[IG-2] Before/after: content system transformation",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Before/after: content system transformation",
+        "Notes": "Phase 2 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 16 - 9AM WAT",
+      "old_entry_title": "[X-AM] Everyone's building AI agents. The creators who win in 2026 are building workflo...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] Everyone's building AI agents. The creators who win in 2026 are building workflo...",
+        "Hook Used": "Everyone's building AI agents. The creators who win in 2026 are building workflows. Here's the difference.",
+        "Notes": "Phase 2 | X-AM | B-21 | [v1 hook] | v2",
+        "Content Type": "Thread",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 16 - 1PM WAT",
+      "old_entry_title": "[X-PM] 3 weeks ago: zero engagement. Today: replies are fuller than they've been in mon...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] 3 weeks ago: zero engagement. Today: replies are fuller than they've been in mon...",
+        "Hook Used": "3 weeks ago: zero engagement. Today: replies are fuller than they've been in months. One change: stopped broadcasting, started conversations.",
+        "Notes": "Phase 2 | X-PM | B-21 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 16 - 10AM WAT",
+      "old_entry_title": "[LI-1] The AI industry is obsessed with 'agents.' The businesses actually making money ...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] The AI industry is obsessed with 'agents.' The businesses actually making money ...",
+        "Hook Used": "The AI industry is obsessed with 'agents.' The businesses actually making money are building workflows.",
+        "Notes": "Phase 2 | LI-1 | B-21 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 16 - 5PM WAT",
+      "old_entry_title": "[LI-2] The architecture behind 15+ posts/week in 3 hours",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] The architecture behind 15+ posts/week in 3 hours",
+        "Notes": "Phase 2 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 16 - 9AM WAT",
+    "[TG-2] Apr 16 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

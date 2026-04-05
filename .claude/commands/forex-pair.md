@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Scan a single forex pair across all timeframes. Usage: /forex-pair EUR/USD. Triggers: '/forex-pair [PAIR]', 'scan EUR/USD', 'scan GBP/JPY'"
 allowed-tools: ["Bash", "Read"]
 ---

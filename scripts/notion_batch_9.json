@@ -1,0 +1,152 @@
+[
+  {
+    "properties": {
+      "Title": "[TK-1] The scaling chapter begins: bigger features, more niches",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-30",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] The affiliate math: 25% recurring on every referral",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-30",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] The community chapter: what we're building together",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-30",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] The numbers from 90 days speak for themselves",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-30",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] 5 trends about to explode from 10K post analysis",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-30",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Q3 roadmap: what's coming next",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-30",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] DeFi case study 3-month follow-up: numbers are better",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | X-AM | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-30",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] Community is the moat. This is how we build it.",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | X-PM | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-30",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] The complete ContentBrain story: 90 days in data",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-30",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Foundation built. Scaling chapter begins. Q3 roadmap.",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-30",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  }
+]

@@ -1,0 +1,1502 @@
+[
+  {
+    "properties": {
+      "Title": "[TK-1] This was my chart: 8 indicators, zero clarity. Then I stripped it down to 3.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "This was my chart: 8 indicators, zero clarity. Then I stripped it down to 3.",
+      "Notes": "Phase 1 | TK-1 | B-6 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-01",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] The worst crypto advice I ever followed",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-01",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] What's the one thing you'd change about crypto culture?",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-01",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] 3 market signals most traders completely ignore",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-01",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] SEC cleared tokens: the update nobody is covering",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-01",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] 5 beginner trading mistakes that cost $10K+",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-01",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] The SEC told you which tokens are safe \u2014 10 days later, here's what actually cha...",
+      "Platform": "X/Twitter",
+      "Content Type": "Thread",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "High",
+      "Hook Used": "The SEC told you which tokens are safe \u2014 10 days later, here's what actually changed",
+      "Notes": "Phase 1 | X-AM | A-1 | [DRAFT READY] | v2",
+      "date:Post Date:start": "2026-04-01",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] I built my entire system during a bear market. Now I just approve signals.",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "High",
+      "Hook Used": "I built my entire system during a bear market. Now I just approve signals.",
+      "Notes": "Phase 1 | X-PM | A-7 | [DRAFT READY] | v2",
+      "date:Post Date:start": "2026-04-01",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] The 3 data points I check before any decision \u2014 how less became more",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-01",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] From 30 hours/week researching to 3. The architecture shift.",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-01",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] My exact system for catching trades others miss",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-02",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Things I wish someone told me before crypto",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-02",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Biggest struggle as a crypto beginner \u2014 drop yours",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-02",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Why simplicity beats complexity in every trade",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-02",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] The 16 Tokens The SEC Just Cleared \u2014 updated with Q2 price action",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "High",
+      "Hook Used": "The 16 Tokens The SEC Just Cleared \u2014 updated with Q2 price action",
+      "Notes": "Phase 1 | IG-1 | A-3 | [DRAFT READY] | v2",
+      "date:Post Date:start": "2026-04-02",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] 3 tokens the SEC cleared that nobody is watching",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-02",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] Q2 is here. Clearer regulations, stable rates, institutional staking live. The s...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "High",
+      "Hook Used": "Q2 is here. Clearer regulations, stable rates, institutional staking live. The setup is violent \u2014 in a good way.",
+      "Notes": "Phase 1 | X-AM | A-11 | [DRAFT READY] | v2",
+      "date:Post Date:start": "2026-04-02",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] The hardest part of building something real isn't the work. It's staying quiet w...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "The hardest part of building something real isn't the work. It's staying quiet while everyone chases trends.",
+      "Notes": "Phase 1 | X-PM | B-7 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-02",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] There are 3 types of founders in Web3. Only one builds something that lasts.",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "There are 3 types of founders in Web3. Only one builds something that lasts.",
+      "Notes": "Phase 1 | LI-1 | B-7 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-02",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] The myth of the talented creator vs the consistent one",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-02",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] How I went from manual charting to automated signals",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-03",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Why most crypto KOLs are lying to you",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-03",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Reply with your worst trade. I'll share mine.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-03",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] I tracked 200 trades. Here's the pattern that separated the winners from the los...",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "I tracked 200 trades. Here's the pattern that separated the winners from the losers.",
+      "Notes": "Phase 1 | TK-4 | B-8 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-03",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] The 16 tokens the SEC cleared \u2014 full Q2 update",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-03",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] AI portfolio analysis: 3 things found in 2 minutes",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-03",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] BlackRock made staking institutional. ETH up 20% since. The thesis is playing ou...",
+      "Platform": "X/Twitter",
+      "Content Type": "Thread",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "High",
+      "Hook Used": "BlackRock made staking institutional. ETH up 20% since. The thesis is playing out.",
+      "Notes": "Phase 1 | X-AM | A-2 | [DRAFT READY] | v2",
+      "date:Post Date:start": "2026-04-03",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] What's the most expensive lesson crypto taught you? Mine: trusting influencers o...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "What's the most expensive lesson crypto taught you? Mine: trusting influencers over charts.",
+      "Notes": "Phase 1 | X-PM | B-8 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-03",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] 2 weeks of conversations over broadcasts: raw engagement data",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-03",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] The automation paradox: less effort, better results",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-03",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] The 3 tools that replaced my $5K/month content team",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-04",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] The moment I almost quit crypto forever",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-04",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] The question nobody asks about building in Web3",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-04",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] The framework I use to evaluate any project in 5 min",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-04",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] 3 tokens the SEC cleared that nobody is watching: AVAX, LINK, DOT.",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "High",
+      "Hook Used": "3 tokens the SEC cleared that nobody is watching: AVAX, LINK, DOT.",
+      "Notes": "Phase 1 | IG-1 | A-4 | [DRAFT READY] | v2",
+      "date:Post Date:start": "2026-04-04",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] The only 3 indicators you actually need",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-04",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] The crypto economy trained traders to watch charts 24/7 when it should have taug...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "The crypto economy trained traders to watch charts 24/7 when it should have taught them to automate.",
+      "Notes": "Phase 1 | X-AM | B-9 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-04",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] Weekend prep: here's what I'm watching \u2014 and what I'm NOT touching.",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Weekend prep: here's what I'm watching \u2014 and what I'm NOT touching.",
+      "Notes": "Phase 1 | X-PM | B-9 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-04",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] 6 months ago I spent 30 hours/week researching content. This week I spent 3. Her...",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "High",
+      "Hook Used": "6 months ago I spent 30 hours/week researching content. This week I spent 3. Here's what changed.",
+      "Notes": "Phase 1 | LI-1 | A-8 | [DRAFT READY] | v2",
+      "date:Post Date:start": "2026-04-04",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] 58% win rate and still profitable: the math nobody teaches",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-04",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Why I stopped trading like everyone else",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-05",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] There are only 1,000,000 Bitcoin left. Ever. Here's why that matters.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "High",
+      "Hook Used": "There are only 1,000,000 Bitcoin left. Ever. Here's why that matters.",
+      "Notes": "Phase 1 | TK-2 | A-6 | [DRAFT READY] | v2",
+      "date:Post Date:start": "2026-04-05",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] If you could learn one crypto skill instantly, what?",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-05",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Polarizing take: stop diversifying your portfolio",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-05",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Morning routine as a crypto KOL",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-05",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] SEC cleared tokens: the update nobody is covering",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-05",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] A year ago I was charting manually for 4 hours every morning. Now my system does...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "A year ago I was charting manually for 4 hours every morning. Now my system does it in 12 minutes.",
+      "Notes": "Phase 1 | X-AM | B-10 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-05",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] Crypto in 2026 is ________ and nobody's ready.",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Crypto in 2026 is ________ and nobody's ready.",
+      "Notes": "Phase 1 | X-PM | B-10 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-05",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Why I evaluate 3 data points instead of 12",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-05",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] The 3 data points I check before any decision \u2014 how less became more",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-05",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] How I built a system that works while I sleep",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-06",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Hot take: 90% of crypto education is useless",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-06",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] What's harder \u2014 finding alpha or trusting it?",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-06",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Risk management isn't optional \u2014 it's the whole game",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-06",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] 5 beginner trading mistakes that cost $10K+",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-06",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Quote: 'Simplicity made me profitable'",
+      "Platform": "Instagram",
+      "Content Type": "Community Post",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-06",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] Everyone's talking about the SEC clearing 16 tokens. Nobody's talking about what...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Everyone's talking about the SEC clearing 16 tokens. Nobody's talking about what this means for your tax strategy.",
+      "Notes": "Phase 1 | X-AM | B-11 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-06",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] What's the one thing you'd change about crypto culture?",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | X-PM | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-06",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] From 30 hours/week researching to 3. The architecture shift.",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-06",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Why Web3 founders need systems, not more tools",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-06",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] The real cost of doing crypto content manually",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-07",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Why your favorite crypto influencer is broke",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-07",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Drop your portfolio age. How long you been at this?",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-07",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Why 58% win rate is actually elite-level trading",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-07",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] 5 Trading Mistakes That Cost Beginners $10K+",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "High",
+      "Hook Used": "5 Trading Mistakes That Cost Beginners $10K+",
+      "Notes": "Phase 1 | IG-1 | A-5 | [DRAFT READY] | v2",
+      "date:Post Date:start": "2026-04-07",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] The 16 tokens the SEC cleared \u2014 full Q2 update",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-07",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] The only 3 things I check before entering any trade. I used to check 12. Simplic...",
+      "Platform": "X/Twitter",
+      "Content Type": "Thread",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "The only 3 things I check before entering any trade. I used to check 12. Simplicity made me profitable.",
+      "Notes": "Phase 1 | X-AM | B-12 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-07",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] You can only keep one for the next bull run: BTC or ETH. No hedging. Which one a...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "You can only keep one for the next bull run: BTC or ETH. No hedging. Which one and why?",
+      "Notes": "Phase 1 | X-PM | B-12 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-07",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] I used to evaluate 12 data points before making a decision. Now I use 3. Here's ...",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "I used to evaluate 12 data points before making a decision. Now I use 3. Here's why less made me sharper.",
+      "Notes": "Phase 1 | LI-1 | B-12 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-07",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] 2 weeks of conversations over broadcasts: raw engagement data",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-07",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] My morning as a crypto KOL: wake up \u2192 check dashboard \u2192 approve signals \u2192 done.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "High",
+      "Hook Used": "My morning as a crypto KOL: wake up \u2192 check dashboard \u2192 approve signals \u2192 done.",
+      "Notes": "Phase 1 | TK-1 | A-9 | [DRAFT READY] | v2",
+      "date:Post Date:start": "2026-04-08",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] The uncomfortable truth about trading courses",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-08",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Crypto truths nobody wants to admit",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-08",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] The only 3 indicators you actually need",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-08",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] AI portfolio analysis: 3 things found in 2 minutes",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-08",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Quote: 'Systems, not willpower'",
+      "Platform": "Instagram",
+      "Content Type": "Community Post",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-08",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] I'll be honest \u2014 I was scared to share my actual win rate. 58%. And I'm still pr...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "I'll be honest \u2014 I was scared to share my actual win rate. 58%. And I'm still profitable. Here's why.",
+      "Notes": "Phase 1 | X-AM | B-13 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-08",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] If your 'community' is just a Telegram group where you dump signals and nobody r...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "If your 'community' is just a Telegram group where you dump signals and nobody replies \u2014 that's not a community.",
+      "Notes": "Phase 1 | X-PM | B-13 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-08",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] The automation paradox: less effort, better results",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-08",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Risk management isn't a strategy \u2014 it's the foundation",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-08",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] From 0 to profitable: my actual timeline",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-09",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Story time: how I lost $10K in one trade",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-09",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] The real reason most people fail in crypto",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-09",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Data doesn't lie: what separates winners from losers",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-09",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] I asked AI to analyze my portfolio. It found 3 things I missed in 2 minutes.",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "High",
+      "Hook Used": "I asked AI to analyze my portfolio. It found 3 things I missed in 2 minutes.",
+      "Notes": "Phase 1 | IG-1 | A-10 | [DRAFT READY] | v2",
+      "date:Post Date:start": "2026-04-09",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Morning routine as a crypto KOL",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-09",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] People say AI content is generic slop. They're right \u2014 if you use it wrong. Here...",
+      "Platform": "X/Twitter",
+      "Content Type": "Thread",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "People say AI content is generic slop. They're right \u2014 if you use it wrong. Here's the difference.",
+      "Notes": "Phase 1 | X-AM | C-9 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-09",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] 2 weeks back on X. No links. No promos. Just talking. Here's what happened to my...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "2 weeks back on X. No links. No promos. Just talking. Here's what happened to my numbers.",
+      "Notes": "Phase 1 | X-PM | B-14 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-09",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] 2 weeks ago I restarted my X account from near-zero engagement. Here are the raw...",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "2 weeks ago I restarted my X account from near-zero engagement. Here are the raw numbers.",
+      "Notes": "Phase 1 | LI-1 | B-14 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-09",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Why I evaluate 3 data points instead of 12",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-09",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] I used to spend 6 hours on content. Now I spend 15 minutes.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 2 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] The day I realized talent doesn't scale \u2014 systems do",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 2 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Drop your content stack. I'll rate it.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 2 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Researching a crypto project in under 60 seconds. Timer on screen.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Researching a crypto project in under 60 seconds. Timer on screen.",
+      "Notes": "Phase 2 | TK-4 | B-15 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] The 3-hour content week: how it actually works",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 2 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Quote: 'Stop broadcasting. Start conversations.'",
+      "Platform": "Instagram",
+      "Content Type": "Community Post",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 2 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] How to research any crypto project in under 10 minutes. Here's the framework \u2014 m...",
+      "Platform": "X/Twitter",
+      "Content Type": "Thread",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "How to research any crypto project in under 10 minutes. Here's the framework \u2014 manual or automated.",
+      "Notes": "Phase 2 | X-AM | B-15 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] What kills more portfolios: FOMO or FUD? I have a strong opinion.",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "What kills more portfolios: FOMO or FUD? I have a strong opinion.",
+      "Notes": "Phase 2 | X-PM | B-15 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-04-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Consistency isn't discipline. It's design.",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 2 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] The content system that runs without the creator",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 2 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-04-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  }
+]

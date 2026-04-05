@@ -1,0 +1,1502 @@
+[
+  {
+    "properties": {
+      "Title": "[TK-1] Workshop #2 announcement: Advanced Content Engineering. No replays. Thursday.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Workshop #2 announcement: Advanced Content Engineering. No replays. Thursday.",
+      "Notes": "Phase 6 | TK-1 | C-71 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Community deep-dive: most-requested topic breakdown",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Next month: spotlights, features, community events",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] User results that speak louder than any demo",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Quote: 'ContentBrain isn't a product \u2014 it's a movement'",
+      "Platform": "Instagram",
+      "Content Type": "Community Post",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Advanced workshop highlights: intelligence layer",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] First workshop: 300 people. 200 asked for another. Thursday 2PM EST: Advanced Co...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "First workshop: 300 people. 200 asked for another. Thursday 2PM EST: Advanced Content Engineering. Free. Live. No replays this time.",
+      "Notes": "Phase 6 | X-AM | C-71 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] This one is different: competitor scraping, trend detection, multi-platform dist...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "This one is different: competitor scraping, trend detection, multi-platform distribution. All live.",
+      "Notes": "Phase 6 | X-PM | C-71 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Free intel report for live attendees worth $500",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Workshop #2 results: 280 attendees, 15 immediate signups",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-10",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Free 15-minute content audits for 48 hours",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-11",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] This is the last call. Not pressure \u2014 just math.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-11",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Drop your content transformation story below",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-11",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Workshop attendee results: the real proof",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-11",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Workshop countdown: 24 hours. Free competitor report for live attendees.",
+      "Platform": "Instagram",
+      "Content Type": "Community Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Workshop countdown: 24 hours. Free competitor report for live attendees.",
+      "Notes": "Phase 6 | IG-1 | C-72 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-11",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] The $50K freelancer savings story \u2014 real DMs",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-11",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] Tomorrow's workshop upgrade: everyone who attends live gets a free competitive i...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Tomorrow's workshop upgrade: everyone who attends live gets a free competitive intelligence report for their niche. $500 value.",
+      "Notes": "Phase 6 | X-AM | C-72 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-11",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] Spots filling fast. This is the only advanced session this month. Comment ADVANC...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Spots filling fast. This is the only advanced session this month. Comment ADVANCED to register.",
+      "Notes": "Phase 6 | X-PM | C-72 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-11",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Advanced workshop tomorrow: competitor scraping and trend detection live. Free i...",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Advanced workshop tomorrow: competitor scraping and trend detection live. Free intel report for attendees.",
+      "Notes": "Phase 6 | LI-1 | C-72 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-11",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Phase 4 recap: from conversion push to movement",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-11",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Advanced workshop highlights: the intelligence layer revealed",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Advanced workshop highlights: the intelligence layer revealed",
+      "Notes": "Phase 6 | TK-1 | C-73 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-12",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] The energy in onboarding calls is different",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-12",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Workshop attendees: what was your biggest takeaway?",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-12",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] 2 workshops. 580 total attendees. Real impact.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-12",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Quote: 'The ones who move first always win'",
+      "Platform": "Instagram",
+      "Content Type": "Community Post",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-12",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Cost breakdown: ContentBrain vs content manager",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-12",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] We're live. Advanced Content Engineering. Competitor scraping. Trend detection. ...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "We're live. Advanced Content Engineering. Competitor scraping. Trend detection. Multi-platform distribution. Let's build.",
+      "Notes": "Phase 6 | X-AM | C-73 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-12",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] 50 minutes of pure execution. Here's what we built: competitor analysis, trend s...",
+      "Platform": "X/Twitter",
+      "Content Type": "Thread",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "50 minutes of pure execution. Here's what we built: competitor analysis, trend surfacing, cross-platform scheduling.",
+      "Notes": "Phase 6 | X-PM | C-73 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-12",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] The cost comparison: ContentBrain vs content manager",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-12",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] 40 strategy calls booked \u2014 what the market is telling us",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-12",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] 6 spots left this month. The old way is overpaying.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-13",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Advanced Content Engineering: no replays this time",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-13",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Spots are filling. Who's riding with us?",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-13",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Phase 4 recap: conversion push \u2192 community movement",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-13",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Workshop results + top 3 testimonials from attendees",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Workshop results + top 3 testimonials from attendees",
+      "Notes": "Phase 6 | IG-1 | C-74 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-13",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Phase 4 highlights: conversion push recap",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-13",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] Yesterday's workshop: 280 live attendees. 15 signed up on the spot. 40 booked st...",
+      "Platform": "X/Twitter",
+      "Content Type": "Thread",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Yesterday's workshop: 280 live attendees. 15 signed up on the spot. 40 booked strategy calls. Here are 3 messages that came in after.",
+      "Notes": "Phase 6 | X-AM | C-74 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-13",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] 5 strategy call slots left this week. Free 15 minutes. No pitch. Just value. Com...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "5 strategy call slots left this week. Free 15 minutes. No pitch. Just value. Comment CALL to book.",
+      "Notes": "Phase 6 | X-PM | C-74 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-13",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Workshop #2 results: 280 attendees, 15 immediate signups, 40 strategy calls. The...",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Workshop #2 results: 280 attendees, 15 immediate signups, 40 strategy calls. The numbers speak.",
+      "Notes": "Phase 6 | LI-1 | C-74 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-13",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] User results that speak louder than any demo",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-13",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Phase 4 recap: from conversion push to community movement",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Phase 4 recap: from conversion push to community movement",
+      "Notes": "Phase 6 | TK-1 | C-75 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-14",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Free intel report worth $500 for live attendees",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-14",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] The real flex: helping people win, not selling them",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-14",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] The content system revolution is here",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-14",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Spot counter update: real-time availability",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-14",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Advanced Content Engineering: what was built live",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-14",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] In the last 2 weeks: 2 workshops. 25 new users. 40 strategy calls. ContentBrain ...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "In the last 2 weeks: 2 workshops. 25 new users. 40 strategy calls. ContentBrain isn't a product anymore \u2014 it's a movement.",
+      "Notes": "Phase 6 | X-AM | C-75 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-14",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] Next month: user spotlights, advanced features, community events. Follow to stay...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Next month: user spotlights, advanced features, community events. Follow to stay in the loop. The best is ahead.",
+      "Notes": "Phase 6 | X-PM | C-75 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-14",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Content systems are replacing content teams. The data.",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-14",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] The workshop effect: real-time conversion in action",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 6 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-14",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Video Production package: scripts to finished video in minutes",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-15",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] 10,000 posts analyzed: 5 trends about to explode",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-15",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] ContentBrain Community launch: free for all users",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-15",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] User spotlight: DeFi protocol, 8\u219260 posts/month",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-15",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] ContentBrain Video Production: from script to video",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-15",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] User spotlight: AI startup case study",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-15",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] User spotlight: DeFi protocol went from 8 posts/month to 60 using ContentBrain. ...",
+      "Platform": "X/Twitter",
+      "Content Type": "Thread",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "User spotlight: DeFi protocol went from 8 posts/month to 60 using ContentBrain. Community engagement tripled. Here's their story.",
+      "Notes": "Phase 7 | X-AM | C-76 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-15",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] Want your project featured next? DM me SPOTLIGHT with your results. Best stories...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Want your project featured next? DM me SPOTLIGHT with your results. Best stories get highlighted.",
+      "Notes": "Phase 7 | X-PM | C-76 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-15",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Video Production package: scripts to finished video",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-15",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] AI startup spotlight: zero to 15K followers, 60 days",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-15",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Content + Video + Community + Funnels. One system.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-16",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] This report generates automatically every week",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-16",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] DM me SPOTLIGHT with your results",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-16",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] DeFi case study 3-month follow-up: numbers are better",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-16",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] ContentBrain Video Production: from script to finished video in minutes",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "ContentBrain Video Production: from script to finished video in minutes",
+      "Notes": "Phase 7 | IG-1 | C-77 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-16",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Full stack package: what AI Marketing Automation includes",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-16",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] Your written content is handled. But what about video? Here's what happens when ...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Your written content is handled. But what about video? Here's what happens when ContentBrain handles scripts, visuals, and voiceover.",
+      "Notes": "Phase 7 | X-AM | C-77 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-16",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] DeFi case study 3-month follow-up: the long-term numbers are even better than th...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "DeFi case study 3-month follow-up: the long-term numbers are even better than the 7-day pilot.",
+      "Notes": "Phase 7 | X-PM | C-45 revisit | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-16",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Upsell bridge: Video Production package \u2014 scripts, visuals, voiceover, all autom...",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Upsell bridge: Video Production package \u2014 scripts, visuals, voiceover, all automated.",
+      "Notes": "Phase 7 | LI-1 | C-77 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-16",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Full stack: AI Marketing Automation announcement",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-16",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] The agency equivalent: $15-20K/mo. This: $3-5K.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-17",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] 90 days ago: just content strategy. Today: a movement.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-17",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Users who connect with other users grow faster",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-17",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] AI startup: zero to 15K followers, CEO never posted",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-17",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Quote: 'Day 90. The first chapter is written.'",
+      "Platform": "Instagram",
+      "Content Type": "Community Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-17",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Gaming project spotlight: 90 days of content",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-17",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] Announcing: The ContentBrain Community. A private group for users to share strat...",
+      "Platform": "X/Twitter",
+      "Content Type": "Thread",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Announcing: The ContentBrain Community. A private group for users to share strategies, results, and support each other. Free for all users.",
+      "Notes": "Phase 7 | X-AM | C-78 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-17",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] Users who connect with other users churn less, grow faster, and build better sys...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Users who connect with other users churn less, grow faster, and build better systems. Community is the moat.",
+      "Notes": "Phase 7 | X-PM | C-78 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-17",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Q3 planning: how to plan a quarter in 30 minutes",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-17",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] One-Time Build: custom system, yours forever",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-17",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] One-Time Build: custom content system, yours forever",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-18",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] The DeFi protocol case study: 3-month follow-up",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-18",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Community is the moat. This is how we build it.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-18",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] 30 days of ContentBrain data: the aggregate report",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-4 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-18",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] User spotlight: AI startup case study \u2014 full transformation",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "User spotlight: AI startup case study \u2014 full transformation",
+      "Notes": "Phase 7 | IG-1 | C-79 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-18",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Q3 planning: entire quarter in 30 minutes",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-18",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] User spotlight: AI startup went from zero social presence to 15K followers in 60...",
+      "Platform": "X/Twitter",
+      "Content Type": "Thread",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "User spotlight: AI startup went from zero social presence to 15K followers in 60 days. CEO hasn't written a single post.",
+      "Notes": "Phase 7 | X-AM | C-79 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-18",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] Founders: your time is too valuable for content creation. You handle the vision....",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "Founders: your time is too valuable for content creation. You handle the vision. ContentBrain handles execution.",
+      "Notes": "Phase 7 | X-PM | C-79 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-18",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] AI startup spotlight: zero to 15K followers in 60 days, CEO never wrote a post. ...",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "AI startup spotlight: zero to 15K followers in 60 days, CEO never wrote a post. Here's how.",
+      "Notes": "Phase 7 | LI-1 | C-79 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-18",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Web3 gaming spotlight: 90 days of automated lore content",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-18",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Affiliate Program: 25% recurring commission",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-19",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Web3 gaming spotlight: Discord grew 12K members",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-19",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Want your project featured? Share your story.",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | TK-3 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-19",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] ContentBrain by the numbers: 30-day aggregate data report",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "ContentBrain by the numbers: 30-day aggregate data report",
+      "Notes": "Phase 7 | TK-4 | C-80 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-19",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Affiliate program: earn 25% recurring",
+      "Platform": "Instagram",
+      "Content Type": "Carousel",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | IG-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-19",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] 90-day results: the complete ContentBrain story",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | IG-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-19",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-AM] 30 days of ContentBrain data across all users. Average time saved: 18 hrs/week. ...",
+      "Platform": "X/Twitter",
+      "Content Type": "Thread",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "30 days of ContentBrain data across all users. Average time saved: 18 hrs/week. Cost reduction: 62%. Content output: 4.2X increase.",
+      "Notes": "Phase 7 | X-AM | C-80 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-19",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-PM] These numbers are real, from real users, in 30 days. Imagine what 90 days looks ...",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "These numbers are real, from real users, in 30 days. Imagine what 90 days looks like.",
+      "Notes": "Phase 7 | X-PM | C-80 | [v1 hook] | v2",
+      "date:Post Date:start": "2026-06-19",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] 90 days of ContentBrain: complete results and Q3 roadmap",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | LI-1 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-19",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] User spotlight: DeFi protocol transformation",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Hook Used": "",
+      "Notes": "Phase 7 | LI-2 | NEW | [TOPIC ONLY] | v2",
+      "date:Post Date:start": "2026-06-19",
+      "date:Post Date:is_datetime": 0,
+      "Recurring": "One-Time"
+    }
+  }
+]

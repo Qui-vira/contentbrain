@@ -1,0 +1,147 @@
+{
+  "date": "2026-06-29",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Jun 29 - 7AM WAT",
+      "old_entry_title": "[TK-1] Custom content system: $2.5K-$15K, yours forever",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] Custom content system: $2.5K-$15K, yours forever",
+        "Notes": "Phase 7 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Jun 29 - 12PM WAT",
+      "old_entry_title": "[TK-2] From Day 1 to Day 90: the complete ContentBrain timeline",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] From Day 1 to Day 90: the complete ContentBrain timeline",
+        "Notes": "Phase 7 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Jun 29 - 5PM WAT",
+      "old_entry_title": "[TK-3] Drop your Q3 content goal below",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Drop your Q3 content goal below",
+        "Notes": "Phase 7 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Jun 29 - 8PM WAT",
+      "old_entry_title": "[TK-4] Q3 planning framework: full quarter in 30 minutes",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] Q3 planning framework: full quarter in 30 minutes",
+        "Notes": "Phase 7 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Jun 29 - 8AM WAT",
+      "old_entry_title": "[IG-1] ContentBrain Community: what's inside",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] ContentBrain Community: what's inside",
+        "Notes": "Phase 7 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Jun 29 - 6PM WAT",
+      "old_entry_title": "[IG-2] DeFi protocol spotlight: 3-month follow-up",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] DeFi protocol spotlight: 3-month follow-up",
+        "Notes": "Phase 7 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Jun 29 - 9AM WAT",
+      "old_entry_title": "[X-AM] Day 90. The first chapter is written. Next 90 days? Bigger features. More niches...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] Day 90. The first chapter is written. Next 90 days? Bigger features. More niches...",
+        "Hook Used": "Day 90. The first chapter is written. Next 90 days? Bigger features. More niches. A community that builds together. This isn't the end — it's the foundation.",
+        "Notes": "Phase 7 | X-AM | C-90 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Jun 29 - 1PM WAT",
+      "old_entry_title": "[X-PM] Thank you for being here from Day 1. Comment NEXT if you're riding into Q3 with ...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] Thank you for being here from Day 1. Comment NEXT if you're riding into Q3 with ...",
+        "Hook Used": "Thank you for being here from Day 1. Comment NEXT if you're riding into Q3 with us. The best content systems are built by communities.",
+        "Notes": "Phase 7 | X-PM | C-90 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Jun 29 - 10AM WAT",
+      "old_entry_title": "[LI-1] The referral program: reward loyalty, grow together",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] The referral program: reward loyalty, grow together",
+        "Notes": "Phase 7 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Jun 29 - 5PM WAT",
+      "old_entry_title": "[LI-2] From scaling to next level: Q3 preview",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] From scaling to next level: Q3 preview",
+        "Notes": "Phase 7 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Jun 29 - 9AM WAT",
+    "[TG-2] Jun 29 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "date": "2026-06-10",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Jun 10 - 7AM WAT",
+      "old_entry_title": "[TK-1] Workshop #2 announcement: Advanced Content Engineering. No replays. Thursday.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] Workshop #2 announcement: Advanced Content Engineering. No replays. Thursday.",
+        "Hook Used": "Workshop #2 announcement: Advanced Content Engineering. No replays. Thursday.",
+        "Notes": "Phase 6 | TK-1 | C-71 | [v1 hook] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Jun 10 - 12PM WAT",
+      "old_entry_title": "[TK-2] Community deep-dive: most-requested topic breakdown",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Community deep-dive: most-requested topic breakdown",
+        "Notes": "Phase 6 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Jun 10 - 5PM WAT",
+      "old_entry_title": "[TK-3] Next month: spotlights, features, community events",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Next month: spotlights, features, community events",
+        "Notes": "Phase 6 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Jun 10 - 8PM WAT",
+      "old_entry_title": "[TK-4] User results that speak louder than any demo",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] User results that speak louder than any demo",
+        "Notes": "Phase 6 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Jun 10 - 8AM WAT",
+      "old_entry_title": "[IG-1] Quote: 'ContentBrain isn't a product — it's a movement'",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Quote: 'ContentBrain isn't a product — it's a movement'",
+        "Notes": "Phase 6 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Community Post",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Jun 10 - 6PM WAT",
+      "old_entry_title": "[IG-2] Advanced workshop highlights: intelligence layer",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Advanced workshop highlights: intelligence layer",
+        "Notes": "Phase 6 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Jun 10 - 9AM WAT",
+      "old_entry_title": "[X-AM] First workshop: 300 people. 200 asked for another. Thursday 2PM EST: Advanced Co...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] First workshop: 300 people. 200 asked for another. Thursday 2PM EST: Advanced Co...",
+        "Hook Used": "First workshop: 300 people. 200 asked for another. Thursday 2PM EST: Advanced Content Engineering. Free. Live. No replays this time.",
+        "Notes": "Phase 6 | X-AM | C-71 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Jun 10 - 1PM WAT",
+      "old_entry_title": "[X-PM] This one is different: competitor scraping, trend detection, multi-platform dist...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] This one is different: competitor scraping, trend detection, multi-platform dist...",
+        "Hook Used": "This one is different: competitor scraping, trend detection, multi-platform distribution. All live.",
+        "Notes": "Phase 6 | X-PM | C-71 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Jun 10 - 10AM WAT",
+      "old_entry_title": "[LI-1] Free intel report for live attendees worth $500",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] Free intel report for live attendees worth $500",
+        "Notes": "Phase 6 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Jun 10 - 5PM WAT",
+      "old_entry_title": "[LI-2] Workshop #2 results: 280 attendees, 15 immediate signups",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] Workshop #2 results: 280 attendees, 15 immediate signups",
+        "Notes": "Phase 6 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Jun 10 - 9AM WAT",
+    "[TG-2] Jun 10 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

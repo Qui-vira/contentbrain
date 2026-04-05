@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Video Producer for @big_quiv. Write video scripts, shot lists, visual direction, art direction, storyboards, AI image/video generation, voiceover, assembly via Remotion. Full production pipeline from script to render. Triggers: 'create a video script', 'write a shot list', 'give me editing notes', 'plan a batch of video content', 'write 5 TikTok scripts', 'create a Reel script', 'produce a video about [topic]', 'art direction for [script]', 'storyboard this', 'generate the visuals', 'assemble the video', 'full video pipeline for [topic]'"
 allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
@@ -40,6 +41,7 @@ If unclear which mode, ask: "Do you want 1) Script & direction for your editor, 
 
 ## CONTEXT FILES TO READ FIRST
 - CLAUDE.md (identity, tone, visual style)
+- design-system/quivira/MASTER.md (Quivira design system — colors, typography, spacing, component specs for any UI/web elements in videos)
 - 02-Hooks/ (proven hooks adapted for video)
 - 03-Trends/ (trending topics, sounds, formats)
 - 06-Drafts/content-plan-[latest].md (which video content is scheduled)
@@ -51,10 +53,41 @@ If unclear which mode, ask: "Do you want 1) Script & direction for your editor, 
 - 08-Templates/production-checklist.md (pre-production through post-launch monitoring)
 - 08-Templates/voice-library.md (voice profiles for voiceover generation)
 - 04-Patterns/content-format-comparison.md (effort vs reach vs authority per format)
+- 04-Patterns/topic-research-visual-hooks-patterns.md (visual hook patterns for scroll-stopping openers)
+- 08-Templates/broll-fetch-rules.md (B-roll sourcing rules, Pexels/Unsplash search, reference image handling)
+- 02-Hooks/visual-hook-index.md (scored visual hooks for video openers — enforce in first 1-3 seconds)
+- 05-Frameworks/psychological-structure-index.md (retention structures for script building)
+- 06-Delivery/talking-head-style-index.md (camera setups, energy, delivery modes — verify shot variety)
+
+## UI UX PRO MAX DESIGN INTELLIGENCE
+
+When creating videos that feature UI/dashboard/product mockup scenes, use the design intelligence tool:
+
+```bash
+# Get style/color/typography recommendations for product UI scenes
+python skills/ui-ux-pro-max/scripts/search.py "<keywords>" --domain style
+python skills/ui-ux-pro-max/scripts/search.py "<keywords>" --domain color
+python skills/ui-ux-pro-max/scripts/search.py "<keywords>" --domain landing
+```
+
+This ensures any UI shown in videos matches professional design standards.
+
+## DESIGN MCP PIPELINE (FREE IMAGE GENERATION)
+
+Three MCP servers for design generation — use BEFORE fal.ai to save credits:
+
+| Task | Tool |
+|------|------|
+| Character shots, hero images, backgrounds | **Nano Banana MCP** (free Gemini image gen) |
+| UI/dashboard screenshots for product demos | **Google Stitch** (free, 350 gens/month) |
+| React UI components shown in videos | **21st.dev Magic** (5 free gens/month) |
+| Carousel slides, social graphics | fal.ai Nano Banana Pro Edit + Pillow (existing) |
+
+**Priority:** Nano Banana MCP (free) > Google Stitch (free) > fal.ai (paid)
 
 ## NOTION CONTENT CALENDAR
 
-Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Database ID: 8f52ebd2efac4eecb05ec4783e924346
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
 Properties the video editor reads from:
@@ -69,9 +102,7 @@ Properties the video editor reads from:
 - "Status" (select): Draft, Approved, Scheduled, Posted, Missed
 
 Properties the video editor writes to:
-- "Content" (text): the full video script, shot deck, or production notes
-- "Source Skill" (select): set to "Video Editor"
-- "Production Status" (select): updated based on pipeline stage
+- NONE. The video editor saves all drafts to 06-Drafts/ with frontmatter. Only /publish writes to Notion.
 
 ## COMPLEXITY CHECK
 
@@ -101,7 +132,30 @@ Step 1: Read CLAUDE.md for identity, voice, tone, audience, brand, and rules.
 
 Step 2: Identify the topic from my prompt. Use the topic to determine which niche folders to scan in 10-Niche-Knowledge/. If the topic is about trading, read crypto-trading/. If about AI, read artificial-intelligence/. If about Web3, read web3-development/. If about personal brand or storytelling, read personal-brand/. If the topic spans multiple niches, read all relevant folders. Also read 08-Templates/ai-video-production-reference.md when creating AI-generated video content.
 
-Step 3: Scan 02-Hooks/ for every hook file. Find hooks that match the topic. Prioritize hooks tagged "proven" or with high engagement scores. If no hooks match the topic exactly, find the closest ones by category (bold claim, question, story, data-led, contrarian).
+Step 3: Read `02-Hooks/hook-index.md` FIRST — this is the scored, ranked hook database. Follow the selection algorithm exactly: (1) Filter by Goal AND Platform, (2) EXCLUDE any hook with `Last Used` within the last 7 days, (3) Sort remaining by Score descending — prioritize SELF-PROVEN first, then COMPETITOR-PROVEN, then STRONG, (4) Pick the top 3 rotation-safe candidates, (5) Select the one that best matches the specific topic, (6) UPDATE the hook's `Last Used` column to today's date. Never pick below score 40. Adapt the hook — the index entry is a formula, not a final draft.
+
+Step 3B — VISUAL HOOK ENFORCEMENT:
+Read `02-Hooks/visual-hook-index.md` and select a visual hook for the video opener.
+1. Filter by Platform and Content Type matching this video
+2. Exclude visual hooks used in last 7 days
+3. Sort by Score, pick the strongest match for the topic emotion
+4. The selected visual hook MUST appear in the first 1-3 seconds of the shot deck
+5. Shot 1 in the storyboard must implement this visual hook exactly
+6. Update visual hook Last Used to today
+
+Step 3C — SCRIPT STRUCTURE SELECTION:
+Read `05-Frameworks/psychological-structure-index.md` and select a retention structure.
+1. Match structure to content Goal
+2. Use the structure's timeline to define the shot deck pacing
+3. Tension points in the structure = visual emphasis moments (PunchZoom, SlamIn)
+4. Payoff points = strongest visual + audio beat
+
+Step 3D — DELIVERY STYLE VERIFICATION:
+Read `06-Delivery/talking-head-style-index.md` and verify shot variety.
+1. Select camera setups that match the visual hook and content emotion
+2. Verify at least 2 shot changes per 30 seconds
+3. Verify energy level varies (no monotone delivery)
+4. Cross-reference TH-XXX camera + energy combo against Last Used (no repeat within 5 days)
 
 Step 4: Scan 03-Trends/ for any active trend related to the topic. If the topic IS a trend, use that trend data. If the topic relates to a trend, reference the trend to make the content timely. Also check for trending sounds and formats.
 
@@ -170,22 +224,63 @@ Never silently use stale data. Always tell me:
 
 This applies to every skill, every request, every time.
 
+## CONCEPT_LOCK OVERRIDE
+
+If the user's prompt contains a `CONCEPT_LOCK` block (from /concept), use the exact index IDs specified:
+- `text_hook`: Use this H-XXX ID from hook-index.md. Do NOT re-select.
+- `visual_hook`: Use this V-XXX ID from visual-hook-index.md. Do NOT re-select.
+- `structure`: Use this PS-XXX ID from psychological-structure-index.md. Do NOT re-select.
+- `delivery_style`: Use this TH-XXX ID from talking-head-style-index.md. Do NOT re-select.
+- `visual_hook_brief`: Use this scene description for Shot 1 in the storyboard.
+- `hook_map`: If present, use these directions for re-hook Points 2-5. The directions guide what TYPE of re-hook to generate at each point, but you still generate the actual text and visual fresh per script.
+
+When a CONCEPT_LOCK is present, skip Steps 3, 3B, 3C, and 3D selection algorithms. Read the locked entries from each index for their details (descriptions, timelines, camera setups), but do not pick different ones.
+
+Still update `Last Used` to today for each locked index entry.
+
+## SMART QUESTIONING PROTOCOL
+
+After mode is selected, gather context. Read the vault first, then ask ONLY what you can't infer:
+
+**Always ask (essential):**
+1. "What's the topic/subject?" — unless obvious from prompt or Notion entry
+2. "What platform is this for?" (TikTok, Instagram Reels, YouTube, YouTube Shorts) — unless specified
+3. "Is there a script ready, or should I write one?" — check 06-Drafts/ and Notion first
+
+**Ask when relevant (expert-level clarity):**
+4. "What's the primary objective: retention (keep watching), comprehension (learn something), or conversion (take action)?" — only if the video could serve multiple goals. A retention video uses jump cuts and dramatic reveals. A comprehension video uses slower pacing and on-screen text. A conversion video uses urgency and clear CTAs. The entire shot deck changes.
+5. "What mood/energy?" (hype, calm, dramatic, educational, raw) — only if not obvious from the topic
+6. "Are you the main character, or is this fully AI-generated? If AI, does the character need to be consistent across a series?" — only if the prompt doesn't specify. Affects whether to use Instant Character, IP-Adapter Face ID, or full creative freedom with Nano Banana.
+7. "Is this part of a series?" — affects visual consistency with prior videos
+8. "What do you want the viewer to DO after watching?" (comment, follow, click link, DM, share, save) — only if the CTA isn't specified. The entire closing 3-5 seconds changes based on this.
+
+**Never ask (auto-decide from production system):**
+- Video duration → platform defaults (7-15s TikTok, 15-30s Reels, 8-15min YouTube)
+- Aspect ratio → platform defaults (9:16 vertical for TikTok/Reels, 16:9 for YouTube)
+- Visual style → always Quivira brand (dark, cinematic, red accents)
+- Music/audio → auto-select based on mood and platform trends
+- Pacing/cut rate → auto-decide from 08-Templates/ pacing patterns
+- Transition types → auto-decide based on energy level (hard cuts for urgency, dissolves for reflection)
+- Thumbnail style → dark background + bold text + face expression
+- Hook timing → first 1-3 seconds, always the most visually striking element
+- Caption style → auto-generate based on platform norms
+- fal.ai prompts → auto-generate from art direction using prompt formulas
+- Voice selection → default to @big_quiv's voice profile
+- Distribution format → auto-decide (silent-autoplay needs captions, sound-on needs audio hook in first 0.5s)
+
 ## PROCESS
 
 ### Mode 1: Script & Direction
 
 #### For a single video script:
-1. Define the video structure:
-   - Hook (0-3 seconds): Visual + spoken text that stops the scroll.
-   - Setup (3-10 seconds): Introduce the problem or topic.
-   - Body (10-40 seconds): Deliver the value, story, or breakdown.
-   - CTA (last 3-5 seconds): Tell them what to do next.
-2. Write the spoken script word for word.
+1. Use the MULTI-HOOK SCRIPT ARCHITECTURE (see below) to define all 5 hook points.
+2. Write the spoken script word for word with visual direction at every hook point.
 3. Add on-screen text for each section (what the viewer reads).
 4. Add B-roll/visual suggestions for each section.
 5. Suggest a trending sound or original audio approach.
 6. Add editing notes: pacing (fast cuts vs slow), text style, transition types.
-7. Save to 06-Drafts/[date]-video-[topic-slug].md
+7. VERIFY: No two consecutive hook points use the same camera angle or shot type. If they do, fix before output.
+8. Save to 06-Drafts/[date]-video-[topic-slug].md
 
 #### For a batch of video scripts:
 1. Generate scripts for all scheduled videos (typically 3-5 per week).
@@ -245,11 +340,11 @@ SHOT DECK
 Total duration: [seconds]
 Screen rec: [seconds] ([percentage]%)
 
-| # | Time | Duration | Type | Description | Text overlay |
-|---|------|----------|------|-------------|-------------|
-| 1 | 0:00 | 2s | AI | [detailed visual description] | [if any] |
-| 2 | 0:02 | 1.5s | SCREEN REC | [what's on screen] | |
-| 3 | 0:03 | 2s | AI | [detailed visual description] | |
+| # | Time | Duration | Type | Description | Text overlay | Effect | SFX | Flash |
+|---|------|----------|------|-------------|-------------|--------|-----|-------|
+| 1 | 0:00 | 2s | AI | [detailed visual description] | [if any] | SlamIn | whoosh | yes |
+| 2 | 0:02 | 1.5s | SCREEN REC | [what's on screen] | | KenBurns | — | no |
+| 3 | 0:03 | 2s | AI | [detailed visual description] | | PunchZoom | bass-hit | yes |
 ...
 ---
 ```
@@ -260,11 +355,35 @@ Shot types:
 - `TEXT`: Bold text screen with design treatment
 - `VIDEO`: Real footage or AI-generated video clip
 
+Effect types (maps to Remotion components):
+- `PunchZoom`: Quick scale 1→1.15→1 on beat (bold claims, reveals)
+- `SlamIn`: Scale from 1.3→1 with ease-out (titles, key stats)
+- `CameraShake`: 3-5px random offset for 0.5s (chaos, urgency, disruption)
+- `CameraTrack`: Slow drift in one direction (establishing shots, calm moments)
+- `KenBurns`: Slow zoom 1→1.08 over full shot duration (static images need motion)
+- `FlashTransition`: White flash 0.1s between shots (hard emphasis transitions)
+- `LoopFade`: Pulse opacity 0.85→1→0.85 (ambient, background elements)
+
+SFX types:
+- `whoosh`: Fast transition accent
+- `bass-hit`: Low impact on reveals
+- `riser`: Tension build before reveal
+- `glitch`: Digital disruption accent
+- `coin-drop`: Money/value moments
+- `notification`: Alert/CTA moments
+- `—`: No SFX for this shot
+
 Rules:
 - Screen recordings must not exceed 20% of total duration
 - AI-generated outputs should fill at least 80% of the reel
-- Hard cuts only. No fades, dissolves, or soft transitions
-- First shot must be the strongest visual
+- Every shot MUST have an Effect assigned — no static shots without motion
+- KenBurns is the minimum for any static image (slow zoom gives life to stills)
+- PunchZoom on every bold claim or data reveal
+- SlamIn on titles and key statistics
+- FlashTransition between major section changes (hook→setup, setup→body, body→CTA)
+- CameraShake sparingly — max 2 per video for chaos/urgency moments
+- SFX on at least 60% of shots — silence is intentional, not default
+- First shot must be the strongest visual with SlamIn or PunchZoom
 - Rapid montage sequences: 0.5-1.5s per shot for energy
 - Text overlays: bold, readable, max 3-4 words, never in top-right corner (profile zone)
 - Sync shots to voiceover beats. Each new sentence = a new cut
@@ -290,10 +409,16 @@ Generate AI images and videos for each shot in the deck using the prompt library
 7. Add the mood block (from prompt-library.md).
 8. Build the negative prompt from prompt-library.md defaults + shot-specific exclusions.
 
-**3C. Search for reference images (if needed):**
-1. If a shot requires real-world accuracy (specific environment, object, or style), search Pexels API for reference images per reference-image-guide.md.
-2. Check 08-Media/references/ first — reuse cached references before downloading new ones.
-3. Download top 1-3 results to 08-Media/references/[category]/.
+**3C. B-roll reference fetch (REQUIRED before generation):**
+For EVERY shot, check: does this scene depict a real-world location, vehicle, object, or environment the character is not physically in?
+- If YES: fetch a reference photo from Pexels API or Pixabay API BEFORE generating.
+  1. Check 08-Media/references/broll/ first — reuse cached references before downloading new ones.
+  2. If no cached match, search Pexels/Pixabay for the environment/object.
+  3. Download the best result to 08-Media/references/broll/[descriptive-name].jpg.
+  4. Upload to fal.ai storage via `fal_client.upload_file()`.
+  5. Pass as `image_urls[0]` to `fal-ai/nano-banana-pro/edit`. Character reference goes in `image_urls[1]` or later.
+- If NO (abstract, text-only, or fully synthetic scene): skip this step.
+- NEVER generate real-world environments from text prompts alone when a photo reference exists.
 
 **3D. Select the right fal.ai model per shot:**
 
@@ -323,8 +448,11 @@ Prompt: [the full assembled prompt from prompt-library blocks]
 Negative prompt: [from prompt-library.md defaults + shot-specific]
 Model: [selected model ID from 3D table]
 Character: [character name from character-library.md or "none"]
-Reference images: [paths to any reference images used, or "none"]
+Reference images: [fal.ai storage URLs — upload local files first via fal_client.upload_file()]
 Settings: [aspect ratio: 9:16, guidance scale, steps]
+Effect: [PunchZoom / SlamIn / CameraShake / CameraTrack / KenBurns / FlashTransition / LoopFade]
+SFX: [whoosh / bass-hit / riser / glitch / coin-drop / notification / —]
+Flash: [yes / no — white flash transition before this shot]
 Output: [file path]
 ---
 ```
@@ -374,20 +502,52 @@ Rules:
 
 #### Step 5: Assemble
 
-Assemble all assets into the final video via Remotion. This includes clipping, concatenation, and compositing.
+Assemble all assets into the final video via Remotion. This step reads the shot deck's Effect, SFX, and Flash columns and maps them to Remotion components.
 
-1. Read the shot deck for exact timing and order.
+1. Read the shot deck for exact timing, order, effects, SFX, and flash transitions.
 2. Map each generated image/video to its slot in the timeline.
-3. **Clip existing footage** if the shot deck references real video files:
-   - Use Remotion's `<OffthreadVideo>` with `startFrom` and `endAt` props to extract specific time ranges.
-   - Example: `<OffthreadVideo src="raw-footage.mp4" startFrom={300} endAt={600} />` extracts frames 300-600.
-4. **Concatenate clips** using Remotion's `<Series>` component to play clips sequentially.
-5. Sync to voiceover audio.
-6. Add text overlays if specified in the shot deck.
-7. Add Ken Burns effect (slow zoom/pan) on static images for motion using `interpolate()` and `useCurrentFrame()`.
-8. Add transitions between clips if requested using `@remotion/transitions` (`fade`, `slide`, `wipe`).
-9. Write the Remotion composition code at content-studio/ (outside the vault).
-10. Render a draft preview (720p fast render).
+3. **Generate shot manifest JSON** from the shot deck:
+   ```json
+   {
+     "fps": 30,
+     "durationInFrames": 450,
+     "shots": [
+       {
+         "id": 1,
+         "src": "shot-01.png",
+         "startFrame": 0,
+         "durationFrames": 60,
+         "effect": "SlamIn",
+         "sfx": "whoosh",
+         "flash": true,
+         "textOverlay": "The market just shifted.",
+         "trackDir": "left"
+       }
+     ],
+     "voiceover": "voiceover.mp3",
+     "music": "ambient-dark.mp3",
+     "musicVolume": 0.15
+   }
+   ```
+4. **Clip existing footage** if the shot deck references real video files:
+   - Use Remotion's `<OffthreadVideo>` with `startFrom` and `endAt` props.
+5. **Apply effects per shot** using Remotion components:
+   - `PunchZoom`: `interpolate(frame, [0, 5, 10], [1, 1.15, 1])` on `scale` transform
+   - `SlamIn`: `interpolate(frame, [0, 8], [1.3, 1], {extrapolateRight: 'clamp'})` with easeOut
+   - `CameraShake`: Random `translateX/Y` offset ±3-5px for 15 frames
+   - `CameraTrack`: `interpolate(frame, [0, durationFrames], [0, -30])` on `translateX`
+   - `KenBurns`: `interpolate(frame, [0, durationFrames], [1, 1.08])` on `scale`
+   - `FlashTransition`: White overlay div, opacity `interpolate(frame, [0, 3], [1, 0])`
+   - `LoopFade`: `0.85 + 0.15 * Math.sin(frame * 0.1)` on opacity
+6. **Place SFX per shot** using `<Audio>` components:
+   - Each SFX file plays at the shot's `startFrame`
+   - SFX volume: 0.7 (below voiceover at 1.0, above music at 0.15)
+   - SFX files stored in `content-studio/public/sfx/` (whoosh.mp3, bass-hit.mp3, riser.mp3, glitch.mp3, coin-drop.mp3, notification.mp3)
+7. Sync to voiceover audio.
+8. Add text overlays with AnimatedCaptions if specified.
+9. Add background music at 15% volume, ducking under voiceover.
+10. Write the Remotion composition that reads the shot manifest via `inputProps`.
+11. Render a draft preview (720p fast render).
 
 Output:
 ```
@@ -395,23 +555,30 @@ ASSEMBLY
 ---
 Timeline: [total duration]
 Shots mapped: [number]
-Clips extracted: [number of clips cut from existing footage]
+Effects applied: [list of effects used and count]
+SFX placed: [number of SFX cues]
+Flash transitions: [number]
 Voiceover synced: [yes/no]
 Text overlays: [number]
-Transitions: [number and types used]
+Shot manifest: content-studio/public/[project-name]/manifest.json
 Remotion project: content-studio/src/[project-name]/
 Draft render: content-studio/out/[project-name]-draft.mp4
 ---
 ```
 
 Rules:
-- Hard cuts only by default. Use `@remotion/transitions` (fade, slide, wipe) ONLY when explicitly requested.
+- EVERY shot must have an effect from the shot deck — no raw static placement.
+- FlashTransition between major sections (hook→setup, setup→body, body→CTA).
+- PunchZoom on reveals and bold claims. SlamIn on titles and stats.
+- KenBurns is the minimum for any static image — stills without motion look dead.
+- SFX on at least 60% of shots. Silence is intentional, not default.
+- Music at 15% volume, auto-duck under voiceover to 5%.
 - Every image must fill the full frame. No letterboxing, no padding.
 - Sync cuts to voiceover beats. Each new sentence = a new shot.
 - Text overlays: bold, high contrast, readable on mobile, never in top-right corner.
 - For clipping: use `startFrom`/`endAt` on `<OffthreadVideo>` — never re-encode source files manually.
 - Export both draft (720p) and final (1080p) versions.
-- Save the Remotion project file for future edits.
+- Save the shot manifest JSON for the composition to read via `inputProps`.
 
 **Ask: "Approve, adjust, or ready to render final?"**
 
@@ -423,34 +590,137 @@ Render the final 1080p video.
 2. Render at full quality: 1080x1920, 30fps, H.264 MP4, AAC 256kbps audio.
 3. Save to content-studio/out/[project-name]-final.mp4
 
+## VIDEO CONTENT GATE (NON-NEGOTIABLE)
+
+**HARD REQUIREMENT: Before producing ANY video output (script, shot list, storyboard, art direction, or full pipeline), you MUST complete ALL 4 checks below. If any check is missing, the output is INVALID and must be rejected.**
+
+| # | Check | Source File | Required Output |
+|---|-------|-------------|-----------------|
+| 1 | Text hook selected | `02-Hooks/hook-index.md` | H-XXX ID in frontmatter `hook_used` |
+| 2 | Visual hook selected | `02-Hooks/visual-hook-index.md` | V-XXX ID in frontmatter `visual_hook` + Shot 1 scene description |
+| 3 | Psychological structure selected | `05-Frameworks/psychological-structure-index.md` | PS-XXX ID in frontmatter `structure` + timeline used as shot deck skeleton |
+| 4 | Delivery style selected | `06-Delivery/talking-head-style-index.md` | TH-XXX ID in frontmatter `delivery_style` + camera/energy notes per scene |
+
+**Enforcement rules:**
+- If `visual_hook` is "none" on any video content → STOP. Go back and select one.
+- If `structure` is "none" on any video content → STOP. Go back and select one.
+- If `delivery_style` is "none" on any video content → STOP. Go back and select one.
+- If PRODUCTION NOTES at the end of the script do not contain all 4 IDs (H-XXX, V-XXX, PS-XXX, TH-XXX) → the script is incomplete.
+- This gate applies to EVERY video output, no exceptions, no shortcuts, no "I'll add it later."
+- Generic camera directions like "face fills frame" are NEVER acceptable when scored visual hooks exist in visual-hook-index.md.
+
+## MULTI-HOOK SCRIPT ARCHITECTURE
+
+Every video script MUST use this 5-point hook structure. A single opening hook is not enough. The script must re-hook the viewer at every drop-off point.
+
+### Hook Point 1: OPENING HOOK (0-3s)
+- **Text:** From hook-index.md (highest scored match, selected per Step 3)
+- **Visual:** From visual-hook-index.md (highest scored match, selected per Step 3B). Must be the most visually striking moment.
+- **Delivery:** From talking-head-style-index.md (energy + camera setup, selected per Step 3D)
+- This is the only hook point that pulls from the indexes.
+
+### Hook Point 2: RE-HOOK 1 (3-7s)
+- **Text:** Escalation, contradiction, or new open loop. Generated fresh for this specific script topic. Must contain a specific claim, number, name, or provocation.
+- **Visual:** MANDATORY camera/angle change from opening shot. Different framing, distance, or angle.
+
+### Hook Point 3: RE-HOOK 2 (7-15s)
+- **Text:** Stakes raise or unexpected turn. Generated fresh.
+- **Visual:** New visual element introduced. Screen recording, b-roll insert, text overlay with key number, prop reveal, or scene change.
+
+### Hook Point 4: RETENTION HOOK (midpoint)
+- **Text:** Pattern interrupt that re-engages viewers about to drop. Generated fresh. Topic-specific, not generic.
+- **Visual:** Energy shift. Change pace, lighting, location, or add split screen.
+
+### Hook Point 5: PAYOFF HOOK (final 3-5s)
+- **Text:** Drives specific action (comment, save, share, follow). The CTA itself must be hooked.
+- **Visual:** Most dynamic shot of the entire video. Fast cuts, text overlay summary, or close-up with highest energy.
+
+### RE-HOOK GENERATION RULES
+1. OPENING HOOK (Point 1) from hook-index.md. ALL RE-HOOKS (Points 2-5) GENERATED FRESH per script.
+2. Re-hooks based on: the specific topic, the psychological structure's emotional arc, Big Quiv's brand voice (polarizing, identity-challenging, specific numbers, common enemy naming).
+3. Visual hooks at re-hook points based on: strongest camera contrast with previous shot, on-screen evidence/proof for the topic.
+4. NEVER reuse the same re-hook phrase across scripts.
+5. NEVER use generic transitional phrases. Every re-hook must contain a specific claim, number, name, or provocation.
+6. No two consecutive hook points use the same camera angle or shot type.
+7. Minimum distinct camera setups: 3 per 30s video, 5 per 60s video.
+
+### VISUAL VERIFICATION (REQUIRED before output)
+After completing the shot deck or script, verify:
+1. Every hook point has a visual change (different framing, angle, or scene from the previous hook point).
+2. If any hook point has the same framing as the previous one, flag it and suggest an alternative from visual-hook-index.md.
+3. Count distinct camera setups. If below minimum (3 per 30s, 5 per 60s), add setups until met.
+
+## Content Type Definitions
+
+**Content types and mix ratios are defined in CLAUDE.md (single source of truth).** Reference: 35% Personality/Story | 26% Value/Education | 20% Authority/Transformation/Sales | 8% Promo | 6% Community | 3% Engagement/Memes | 2% Hot Takes
+
+**Daily TikTok Rotation:** Morning: Value/Education | Midday: Personality/Story | Afternoon: Authority/Transformation | Evening: Promo or Hot Take
+
+**TikTok Format by Slot:**
+- Morning (Value/Education): Screen record or B-roll + voiceover — teach a tool or workflow
+- Midday (Personality/Story): Talking head — Big Quiv on camera, first person
+- Afternoon (Authority/Transformation): B-roll + voiceover or talking head — show receipts, proof, results
+- Evening (Promo or Hot Take): Quick clip (15s) — bold claim or direct offer
+
+**Content Structure Types:** Visual Explainer, Tactical, Problem Solver, Authority, Complete Thought/Story, Promo/CTA
+
+**RULE: Before scripting any video, state:**
+1. Content type (Personality/Story, Value/Education, Authority/Transformation/Sales, Promo, Community, Engagement/Memes, Hot Take)
+2. Platform and format
+3. Structure type (from psychological-structure-index.md)
+4. Which daily slot it fills
+
+If these 4 are not defined, stop and ask before scripting.
+
 ## OUTPUT FORMAT (Mode 1)
 ```
 # VIDEO SCRIPT: [Title]
 Platform: [TikTok / Reels / Shorts]
 Target Length: [30s / 45s / 60s]
 Tone: [educational / hype / story / controversial]
+Indexes: Hook [H-XXX] | Visual [V-XXX] | Structure [PS-XXX] | Delivery [TH-XXX]
+Camera setups: [count] distinct angles
 
-## HOOK (0-3s)
+## HOOK POINT 1 — OPENING HOOK (0-3s)
+Spoken: "[exact words — from hook-index.md H-XXX adapted to topic]"
+On-screen text: "[max 4 words]"
+Visual: [from visual-hook-index.md V-XXX: camera setup, scene, framing]
+Delivery: [from talking-head-style-index.md TH-XXX: energy, camera angle]
+Editing note: [effect: SlamIn/PunchZoom + SFX]
+
+## HOOK POINT 2 — RE-HOOK 1 (3-7s)
+Spoken: "[exact words — escalation/contradiction/open loop, generated fresh]"
+On-screen text: "[if any]"
+Visual: [DIFFERENT angle from Point 1 + scene description]
+Editing note: [camera change type + effect]
+
+## HOOK POINT 3 — RE-HOOK 2 (7-15s)
+Spoken: "[exact words — stakes raise/unexpected turn, generated fresh]"
+On-screen text: "[if any]"
+Visual: [new element: screen recording, b-roll, number overlay, prop, scene change]
+Editing note: [transition + effect]
+
+## BODY (15s-midpoint)
+Spoken: "[exact words — break into beats, one sentence per cut]"
+On-screen text: "[key phrases]"
+Visual: [per-sentence visual direction]
+
+## HOOK POINT 4 — RETENTION HOOK (midpoint)
+Spoken: "[exact words — pattern interrupt, generated fresh, topic-specific]"
+On-screen text: "[if any]"
+Visual: [energy shift: pace change, lighting, location, split screen]
+Editing note: [contrast with previous section]
+
+## BODY (midpoint-final 5s)
 Spoken: "[exact words]"
-On-screen text: "[text overlay]"
-Visual: [what the viewer sees]
-Editing note: [fast zoom, jump cut, face-to-camera, etc.]
+On-screen text: "[key phrases]"
+Visual: [per-sentence visual direction]
 
-## SETUP (3-10s)
-Spoken: "[exact words]"
-On-screen text: "[text overlay if any]"
-Visual: [B-roll or camera angle]
-
-## BODY (10-40s)
-Spoken: "[exact words - break into beats]"
-On-screen text: "[key phrases to highlight]"
-Visual: [screen recording, B-roll, charts, etc.]
-Editing note: [pacing, transitions]
-
-## CTA (last 3-5s)
-Spoken: "[exact words]"
-On-screen text: "[text overlay]"
-Visual: [point to screen, link in bio gesture, etc.]
+## HOOK POINT 5 — PAYOFF HOOK (final 3-5s)
+Spoken: "[exact words — hooked CTA, generated fresh]"
+On-screen text: "[key takeaway overlay]"
+Visual: [most dynamic shot: fast cuts, summary overlay, close-up high energy]
+Editing note: [final effect + SFX]
 
 ## PRODUCTION NOTES
 - Sound: [trending sound name or "original audio"]
@@ -465,13 +735,87 @@ Visual: [point to screen, link in bio gesture, etc.]
 - Estimated edit time: [15min / 30min / 1hr]
 ```
 
-### SAVING TO NOTION
+### SAVING DRAFTS
 
-1. Write the full script/shot deck/production notes into the "Content" property of the matching Notion entry.
-2. Set "Source Skill" to "Video Editor".
-3. Set "Production Status" based on what was produced: "Script Ready" after Mode 1, advance through the pipeline in Mode 2.
-4. Do NOT change "Status" — it stays "Draft" until @big_quiv approves.
-5. Do NOT save to 06-Drafts/ for Notion-sourced content. Only save to 06-Drafts/ if no matching Notion entry exists.
+**ALWAYS write drafts to 06-Drafts/ with frontmatter. NEVER write directly to Notion "Content" property. Only /publish writes to Notion.**
+
+1. Save the script/shot deck/production notes to `06-Drafts/[date]-video-[topic-slug].md` with this frontmatter:
+   ```
+   ---
+   status: draft
+   platform: [TikTok, Instagram, YouTube]
+   content_type: [TikTok Script, Reel Script, Video - AI Generated, Video - Hybrid, Video - Shoot Myself]
+   goal: [Sales, Reach, Leads, Authority, Community]
+   hook_used: [H-XXX or hook text]
+   visual_hook: [V-XXX]
+   structure: [PS-XXX]
+   delivery_style: [TH-XXX]
+   source_skill: Video Editor
+   notion_id: [page ID if matched from Step 0, otherwise omit]
+   production_status: [Script Ready, AI Assets Needed, Review, Ready to Post]
+   media_dir: [06-Drafts/visuals/project-slug/ — path to generated assets]
+   post_date: [YYYY-MM-DD if known]
+   ---
+   ```
+2. The body below the frontmatter is the full script, shot deck, and production notes.
+3. Visual assets (images, videos, voiceover, manifest) are saved to `06-Drafts/visuals/[project-slug]/` as before.
+4. Do NOT change anything in Notion. The /publish skill handles all Notion writes.
+5. When Mode 2 completes final render, update the draft frontmatter to `production_status: Ready to Post`.
+
+## FALLBACK PROTOCOL — NEVER STOP THE PIPELINE
+
+When any external tool fails, save what you can and continue. Never block the full pipeline because one tool is down.
+
+### FALLBACK F2: fal.ai / Nano Banana unavailable
+If fal.ai returns an error, times out, or credits are exhausted:
+1. Save every image prompt to `06-Drafts/visuals/[slug]/manual-prompts.md` with full prompt text, negative prompt, dimensions, style notes, model ID, and reference image descriptions.
+2. Try Nano Banana MCP `generate_image` as backup (free Gemini generation).
+3. If all generation fails, continue pipeline without images. Use placeholder notes in the shot deck: `[IMAGE PENDING — see manual-prompts.md]`.
+4. Log: "FALLBACK: fal.ai unavailable. Image prompts saved to manual-prompts.md for manual generation."
+5. Add `fallback_used: fal.ai` to draft frontmatter so /approve and /publish know.
+6. Do NOT stop. Continue to voiceover and assembly steps.
+
+### FALLBACK F3: Kling 3.0 unavailable
+If Kling API fails for video generation:
+1. Save all video generation prompts to `06-Drafts/visuals/[slug]/video-prompts.md` with: source keyframe path, motion description, duration, camera movement.
+2. Continue with static images + KenBurns effect for those shots instead of generated video.
+3. Log: "FALLBACK: Kling unavailable. Video prompts saved. Using static images with KenBurns."
+4. Add `fallback_used: kling` to draft frontmatter.
+
+### FALLBACK F4: MiniMax voiceover unavailable
+If MiniMax API fails:
+1. Save the full voiceover script to `06-Drafts/visuals/[slug]/voiceover-script.md` with:
+   - Full marked-up text with [PAUSE], [EMPHASIS], [SLOW], [FAST] markers
+   - Voice profile name, pace, tone, energy level
+   - Estimated duration per section
+   - Recording instructions for manual voiceover
+2. Try ElevenLabs as backup (override foreign-only rule for this failure case).
+3. If all voice generation fails, continue assembly with text-on-screen version (AnimatedCaptions only, no audio VO).
+4. Log: "FALLBACK: MiniMax unavailable. Voiceover script saved for manual recording. Assembly uses text-on-screen."
+5. Add `fallback_used: minimax` to draft frontmatter.
+
+### FALLBACK F5: Remotion unavailable
+If Remotion render fails (project missing, dependency error, render crash):
+1. Save all assets organized in `06-Drafts/visuals/[slug]/assembly-kit/`:
+   - All image/video files numbered in sequence (shot-01.png through shot-XX.png)
+   - Voiceover file (voiceover.mp3)
+   - Shot manifest JSON (manifest.json)
+   - Assembly instructions in `assembly-instructions.md`:
+     - Which image at which timestamp
+     - Effect per shot (PunchZoom, SlamIn, etc.) with manual editing equivalents
+     - SFX cues with timestamps
+     - Text overlay content and positioning
+     - Transition types between sections
+     - Music track and volume levels
+2. Log: "FALLBACK: Remotion unavailable. Assembly kit saved for manual editing in CapCut/Premiere."
+3. Update draft frontmatter: `production_status: Assembly Kit Ready` and `fallback_used: remotion`.
+4. Do NOT mark as failed. The content is still usable — it just needs manual assembly.
+
+### FALLBACK F9: Notion unavailable
+If Notion API is unreachable during any step:
+1. Write all output to `06-Drafts/` with full frontmatter (the SAVING DRAFTS section already handles this).
+2. Log: "FALLBACK: Notion unavailable. Saved locally to 06-Drafts/. Run /publish when restored."
+3. Continue pipeline. Never block on Notion.
 
 ## RULES
 - Hook must work with sound OFF (viewers scroll muted). On-screen text must carry the hook alone.

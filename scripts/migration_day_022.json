@@ -1,0 +1,148 @@
+{
+  "date": "2026-04-22",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 22 - 7AM WAT",
+      "old_entry_title": "[TK-1] Speed run: competitor analysis in 30 seconds",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] Speed run: competitor analysis in 30 seconds",
+        "Notes": "Phase 3 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 22 - 12PM WAT",
+      "old_entry_title": "[TK-2] Let me show you how much you're wasting on content tools.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Let me show you how much you're wasting on content tools.",
+        "Hook Used": "Let me show you how much you're wasting on content tools.",
+        "Notes": "Phase 3 | TK-2 | B-27 | [v1 hook] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 22 - 5PM WAT",
+      "old_entry_title": "[TK-3] The most underrated skill in crypto is __________",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] The most underrated skill in crypto is __________",
+        "Notes": "Phase 3 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 22 - 8PM WAT",
+      "old_entry_title": "[TK-4] I analyzed your favorite KOL's content in 30 seconds",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] I analyzed your favorite KOL's content in 30 seconds",
+        "Notes": "Phase 3 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 22 - 8AM WAT",
+      "old_entry_title": "[IG-1] Content tool cost breakdown: 5 subscriptions vs 1 system",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Content tool cost breakdown: 5 subscriptions vs 1 system",
+        "Notes": "Phase 3 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 22 - 6PM WAT",
+      "old_entry_title": "[IG-2] 30 days. Zero gimmicks. Here's what happened.",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] 30 days. Zero gimmicks. Here's what happened.",
+        "Notes": "Phase 3 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 22 - 9AM WAT",
+      "old_entry_title": "[X-AM] Canva + ChatGPT + Notion + Buffer + VA = $2,558/month. What if one system did al...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] Canva + ChatGPT + Notion + Buffer + VA = $2,558/month. What if one system did al...",
+        "Hook Used": "Canva + ChatGPT + Notion + Buffer + VA = $2,558/month. What if one system did all of it?",
+        "Notes": "Phase 3 | X-AM | B-27 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 22 - 1PM WAT",
+      "old_entry_title": "[X-PM] The most underrated skill in crypto is __________.",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] The most underrated skill in crypto is __________.",
+        "Hook Used": "The most underrated skill in crypto is __________.",
+        "Notes": "Phase 3 | X-PM | B-27 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 22 - 10AM WAT",
+      "old_entry_title": "[LI-1] 30-day recovery: raw numbers from restarting from zero",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] 30-day recovery: raw numbers from restarting from zero",
+        "Notes": "Phase 3 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 22 - 5PM WAT",
+      "old_entry_title": "[LI-2] Live walkthrough: content system that runs itself",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] Live walkthrough: content system that runs itself",
+        "Notes": "Phase 3 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 22 - 9AM WAT",
+    "[TG-2] Apr 22 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

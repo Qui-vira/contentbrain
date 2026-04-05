@@ -75,7 +75,7 @@ Step 1: Read CLAUDE.md for identity, voice, tone, audience, brand, and rules.
 
 Step 2: Identify the topic from my prompt. Use the topic to determine which niche folders to scan in 10-Niche-Knowledge/. If the topic is about trading, read crypto-trading/. If about AI, read artificial-intelligence/. If about Web3, read web3-development/. If about personal brand or storytelling, read personal-brand/. If the topic spans multiple niches, read all relevant folders. Also read 08-Templates/ai-video-production-reference.md when creating AI-generated video content.
 
-Step 3: Scan 02-Hooks/ for every hook file. Find hooks that match the topic. Prioritize hooks tagged "proven" or with high engagement scores. If no hooks match the topic exactly, find the closest ones by category (bold claim, question, story, data-led, contrarian).
+Step 3: Read `02-Hooks/hook-index.md` FIRST — this is the scored, ranked hook database. Follow the selection algorithm exactly: (1) Filter by Goal AND Platform, (2) EXCLUDE any hook with `Last Used` within the last 7 days, (3) Sort remaining by Score descending — prioritize SELF-PROVEN first, then COMPETITOR-PROVEN, then STRONG, (4) Pick the top 3 rotation-safe candidates, (5) Select the one that best matches the specific topic, (6) UPDATE the hook's `Last Used` column to today's date. Never pick below score 40. Adapt the hook — the index entry is a formula, not a final draft.
 
 Step 4: Scan 03-Trends/ for any active trend related to the topic. If the topic IS a trend, use that trend data. If the topic relates to a trend, reference the trend to make the content timely. Also check for trending sounds and formats.
 
@@ -219,11 +219,11 @@ SHOT DECK
 Total duration: [seconds]
 Screen rec: [seconds] ([percentage]%)
 
-| # | Time | Duration | Type | Description | Text overlay |
-|---|------|----------|------|-------------|-------------|
-| 1 | 0:00 | 2s | AI | [detailed visual description] | [if any] |
-| 2 | 0:02 | 1.5s | SCREEN REC | [what's on screen] | |
-| 3 | 0:03 | 2s | AI | [detailed visual description] | |
+| # | Time | Duration | Type | Description | Text overlay | Effect | SFX | Flash |
+|---|------|----------|------|-------------|-------------|--------|-----|-------|
+| 1 | 0:00 | 2s | AI | [detailed visual description] | [if any] | SlamIn | whoosh | yes |
+| 2 | 0:02 | 1.5s | SCREEN REC | [what's on screen] | | KenBurns | — | no |
+| 3 | 0:03 | 2s | AI | [detailed visual description] | | PunchZoom | bass-hit | yes |
 ...
 ---
 ```
@@ -234,11 +234,27 @@ Shot types:
 - `TEXT`: Bold text screen with design treatment
 - `VIDEO`: Real footage or AI-generated video clip
 
+Effect types (maps to Remotion components):
+- `PunchZoom`: Quick scale 1→1.15→1 on beat (bold claims, reveals)
+- `SlamIn`: Scale from 1.3→1 with ease-out (titles, key stats)
+- `CameraShake`: 3-5px random offset for 0.5s (chaos, urgency)
+- `CameraTrack`: Slow drift in one direction (establishing shots)
+- `KenBurns`: Slow zoom 1→1.08 over full shot duration (static images)
+- `FlashTransition`: White flash 0.1s between shots (hard emphasis)
+- `LoopFade`: Pulse opacity (ambient, background elements)
+
+SFX types: `whoosh`, `bass-hit`, `riser`, `glitch`, `coin-drop`, `notification`, `—` (none)
+
 Rules:
 - Screen recordings must not exceed 20% of total duration
 - AI-generated outputs should fill at least 80% of the reel
-- Hard cuts only. No fades, dissolves, or soft transitions
-- First shot must be the strongest visual
+- Every shot MUST have an Effect assigned — no static shots without motion
+- KenBurns is the minimum for any static image
+- PunchZoom on every bold claim or data reveal
+- SlamIn on titles and key statistics
+- FlashTransition between major section changes
+- SFX on at least 60% of shots
+- First shot must be the strongest visual with SlamIn or PunchZoom
 - Rapid montage sequences: 0.5-1.5s per shot for energy
 - Text overlays: bold, readable, max 3-4 words, never in top-right corner (profile zone)
 - Sync shots to voiceover beats. Each new sentence = a new cut
@@ -250,11 +266,48 @@ Rules:
 Generate AI images and videos for each shot in the deck.
 
 1. Read the art direction for palette, mood, and lighting specs.
-2. For each AI shot in the deck, write an optimized prompt.
+2. For each AI shot in the deck, write an optimized prompt using blocks from `08-Templates/prompt-library.md`:
+   - Select **camera angle** block matching the shot's emotional intent (see Camera Angle Selection Guide below)
+   - Select **lighting** block matching the art direction
+   - Select **mood** block matching the scene energy
+   - Select **environment** block matching the setting
+   - Combine with character description from `08-Templates/character-library.md`
+   - Add quality tags and negative prompts from prompt-library.md
 3. Present all prompts for approval before generating.
-4. Generate images via fal.ai (Nano Banana 2, model: fal-ai/nano-banana-pro).
-5. For video shots, generate via fal.ai Kling 3.0 Pro (model: fal-ai/kling-video/v3/pro/image-to-video).
-6. Save outputs to 06-Drafts/visuals/[project-name]/ with shot numbers as filenames.
+4. **Check fal.ai credit balance first.** If credits are available, generate via fal.ai:
+   - Text-only scenes (no reference): `fal-ai/nano-banana-pro`
+   - Scenes with reference images: `fal-ai/nano-banana-pro/edit` (up to 14 refs via `image_urls` param)
+   - Upload local reference images to fal.ai storage first: `fal_client.upload_file(local_path)`
+   - For character consistency, pass the previous shot's output as a reference image to the next shot
+5. **If fal.ai has no credits (manual keyframe mode):**
+   - Still generate all prompts exactly as above (they work in any image generator)
+   - Output a **Keyframe Prompt Sheet** — a numbered list of every shot with its full prompt, camera angle, lighting, and mood
+   - Tell the user: "fal.ai credits exhausted. Use the Keyframe Prompt Sheet to generate images manually in any tool (Midjourney, DALL-E, Ideogram, Leonardo, local Flux, or ChatGPT image gen). Paste each prompt directly."
+   - Save the prompt sheet to `06-Drafts/visuals/[project-name]/keyframe-prompts.md`
+   - The prompts are tool-agnostic — they work in any image generator as-is
+6. For video shots, generate via fal.ai Kling 3.0 Pro (model: fal-ai/kling-video/v3/pro/image-to-video).
+7. Save outputs to 06-Drafts/visuals/[project-name]/ with shot numbers as filenames.
+
+#### Camera Angle Selection Guide
+
+The pipeline selects camera angles based on the **emotional intent** of each shot. This is how angles are chosen:
+
+| Shot Intent | Camera Angle | Why |
+|-------------|-------------|-----|
+| Hook / scroll-stop | Extreme close-up or Low angle | Maximum visual impact, dominance |
+| Bold claim / flex | Low angle (power) | Subject looks dominant, authoritative |
+| Teaching / explaining | Medium shot or Medium close-up | Room for text overlays, approachable |
+| Story / vulnerability | High angle or Close-up | Intimacy, emotional connection |
+| Tension / controversy | Dutch angle | Visual unease matches the content |
+| Demo / showing process | POV first-person or Over-shoulder | Immersive, viewer feels involved |
+| Reveal / surprise | Macro-to-wide reveal | Starts tight, pulls back for context |
+| Before/after comparison | Split screen comparison | Side-by-side visual impact |
+| Establishing / context | Wide / establishing | Sets the scene, shows environment |
+| Transition / breather | Profile / side | Cinematic pause between sections |
+| CTA / closing | Three-quarter or Medium close-up | Editorial, direct, personal |
+| Authority / expert | Close-up + Dramatic side light | Confidence, expertise, credibility |
+
+When building the shot deck, assign camera angles BEFORE writing prompts. Each shot gets exactly one angle from the prompt-library.md table. Vary angles across the video — never use the same angle for 3+ consecutive shots.
 
 Output per shot:
 ```
@@ -262,8 +315,12 @@ SHOT [n]
 ---
 Prompt: [the full generation prompt]
 Negative prompt: [what to avoid]
-Model: [fal-ai/nano-banana-pro or fal-ai/kling-video/v3/pro/image-to-video]
+Model: [fal-ai/nano-banana-pro/edit or fal-ai/nano-banana-pro or fal-ai/kling-video/v3/pro/image-to-video]
+Reference images: [fal.ai storage URLs — upload local files first via fal_client.upload_file()]
 Settings: [aspect ratio: 9:16, guidance scale, steps]
+Effect: [PunchZoom / SlamIn / CameraShake / CameraTrack / KenBurns / FlashTransition / LoopFade]
+SFX: [whoosh / bass-hit / riser / glitch / coin-drop / notification / —]
+Flash: [yes / no]
 Output: [file path]
 ---
 ```
@@ -273,7 +330,7 @@ Rules:
 - Write specific, technical prompts. Include lighting, camera angle, lens, composition
 - Always add "photograph, ultra realistic, editorial quality" for photorealistic shots
 - Include negative prompts: no blurry, no distorted faces, no watermarks, no cartoon style
-- Maintain visual consistency across all shots: same subject description, same lighting setup, same style tags
+- Maintain visual consistency by chaining reference images: pass shot N's output as reference to shot N+1 via `fal-ai/nano-banana-pro/edit`
 - Name files by shot number: shot-01.png, shot-02.png
 - If a generation fails or looks wrong, iterate on the prompt
 
@@ -312,15 +369,19 @@ Rules:
 
 #### Step 5: Assemble
 
-Assemble all assets into the final video via Remotion.
+Assemble all assets into the final video via Remotion. This step reads the shot deck's Effect, SFX, and Flash columns and maps them to Remotion components.
 
-1. Read the shot deck for exact timing and order.
+1. Read the shot deck for exact timing, order, effects, SFX, and flash transitions.
 2. Map each generated image/video to its slot in the timeline.
-3. Sync to voiceover audio.
-4. Add text overlays if specified in the shot deck.
-5. Add Ken Burns effect (slow zoom/pan) on static images for motion.
-6. Write the Remotion composition code at content-studio/ (outside the vault).
-7. Render a draft preview (720p fast render).
+3. Generate a **shot manifest JSON** from the shot deck (see format in ai-video-production-reference.md).
+4. Apply effects per shot using shared Remotion components from `content-studio/src/components/effects.tsx`:
+   - PunchZoom, SlamIn, CameraShake, CameraTrack, KenBurns, FlashTransition, LoopFade
+5. Place SFX per shot using `<Audio>` components (SFX volume 0.7, below voiceover at 1.0, above music at 0.15).
+6. Sync to voiceover audio.
+7. Add text overlays with AnimatedCaptions if word timestamps are available.
+8. Add background music at 15% volume.
+9. Use the `ManifestVideo` composition which reads the manifest via `inputProps`.
+10. Render: `npx remotion render ManifestVideo --props=public/[project-name]/manifest.json`
 
 Output:
 ```
@@ -328,20 +389,29 @@ ASSEMBLY
 ---
 Timeline: [total duration]
 Shots mapped: [number]
+Effects applied: [list of effects used and count]
+SFX placed: [number of SFX cues]
+Flash transitions: [number]
 Voiceover synced: [yes/no]
 Text overlays: [number]
-Remotion project: content-studio/src/[project-name]/
+Shot manifest: content-studio/public/[project-name]/manifest.json
+Remotion composition: ManifestVideo
 Draft render: content-studio/out/[project-name]-draft.mp4
 ---
 ```
 
 Rules:
-- Hard cuts only. No fades, dissolves, or transitions unless explicitly requested
+- EVERY shot must have an effect from the shot deck — no raw static placement
+- FlashTransition between major sections (hook→setup, setup→body, body→CTA)
+- PunchZoom on reveals and bold claims. SlamIn on titles and stats
+- KenBurns is the minimum for any static image
+- SFX on at least 60% of shots. Silence is intentional, not default
+- Music at 15% volume, auto-duck under voiceover
 - Every image must fill the full frame. No letterboxing, no padding
 - Sync cuts to voiceover beats. Each new sentence = a new shot
 - Text overlays: bold, high contrast, readable on mobile, never in top-right corner
 - Export both draft (720p) and final (1080p) versions
-- Save the Remotion project file for future edits
+- Save the shot manifest JSON for the ManifestVideo composition
 
 **Ask: "Approve, adjust, or ready to render final?"**
 

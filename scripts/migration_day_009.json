@@ -1,0 +1,149 @@
+{
+  "date": "2026-04-09",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 9 - 7AM WAT",
+      "old_entry_title": "[TK-1] From 0 to profitable: my actual timeline",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] From 0 to profitable: my actual timeline",
+        "Notes": "Phase 1 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 9 - 12PM WAT",
+      "old_entry_title": "[TK-2] Story time: how I lost $10K in one trade",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Story time: how I lost $10K in one trade",
+        "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 9 - 5PM WAT",
+      "old_entry_title": "[TK-3] The real reason most people fail in crypto",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] The real reason most people fail in crypto",
+        "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 9 - 8PM WAT",
+      "old_entry_title": "[TK-4] Data doesn't lie: what separates winners from losers",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] Data doesn't lie: what separates winners from losers",
+        "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 9 - 8AM WAT",
+      "old_entry_title": "[IG-1] I asked AI to analyze my portfolio. It found 3 things I missed in 2 minutes.",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] I asked AI to analyze my portfolio. It found 3 things I missed in 2 minutes.",
+        "Hook Used": "I asked AI to analyze my portfolio. It found 3 things I missed in 2 minutes.",
+        "Notes": "Phase 1 | IG-1 | A-10 | [DRAFT READY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "High"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 9 - 6PM WAT",
+      "old_entry_title": "[IG-2] Morning routine as a crypto KOL",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Morning routine as a crypto KOL",
+        "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 9 - 9AM WAT",
+      "old_entry_title": "[X-AM] People say AI content is generic slop. They're right — if you use it wrong. Here...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] People say AI content is generic slop. They're right — if you use it wrong. Here...",
+        "Hook Used": "People say AI content is generic slop. They're right — if you use it wrong. Here's the difference.",
+        "Notes": "Phase 1 | X-AM | C-9 | [v1 hook] | v2",
+        "Content Type": "Thread",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 9 - 1PM WAT",
+      "old_entry_title": "[X-PM] 2 weeks back on X. No links. No promos. Just talking. Here's what happened to my...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] 2 weeks back on X. No links. No promos. Just talking. Here's what happened to my...",
+        "Hook Used": "2 weeks back on X. No links. No promos. Just talking. Here's what happened to my numbers.",
+        "Notes": "Phase 1 | X-PM | B-14 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 9 - 10AM WAT",
+      "old_entry_title": "[LI-1] 2 weeks ago I restarted my X account from near-zero engagement. Here are the raw...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] 2 weeks ago I restarted my X account from near-zero engagement. Here are the raw...",
+        "Hook Used": "2 weeks ago I restarted my X account from near-zero engagement. Here are the raw numbers.",
+        "Notes": "Phase 1 | LI-1 | B-14 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 9 - 5PM WAT",
+      "old_entry_title": "[LI-2] Why I evaluate 3 data points instead of 12",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] Why I evaluate 3 data points instead of 12",
+        "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 9 - 9AM WAT",
+    "[TG-2] Apr 9 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

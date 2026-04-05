@@ -1,0 +1,149 @@
+{
+  "date": "2026-06-13",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Jun 13 - 7AM WAT",
+      "old_entry_title": "[TK-1] 6 spots left this month. The old way is overpaying.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] 6 spots left this month. The old way is overpaying.",
+        "Notes": "Phase 6 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Jun 13 - 12PM WAT",
+      "old_entry_title": "[TK-2] Advanced Content Engineering: no replays this time",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Advanced Content Engineering: no replays this time",
+        "Notes": "Phase 6 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Jun 13 - 5PM WAT",
+      "old_entry_title": "[TK-3] Spots are filling. Who's riding with us?",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Spots are filling. Who's riding with us?",
+        "Notes": "Phase 6 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Jun 13 - 8PM WAT",
+      "old_entry_title": "[TK-4] Phase 4 recap: conversion push → community movement",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] Phase 4 recap: conversion push → community movement",
+        "Notes": "Phase 6 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Jun 13 - 8AM WAT",
+      "old_entry_title": "[IG-1] Workshop results + top 3 testimonials from attendees",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Workshop results + top 3 testimonials from attendees",
+        "Hook Used": "Workshop results + top 3 testimonials from attendees",
+        "Notes": "Phase 6 | IG-1 | C-74 | [v1 hook] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Jun 13 - 6PM WAT",
+      "old_entry_title": "[IG-2] Phase 4 highlights: conversion push recap",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Phase 4 highlights: conversion push recap",
+        "Notes": "Phase 6 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Jun 13 - 9AM WAT",
+      "old_entry_title": "[X-AM] Yesterday's workshop: 280 live attendees. 15 signed up on the spot. 40 booked st...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] Yesterday's workshop: 280 live attendees. 15 signed up on the spot. 40 booked st...",
+        "Hook Used": "Yesterday's workshop: 280 live attendees. 15 signed up on the spot. 40 booked strategy calls. Here are 3 messages that came in after.",
+        "Notes": "Phase 6 | X-AM | C-74 | [v1 hook] | v2",
+        "Content Type": "Thread",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Jun 13 - 1PM WAT",
+      "old_entry_title": "[X-PM] 5 strategy call slots left this week. Free 15 minutes. No pitch. Just value. Com...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] 5 strategy call slots left this week. Free 15 minutes. No pitch. Just value. Com...",
+        "Hook Used": "5 strategy call slots left this week. Free 15 minutes. No pitch. Just value. Comment CALL to book.",
+        "Notes": "Phase 6 | X-PM | C-74 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Jun 13 - 10AM WAT",
+      "old_entry_title": "[LI-1] Workshop #2 results: 280 attendees, 15 immediate signups, 40 strategy calls. The...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] Workshop #2 results: 280 attendees, 15 immediate signups, 40 strategy calls. The...",
+        "Hook Used": "Workshop #2 results: 280 attendees, 15 immediate signups, 40 strategy calls. The numbers speak.",
+        "Notes": "Phase 6 | LI-1 | C-74 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Jun 13 - 5PM WAT",
+      "old_entry_title": "[LI-2] User results that speak louder than any demo",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] User results that speak louder than any demo",
+        "Notes": "Phase 6 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Jun 13 - 9AM WAT",
+    "[TG-2] Jun 13 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Set up ManyChat DM automation for Instagram posts. Triggers: set up manychat, create dm automation, keyword automation"
 allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
 ---

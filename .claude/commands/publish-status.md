@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Check status of all content in Notion. Triggers: publish status, what's scheduled, what did I miss"
 allowed-tools: ["Read", "Glob", "mcp__notion__notion-search", "mcp__notion__notion-update-page"]
 ---
@@ -7,7 +8,7 @@ allowed-tools: ["Read", "Glob", "mcp__notion__notion-search", "mcp__notion__noti
 
 ## NOTION CONTENT CALENDAR
 
-Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Database ID: 8f52ebd2efac4eecb05ec4783e924346
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
 This skill reads from the Notion Content Calendar to show content status. Use the database and data source IDs above for all Notion operations.

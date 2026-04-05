@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Run full forex TA scan — all pairs, all timeframes. Generates forex_ta_summary.json. Triggers: '/forex-scan', 'scan forex', 'forex scan all'"
 allowed-tools: ["Bash", "Read"]
 ---

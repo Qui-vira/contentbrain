@@ -1,0 +1,149 @@
+{
+  "date": "2026-04-30",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 30 - 7AM WAT",
+      "old_entry_title": "[TK-1] The math: 1 post → 1 client → $2K. Scale that.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] The math: 1 post → 1 client → $2K. Scale that.",
+        "Notes": "Phase 4 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 30 - 12PM WAT",
+      "old_entry_title": "[TK-2] The time audit challenge: track your content hours",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] The time audit challenge: track your content hours",
+        "Notes": "Phase 4 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 30 - 5PM WAT",
+      "old_entry_title": "[TK-3] Track your content hours this week — report back",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Track your content hours this week — report back",
+        "Notes": "Phase 4 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 30 - 8PM WAT",
+      "old_entry_title": "[TK-4] Web3 projects that grow fastest have the best content systems",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] Web3 projects that grow fastest have the best content systems",
+        "Notes": "Phase 4 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 30 - 8AM WAT",
+      "old_entry_title": "[IG-1] I just pulled your top competitor's content patterns for free. 30 seconds. Watch...",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] I just pulled your top competitor's content patterns for free. 30 seconds. Watch...",
+        "Hook Used": "I just pulled your top competitor's content patterns for free. 30 seconds. Watch.",
+        "Notes": "Phase 4 | IG-1 | C-30 | [v1 hook] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 30 - 6PM WAT",
+      "old_entry_title": "[IG-2] Quote: 'Content Creator vs Content Architect'",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Quote: 'Content Creator vs Content Architect'",
+        "Notes": "Phase 4 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Community Post",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 30 - 9AM WAT",
+      "old_entry_title": "[X-AM] I know exactly what your competitors posted this week, which hooks worked, and w...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] I know exactly what your competitors posted this week, which hooks worked, and w...",
+        "Hook Used": "I know exactly what your competitors posted this week, which hooks worked, and which formats flopped. 30 seconds.",
+        "Notes": "Phase 4 | X-AM | C-30 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 30 - 1PM WAT",
+      "old_entry_title": "[X-PM] A pattern I've noticed: Web3 projects that grow fastest aren't the ones with the...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] A pattern I've noticed: Web3 projects that grow fastest aren't the ones with the...",
+        "Hook Used": "A pattern I've noticed: Web3 projects that grow fastest aren't the ones with the best tech. They're the ones with the best content systems.",
+        "Notes": "Phase 4 | X-PM | C-5 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 30 - 10AM WAT",
+      "old_entry_title": "[LI-1] ROI calculator: content as a revenue engine, not a cost center. The math that ma...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] ROI calculator: content as a revenue engine, not a cost center. The math that ma...",
+        "Hook Used": "ROI calculator: content as a revenue engine, not a cost center. The math that makes content investment a no-brainer.",
+        "Notes": "Phase 4 | LI-1 | C-29 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 30 - 5PM WAT",
+      "old_entry_title": "[LI-2] AI agents are hype. Workflows are money. The data.",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] AI agents are hype. Workflows are money. The data.",
+        "Notes": "Phase 4 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 30 - 9AM WAT",
+    "[TG-2] Apr 30 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

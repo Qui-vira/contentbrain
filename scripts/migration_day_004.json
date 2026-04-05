@@ -1,0 +1,149 @@
+{
+  "date": "2026-04-04",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 4 - 7AM WAT",
+      "old_entry_title": "[TK-1] The 3 tools that replaced my $5K/month content team",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] The 3 tools that replaced my $5K/month content team",
+        "Notes": "Phase 1 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 4 - 12PM WAT",
+      "old_entry_title": "[TK-2] The moment I almost quit crypto forever",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] The moment I almost quit crypto forever",
+        "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 4 - 5PM WAT",
+      "old_entry_title": "[TK-3] The question nobody asks about building in Web3",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] The question nobody asks about building in Web3",
+        "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 4 - 8PM WAT",
+      "old_entry_title": "[TK-4] The framework I use to evaluate any project in 5 min",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] The framework I use to evaluate any project in 5 min",
+        "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 4 - 8AM WAT",
+      "old_entry_title": "[IG-1] 3 tokens the SEC cleared that nobody is watching: AVAX, LINK, DOT.",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] 3 tokens the SEC cleared that nobody is watching: AVAX, LINK, DOT.",
+        "Hook Used": "3 tokens the SEC cleared that nobody is watching: AVAX, LINK, DOT.",
+        "Notes": "Phase 1 | IG-1 | A-4 | [DRAFT READY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "High"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 4 - 6PM WAT",
+      "old_entry_title": "[IG-2] The only 3 indicators you actually need",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] The only 3 indicators you actually need",
+        "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 4 - 9AM WAT",
+      "old_entry_title": "[X-AM] The crypto economy trained traders to watch charts 24/7 when it should have taug...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] The crypto economy trained traders to watch charts 24/7 when it should have taug...",
+        "Hook Used": "The crypto economy trained traders to watch charts 24/7 when it should have taught them to automate.",
+        "Notes": "Phase 1 | X-AM | B-9 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 4 - 1PM WAT",
+      "old_entry_title": "[X-PM] Weekend prep: here's what I'm watching — and what I'm NOT touching.",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] Weekend prep: here's what I'm watching — and what I'm NOT touching.",
+        "Hook Used": "Weekend prep: here's what I'm watching — and what I'm NOT touching.",
+        "Notes": "Phase 1 | X-PM | B-9 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 4 - 10AM WAT",
+      "old_entry_title": "[LI-1] 6 months ago I spent 30 hours/week researching content. This week I spent 3. Her...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] 6 months ago I spent 30 hours/week researching content. This week I spent 3. Her...",
+        "Hook Used": "6 months ago I spent 30 hours/week researching content. This week I spent 3. Here's what changed.",
+        "Notes": "Phase 1 | LI-1 | A-8 | [DRAFT READY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "High"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 4 - 5PM WAT",
+      "old_entry_title": "[LI-2] 58% win rate and still profitable: the math nobody teaches",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] 58% win rate and still profitable: the math nobody teaches",
+        "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 4 - 9AM WAT",
+    "[TG-2] Apr 4 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

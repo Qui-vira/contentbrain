@@ -1,0 +1,147 @@
+{
+  "date": "2026-04-26",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 26 - 7AM WAT",
+      "old_entry_title": "[TK-1] The execution gap: strategy vs system",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] The execution gap: strategy vs system",
+        "Notes": "Phase 4 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 26 - 12PM WAT",
+      "old_entry_title": "[TK-2] Content Creator vs Content Architect",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Content Creator vs Content Architect",
+        "Notes": "Phase 4 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 26 - 5PM WAT",
+      "old_entry_title": "[TK-3] What's the one tool you can't live without?",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] What's the one tool you can't live without?",
+        "Notes": "Phase 4 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 26 - 8PM WAT",
+      "old_entry_title": "[TK-4] Pattern: best creators aren't most talented — most consistent",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] Pattern: best creators aren't most talented — most consistent",
+        "Notes": "Phase 4 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 26 - 8AM WAT",
+      "old_entry_title": "[IG-1] Live build preview: what you'll see Wednesday",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Live build preview: what you'll see Wednesday",
+        "Notes": "Phase 4 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 26 - 6PM WAT",
+      "old_entry_title": "[IG-2] ROI calculator: content as a revenue engine",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] ROI calculator: content as a revenue engine",
+        "Notes": "Phase 4 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 26 - 9AM WAT",
+      "old_entry_title": "[X-AM] Pattern I've noticed: creators who ride trends early don't have better instincts...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] Pattern I've noticed: creators who ride trends early don't have better instincts...",
+        "Hook Used": "Pattern I've noticed: creators who ride trends early don't have better instincts. They have better systems for detecting trends.",
+        "Notes": "Phase 4 | X-AM | C-26 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 26 - 1PM WAT",
+      "old_entry_title": "[X-PM] You spent 6 hours last week planning content. Your competitor spent 15 minutes. ...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] You spent 6 hours last week planning content. Your competitor spent 15 minutes. ...",
+        "Hook Used": "You spent 6 hours last week planning content. Your competitor spent 15 minutes. Same results. That gap is the game now.",
+        "Notes": "Phase 4 | X-PM | C-1 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 26 - 10AM WAT",
+      "old_entry_title": "[LI-1] The content architect vs content creator mindset shift",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] The content architect vs content creator mindset shift",
+        "Notes": "Phase 4 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 26 - 5PM WAT",
+      "old_entry_title": "[LI-2] Content as execution: the missing layer in most strategies",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] Content as execution: the missing layer in most strategies",
+        "Notes": "Phase 4 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 26 - 9AM WAT",
+    "[TG-2] Apr 26 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

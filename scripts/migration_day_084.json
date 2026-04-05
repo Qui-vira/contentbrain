@@ -1,0 +1,149 @@
+{
+  "date": "2026-06-23",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Jun 23 - 7AM WAT",
+      "old_entry_title": "[TK-1] Q3 planning: entire quarter in 30 minutes",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] Q3 planning: entire quarter in 30 minutes",
+        "Notes": "Phase 7 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Jun 23 - 12PM WAT",
+      "old_entry_title": "[TK-2] The community is growing faster than predicted",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] The community is growing faster than predicted",
+        "Notes": "Phase 7 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Jun 23 - 5PM WAT",
+      "old_entry_title": "[TK-3] The best content systems are built by communities",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] The best content systems are built by communities",
+        "Notes": "Phase 7 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Jun 23 - 8PM WAT",
+      "old_entry_title": "[TK-4] 90 days of ContentBrain: the complete results",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] 90 days of ContentBrain: the complete results",
+        "Notes": "Phase 7 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Jun 23 - 8AM WAT",
+      "old_entry_title": "[IG-1] Full stack package: what the AI Marketing Automation includes",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Full stack package: what the AI Marketing Automation includes",
+        "Hook Used": "Full stack package: what the AI Marketing Automation includes",
+        "Notes": "Phase 7 | IG-1 | C-84 | [v1 hook] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Jun 23 - 6PM WAT",
+      "old_entry_title": "[IG-2] User spotlight: AI startup case study",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] User spotlight: AI startup case study",
+        "Notes": "Phase 7 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Jun 23 - 9AM WAT",
+      "old_entry_title": "[X-AM] Content + Video + Community Automation + Lead Funnels. What if one system handle...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] Content + Video + Community Automation + Lead Funnels. What if one system handle...",
+        "Hook Used": "Content + Video + Community Automation + Lead Funnels. What if one system handled all of it? For less than you pay a social media manager.",
+        "Notes": "Phase 7 | X-AM | C-84 | [v1 hook] | v2",
+        "Content Type": "Thread",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Jun 23 - 1PM WAT",
+      "old_entry_title": "[X-PM] The agency equivalent: $15-20K/month. AI Marketing Automation package: $3-5K. Sa...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] The agency equivalent: $15-20K/month. AI Marketing Automation package: $3-5K. Sa...",
+        "Hook Used": "The agency equivalent: $15-20K/month. AI Marketing Automation package: $3-5K. Same output. Better data. No HR.",
+        "Notes": "Phase 7 | X-PM | C-84 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Jun 23 - 10AM WAT",
+      "old_entry_title": "[LI-1] Full stack announcement: AI Marketing Automation — content, video, community, fu...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] Full stack announcement: AI Marketing Automation — content, video, community, fu...",
+        "Hook Used": "Full stack announcement: AI Marketing Automation — content, video, community, funnels, analytics.",
+        "Notes": "Phase 7 | LI-1 | C-84 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Jun 23 - 5PM WAT",
+      "old_entry_title": "[LI-2] AI startup spotlight: zero to 15K followers, 60 days",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] AI startup spotlight: zero to 15K followers, 60 days",
+        "Notes": "Phase 7 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Jun 23 - 9AM WAT",
+    "[TG-2] Jun 23 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

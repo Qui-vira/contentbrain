@@ -1,0 +1,38 @@
+[
+  {
+    "filename": "shot01_scanner_hook.png",
+    "request_id": "019d20fc-5323-7d73-b3a9-ec5883824390",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019d20fc-5323-7d73-b3a9-ec5883824390/status",
+    "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/019d20fc-5323-7d73-b3a9-ec5883824390"
+  },
+  {
+    "filename": "shot02_hook_facecam.png",
+    "request_id": "019d20fc-585d-76b0-951a-e00bdaf0f5fb",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019d20fc-585d-76b0-951a-e00bdaf0f5fb/status",
+    "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/019d20fc-585d-76b0-951a-e00bdaf0f5fb"
+  },
+  {
+    "filename": "shot03_tired_trader_2am.png",
+    "request_id": "019d20fc-5d6b-7f82-98e5-c7f0a0d65825",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019d20fc-5d6b-7f82-98e5-c7f0a0d65825/status",
+    "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/019d20fc-5d6b-7f82-98e5-c7f0a0d65825"
+  },
+  {
+    "filename": "shot04_clean_morning.png",
+    "request_id": "019d20fc-62ab-7250-801d-d123005e6e80",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019d20fc-62ab-7250-801d-d123005e6e80/status",
+    "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/019d20fc-62ab-7250-801d-d123005e6e80"
+  },
+  {
+    "filename": "shot05_telegram_signal.png",
+    "request_id": "019d20fc-67d8-7f11-9676-786ce5c48b0c",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019d20fc-67d8-7f11-9676-786ce5c48b0c/status",
+    "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/019d20fc-67d8-7f11-9676-786ce5c48b0c"
+  },
+  {
+    "filename": "shot06_cta_facecam.png",
+    "request_id": "019d20fc-6d19-7c90-a162-51fa1a436608",
+    "status_url": "https://queue.fal.run/fal-ai/kling-video/requests/019d20fc-6d19-7c90-a162-51fa1a436608/status",
+    "response_url": "https://queue.fal.run/fal-ai/kling-video/requests/019d20fc-6d19-7c90-a162-51fa1a436608"
+  }
+]

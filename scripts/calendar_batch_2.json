@@ -1,0 +1,1402 @@
+[
+  {
+    "properties": {
+      "Title": "[LI-2] Apr 17 - 5PM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-17T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-2] Apr 17 - 5PM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-17T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Apr 17 - 6PM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-17T17:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Apr 17 - 8PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-17T19:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Apr 18 - 7AM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-18T06:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Apr 18 - 8AM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-18T07:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-1] Apr 18 - 9AM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-18T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-1] Apr 18 - 9AM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-18T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Apr 18 - 10AM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-18T09:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Apr 18 - 12PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-18T11:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-2] Apr 18 - 1PM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-18T12:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Apr 18 - 5PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-18T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Apr 18 - 5PM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-18T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-2] Apr 18 - 5PM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-18T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Apr 18 - 6PM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-18T17:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Apr 18 - 8PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-18T19:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Apr 19 - 7AM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-19T06:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Apr 19 - 8AM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-19T07:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-1] Apr 19 - 9AM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-19T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-1] Apr 19 - 9AM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-19T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Apr 19 - 10AM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-19T09:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Apr 19 - 12PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-19T11:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-2] Apr 19 - 1PM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-19T12:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Apr 19 - 5PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-19T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Apr 19 - 5PM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-19T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-2] Apr 19 - 5PM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-19T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Apr 19 - 6PM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-19T17:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Apr 19 - 8PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-19T19:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Apr 20 - 7AM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-20T06:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Apr 20 - 8AM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-20T07:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-1] Apr 20 - 9AM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-20T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-1] Apr 20 - 9AM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-20T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Apr 20 - 10AM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-20T09:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Apr 20 - 12PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-20T11:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-2] Apr 20 - 1PM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-20T12:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Apr 20 - 5PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-20T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Apr 20 - 5PM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-20T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-2] Apr 20 - 5PM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-20T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Apr 20 - 6PM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-20T17:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Apr 20 - 8PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-20T19:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Apr 21 - 7AM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-21T06:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Apr 21 - 8AM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-21T07:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-1] Apr 21 - 9AM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-21T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-1] Apr 21 - 9AM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-21T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Apr 21 - 10AM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-21T09:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Apr 21 - 12PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-21T11:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-2] Apr 21 - 1PM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-21T12:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Apr 21 - 5PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-21T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Apr 21 - 5PM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-21T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-2] Apr 21 - 5PM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-21T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Apr 21 - 6PM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-21T17:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Apr 21 - 8PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-21T19:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Apr 22 - 7AM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-22T06:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Apr 22 - 8AM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-22T07:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-1] Apr 22 - 9AM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-22T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-1] Apr 22 - 9AM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-22T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Apr 22 - 10AM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-22T09:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Apr 22 - 12PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-22T11:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-2] Apr 22 - 1PM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-22T12:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Apr 22 - 5PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-22T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Apr 22 - 5PM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-22T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-2] Apr 22 - 5PM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-22T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Apr 22 - 6PM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-22T17:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Apr 22 - 8PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-22T19:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Apr 23 - 7AM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-23T06:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Apr 23 - 8AM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-23T07:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-1] Apr 23 - 9AM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-23T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-1] Apr 23 - 9AM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-23T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Apr 23 - 10AM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-23T09:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Apr 23 - 12PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-23T11:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-2] Apr 23 - 1PM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-23T12:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Apr 23 - 5PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-23T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Apr 23 - 5PM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-23T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-2] Apr 23 - 5PM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-23T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Apr 23 - 6PM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-23T17:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Apr 23 - 8PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-23T19:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Apr 24 - 7AM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-24T06:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Apr 24 - 8AM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-24T07:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-1] Apr 24 - 9AM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-24T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-1] Apr 24 - 9AM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-24T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Apr 24 - 10AM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-24T09:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Apr 24 - 12PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-24T11:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-2] Apr 24 - 1PM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-24T12:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Apr 24 - 5PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-24T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Apr 24 - 5PM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-24T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-2] Apr 24 - 5PM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-24T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Apr 24 - 6PM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-24T17:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Apr 24 - 8PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-24T19:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-1] Apr 25 - 7AM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-25T06:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-1] Apr 25 - 8AM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-25T07:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-1] Apr 25 - 9AM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-25T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-1] Apr 25 - 9AM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-25T08:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-1] Apr 25 - 10AM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-25T09:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-2] Apr 25 - 12PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-25T11:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[X-2] Apr 25 - 1PM WAT",
+      "Platform": "X/Twitter",
+      "Content Type": "Tweet",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Polarizing Stand",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-25T12:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-3] Apr 25 - 5PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Community",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Hot Take",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-25T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[LI-2] Apr 25 - 5PM WAT",
+      "Platform": "LinkedIn",
+      "Content Type": "LinkedIn Post",
+      "Goal": "Leads",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Story",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-25T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TG-2] Apr 25 - 5PM WAT",
+      "Platform": "Telegram",
+      "Content Type": "Community Post",
+      "Goal": "Authority",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Enemy",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-25T16:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[IG-2] Apr 25 - 6PM WAT",
+      "Platform": "Instagram",
+      "Content Type": "Reel Script",
+      "Goal": "Sales",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Callout",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-25T17:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  },
+  {
+    "properties": {
+      "Title": "[TK-4] Apr 25 - 8PM WAT",
+      "Platform": "TikTok",
+      "Content Type": "TikTok Script",
+      "Goal": "Reach",
+      "Status": "Draft",
+      "Priority": "Normal",
+      "Personality Marker": "Mythology",
+      "Recurring": "One-Time",
+      "date:Post Date:start": "2026-04-25T19:00:00",
+      "date:Post Date:is_datetime": 1
+    }
+  }
+]

@@ -1,0 +1,149 @@
+{
+  "date": "2026-04-14",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 14 - 7AM WAT",
+      "old_entry_title": "[TK-1] The system that replaced my content team",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] The system that replaced my content team",
+        "Notes": "Phase 2 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 14 - 12PM WAT",
+      "old_entry_title": "[TK-2] The day I realized talent doesn't scale — systems do",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] The day I realized talent doesn't scale — systems do",
+        "Notes": "Phase 2 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 14 - 5PM WAT",
+      "old_entry_title": "[TK-3] How many hours/week do you spend on content? Be honest.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] How many hours/week do you spend on content? Be honest.",
+        "Notes": "Phase 2 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 14 - 8PM WAT",
+      "old_entry_title": "[TK-4] The evolution: trader → creator → architect",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] The evolution: trader → creator → architect",
+        "Notes": "Phase 2 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 14 - 8AM WAT",
+      "old_entry_title": "[IG-1] Same person. Different system.",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Same person. Different system.",
+        "Hook Used": "Same person. Different system.",
+        "Notes": "Phase 2 | IG-1 | B-19 | [v1 hook] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 14 - 6PM WAT",
+      "old_entry_title": "[IG-2] AI Agents vs AI Workflows — infographic",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] AI Agents vs AI Workflows — infographic",
+        "Notes": "Phase 2 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 14 - 9AM WAT",
+      "old_entry_title": "[X-AM] Left: my content process 6 months ago. Right: today. Same person. Different arch...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] Left: my content process 6 months ago. Right: today. Same person. Different arch...",
+        "Hook Used": "Left: my content process 6 months ago. Right: today. Same person. Different architecture.",
+        "Notes": "Phase 2 | X-AM | B-19 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 14 - 1PM WAT",
+      "old_entry_title": "[X-PM] Bold call: by end of 2026, every crypto KOL either has an AI content system or t...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] Bold call: by end of 2026, every crypto KOL either has an AI content system or t...",
+        "Hook Used": "Bold call: by end of 2026, every crypto KOL either has an AI content system or they're irrelevant.",
+        "Notes": "Phase 2 | X-PM | B-19 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 14 - 10AM WAT",
+      "old_entry_title": "[LI-1] 6 months ago my content process was a mess. Today it's a machine. Here's the arc...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] 6 months ago my content process was a mess. Today it's a machine. Here's the arc...",
+        "Hook Used": "6 months ago my content process was a mess. Today it's a machine. Here's the architecture I built.",
+        "Notes": "Phase 2 | LI-1 | B-19 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 14 - 5PM WAT",
+      "old_entry_title": "[LI-2] The evolution from creator to content architect",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] The evolution from creator to content architect",
+        "Notes": "Phase 2 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 14 - 9AM WAT",
+    "[TG-2] Apr 14 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

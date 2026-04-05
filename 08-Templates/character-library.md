@@ -24,34 +24,41 @@ For each character in a video:
 
 **Description prompt** (use in every shot featuring this character):
 ```
-African man, confident expression, sharp features, dark premium hoodie, commanding presence, Web3 creator aesthetic
+African man, sharp features, short cropped hair, light goatee, bold square black-frame glasses with blue-light lenses, confident commanding expression, Web3 creator aesthetic
 ```
 
-**Reference images** (add your photos here):
-- Primary face reference: `08-Media/characters/quivira-face-01.jpg` [TO BE ADDED]
-- Full body reference: `08-Media/characters/quivira-full-01.jpg` [TO BE ADDED]
-- Profile reference: `08-Media/characters/quivira-profile-01.jpg` [TO BE ADDED]
+**Reference images** (32 photos, all angles):
 
-**Assigned model for face consistency:**
+| Category | Files | Use For |
+|----------|-------|---------|
+| Extreme close-up | `img_4647.jpg`, `img_4648.jpg`, `img_4652.jpg` | Hook shots, dramatic reveals |
+| Close-up | `img_4649.jpg`, `img_4650.jpg`, `img_4651.jpg` | Authority, talking head, CTA |
+| Medium close-up | `img_4653.jpg`, `img_4654.jpg` | Narration, body shots |
+| Medium shot | `img_4655.jpg`, `img_4671.jpg` | Standard talking head, teaching |
+| Low angle (power) | `img_4656.jpg`, `img_4657.jpg`, `img_4663.jpg`, `img_4664.jpg`, `img_4665.jpg`, `img_4666.jpg`, `img_4667.jpg` | Authority, flex, bold claims |
+| Full body wide | `img_4675.jpg`, `img_4676.jpg`, `img_4677.jpg` | Establishing, wide power |
+| Profile (left) | `img_4673.jpg`, `img_4679.jpg` | Cinematic transitions |
+| Profile (right) | `img_4678.jpg` | Cinematic, opposite direction |
+| Three-quarter | `img_4670.jpg`, `img_4672.jpg` | Editorial, casual |
+| Over-the-shoulder | `img_4668.jpg` | Trading desk, screen scenes |
+| POV first-person | `img_4669.jpg` | Chart analysis, demo energy |
+| Arms crossed | `img_4674.jpg` | Authority, thumbnails |
+| Back of head | `img_4680.jpg` | Mystery reveal, rear shot |
+| Mirror/creative | `img_4660.jpg`, `img_4662.jpg` | Creative angles |
+
+All files at: `08-Media/characters/`
+
+**Primary model (use for ALL character shots):**
+- Model: Nano Banana Pro Edit
+- Model ID: `fal-ai/nano-banana-pro/edit`
+- Input: image_urls=[character reference URL, scene reference URLs] + scene prompt from prompt-library.md blocks
+- IMPORTANT: `fal-ai/nano-banana-pro` (without /edit) is text-only and CANNOT accept reference images. Always use the /edit variant for character shots.
+- Why: Same tool used for backgrounds. Prompt library has all building blocks. No need for extra models.
+
+**Fallback only (if Nano Banana Edit fails at face consistency):**
 - Model: IP-Adapter Face ID
 - Model ID: `fal-ai/ip-adapter-face-id`
 - Input: `face_image_url` → primary face reference above
-- Model type: `SDXL-v2-plus` (best quality)
-
-**Alternative model (for full-body poses):**
-- Model: Instant Character
-- Model ID: `fal-ai/instant-character`
-- Input: `image_url` → full body reference above
-
-**For editing existing shots (keep character, change scene):**
-- Model: FLUX Kontext
-- Model ID: `fal-ai/flux-pro/kontext`
-- Input: `image_url` → the previously generated image to edit
-
-**For swapping face into AI-generated scene:**
-- Model: Face Swap
-- Model ID: `fal-ai/face-swap`
-- Input: source face → primary face reference, target → AI-generated scene image
 
 ### Character Slot 2: [EMPTY]
 
@@ -96,6 +103,21 @@ African man, confident expression, sharp features, dark premium hoodie, commandi
 
 ---
 
+## VISUAL HOOK SCENE TYPES
+
+When generating first-frame scroll-stoppers featuring a character, use these pose + action combinations. Pair with Visual Hook Techniques from prompt-library.md.
+
+| Scene Type | Character Action | Best Camera Angle | Best Lighting |
+|-----------|-----------------|-------------------|---------------|
+| Chart reaction | Looking at screen, intense focus, slight lean forward | Close-up or medium close-up | Screen glow only or neon crypto |
+| Authority reveal | Arms crossed or one hand on chin, direct gaze at camera | Low angle (power) | Red accent (Quivira brand) |
+| Teaching moment | Hand gesturing toward whiteboard or screen annotation | Medium shot or three-quarter | Clean studio or dramatic side light |
+| Trade entry | Hands on keyboard, mid-action, decisive posture | POV first-person or over-the-shoulder | Screen glow + practical lights |
+| Alpha drop | Leaning back in chair, confident smirk, one hand up | Medium wide | Dark-to-spotlight reveal |
+| Pattern interrupt | Unexpected pose or location, breaking the expected frame | Dutch angle (tension) | Split light or silhouette |
+
+---
+
 ## CONSISTENCY RULES
 
 1. **Same character = same reference image** across ALL shots in a video. Never switch reference images mid-project.
@@ -111,6 +133,13 @@ African man, confident expression, sharp features, dark premium hoodie, commandi
 
 ```
 1. Read this file → get character description + reference image path
+1b. Upload the selected reference image(s) to fal.ai storage:
+    ```python
+    import fal_client
+    ref_url = fal_client.upload_file("08-Media/characters/[filename]")
+    ```
+    Use the returned URL in all subsequent fal.ai API calls for this character.
+    fal.ai requires publicly accessible HTTP URLs — local file paths will NOT work.
 2. Read prompt-library.md → get camera angle, lighting, mood, environment blocks
 3. Combine: character description + scene prompt + style modifiers
 4. Select model from this file based on scenario

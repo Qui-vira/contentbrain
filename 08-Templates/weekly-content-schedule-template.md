@@ -76,8 +76,10 @@ Monetization: thread ends with subtle CTA to product or community
 
 ## WEEKLY CHECKLIST
 - [ ] Minimum 1 thread posted
-- [ ] Minimum 2 LinkedIn posts published
-- [ ] Minimum 2 TikTok scripts created
+- [ ] 2 LinkedIn posts this week (Mon + one more)
+- [ ] TikTok: 4 posts/day (28/week minimum)
+- [ ] X/Twitter: 2 posts/day (14/week minimum)
+- [ ] Instagram: 2 posts/day (14/week minimum)
 - [ ] Minimum 1 lead magnet or DM keyword CTA posted
 - [ ] Minimum 2 posts with direct monetization tie-in
 - [ ] Minimum 1 storytime or personal narrative post

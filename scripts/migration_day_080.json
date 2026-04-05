@@ -1,0 +1,148 @@
+{
+  "date": "2026-06-19",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Jun 19 - 7AM WAT",
+      "old_entry_title": "[TK-1] Affiliate Program: 25% recurring commission",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] Affiliate Program: 25% recurring commission",
+        "Notes": "Phase 7 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Jun 19 - 12PM WAT",
+      "old_entry_title": "[TK-2] Web3 gaming spotlight: Discord grew 12K members",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Web3 gaming spotlight: Discord grew 12K members",
+        "Notes": "Phase 7 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Jun 19 - 5PM WAT",
+      "old_entry_title": "[TK-3] Want your project featured? Share your story.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Want your project featured? Share your story.",
+        "Notes": "Phase 7 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Jun 19 - 8PM WAT",
+      "old_entry_title": "[TK-4] ContentBrain by the numbers: 30-day aggregate data report",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] ContentBrain by the numbers: 30-day aggregate data report",
+        "Hook Used": "ContentBrain by the numbers: 30-day aggregate data report",
+        "Notes": "Phase 7 | TK-4 | C-80 | [v1 hook] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Jun 19 - 8AM WAT",
+      "old_entry_title": "[IG-1] Affiliate program: earn 25% recurring",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Affiliate program: earn 25% recurring",
+        "Notes": "Phase 7 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Jun 19 - 6PM WAT",
+      "old_entry_title": "[IG-2] 90-day results: the complete ContentBrain story",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] 90-day results: the complete ContentBrain story",
+        "Notes": "Phase 7 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Jun 19 - 9AM WAT",
+      "old_entry_title": "[X-AM] 30 days of ContentBrain data across all users. Average time saved: 18 hrs/week. ...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] 30 days of ContentBrain data across all users. Average time saved: 18 hrs/week. ...",
+        "Hook Used": "30 days of ContentBrain data across all users. Average time saved: 18 hrs/week. Cost reduction: 62%. Content output: 4.2X increase.",
+        "Notes": "Phase 7 | X-AM | C-80 | [v1 hook] | v2",
+        "Content Type": "Thread",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Jun 19 - 1PM WAT",
+      "old_entry_title": "[X-PM] These numbers are real, from real users, in 30 days. Imagine what 90 days looks ...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] These numbers are real, from real users, in 30 days. Imagine what 90 days looks ...",
+        "Hook Used": "These numbers are real, from real users, in 30 days. Imagine what 90 days looks like.",
+        "Notes": "Phase 7 | X-PM | C-80 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Jun 19 - 10AM WAT",
+      "old_entry_title": "[LI-1] 90 days of ContentBrain: complete results and Q3 roadmap",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] 90 days of ContentBrain: complete results and Q3 roadmap",
+        "Notes": "Phase 7 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Jun 19 - 5PM WAT",
+      "old_entry_title": "[LI-2] User spotlight: DeFi protocol transformation",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] User spotlight: DeFi protocol transformation",
+        "Notes": "Phase 7 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Jun 19 - 9AM WAT",
+    "[TG-2] Jun 19 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

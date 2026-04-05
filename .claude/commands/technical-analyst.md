@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Market scanner, setup finder, signal generator for @big_quiv. Reads pre-computed TA from binance_ta_summary.json (crypto) and forex_ta_summary.json (forex), identifies setups with multi-indicator confluence, generates signals. Triggers: 'scan for setups', 'analyze BTC/USDT', 'scan all pairs', 'find me a trade', 'what setups are there', 'technical analysis on [pair]', 'check [pair] on [timeframe]', 'scan forex', 'analyze EUR/USD'"
 allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
 ---

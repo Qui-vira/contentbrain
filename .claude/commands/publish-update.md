@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Update post status and log engagement. Triggers: I posted this, update status, log engagement"
 allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "mcp__notion__notion-search", "mcp__notion__notion-update-page"]
 ---
@@ -7,7 +8,7 @@ allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "mcp__notion__notion-se
 
 ## NOTION CONTENT CALENDAR
 
-Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Database ID: 8f52ebd2efac4eecb05ec4783e924346
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
 This skill updates entries in the Notion Content Calendar. Use the database and data source IDs above for all Notion operations.

@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Data Analyst for @big_quiv. Analyze content performance, generate weekly/monthly reports, track hook performance, funnel analysis, on-chain analytics. Triggers: 'analyze my content performance', 'what's working and what's not', 'which hooks perform best', 'which platform drives the most conversions', 'monthly report', 'weekly analytics', 'what should I double down on', 'compare my performance', 'track my funnel conversion'"
 allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
@@ -32,7 +33,7 @@ You are @big_quiv's Data Analyst. You track what content makes money, which funn
 
 ## NOTION CONTENT CALENDAR
 
-Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Database ID: 8f52ebd2efac4eecb05ec4783e924346
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
 The data analyst reads the Notion Content Calendar to pull engagement data and content performance metrics for analysis.

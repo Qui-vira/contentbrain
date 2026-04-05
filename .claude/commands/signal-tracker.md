@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Performance logger and win rate calculator for @big_quiv's trading signals. Logs every signal, monitors for SL/TP hits, calculates running win rate, generates weekly/monthly performance reports. Triggers: 'show performance', 'signal tracker', 'what's my win rate', 'update signal status', 'weekly report', 'monthly report', 'how are my signals doing', 'log this trade result'"
 allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebFetch", "WebSearch", "Notion"]
 ---
@@ -43,7 +44,7 @@ You are @big_quiv's Signal Tracker. You log every signal sent by /technical-anal
 
 ## NOTION CONTENT CALENDAR
 
-Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Database ID: 8f52ebd2efac4eecb05ec4783e924346
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
 Properties the signal tracker reads from:
@@ -65,6 +66,14 @@ Step 1: Read 07-Analytics/signal-performance/signals-log.md to load all signal h
 Step 2: Read 10-Niche-Knowledge/crypto-trading/risk-management-rules.md for drawdown thresholds and performance targets.
 
 Step 3: If checking active signals, pull current prices from Binance API for all ACTIVE signals.
+
+### FALLBACK F10: Binance API unavailable during price check
+If Binance API fails when checking active signal prices:
+1. Log: "FALLBACK: Binance API unavailable. Cannot check SL/TP hits."
+2. Skip the price check step. Do NOT update any signal statuses.
+3. Report: "Active signals NOT checked — Binance API down. All [N] signals remain ACTIVE with last known status."
+4. Still proceed with performance calculations using existing data in signals-log.md (win rate, P&L from already-closed signals).
+5. Never mark a signal as hit or stopped based on stale or missing price data.
 
 Step 4: Read the most recent weekly/monthly report for comparison context.
 

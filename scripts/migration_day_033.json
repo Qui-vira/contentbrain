@@ -1,0 +1,148 @@
+{
+  "date": "2026-05-03",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] May 3 - 7AM WAT",
+      "old_entry_title": "[TK-1] Content ROI calculator — the numbers that matter",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] Content ROI calculator — the numbers that matter",
+        "Notes": "Phase 4 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] May 3 - 12PM WAT",
+      "old_entry_title": "[TK-2] Post less, post better — what a quality-first content system actually looks like",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Post less, post better — what a quality-first content system actually looks like",
+        "Hook Used": "Post less, post better — what a quality-first content system actually looks like",
+        "Notes": "Phase 4 | TK-2 | C-33 | [v1 hook] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] May 3 - 5PM WAT",
+      "old_entry_title": "[TK-3] What's the one tool you can't live without?",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] What's the one tool you can't live without?",
+        "Notes": "Phase 4 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] May 3 - 8PM WAT",
+      "old_entry_title": "[TK-4] Pattern: best creators aren't most talented — most consistent",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] Pattern: best creators aren't most talented — most consistent",
+        "Notes": "Phase 4 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] May 3 - 8AM WAT",
+      "old_entry_title": "[IG-1] Live build preview: what you'll see Wednesday",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Live build preview: what you'll see Wednesday",
+        "Notes": "Phase 4 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] May 3 - 6PM WAT",
+      "old_entry_title": "[IG-2] ROI calculator: content as a revenue engine",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] ROI calculator: content as a revenue engine",
+        "Notes": "Phase 4 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] May 3 - 9AM WAT",
+      "old_entry_title": "[X-AM] HubSpot's 2026 report: post less, post better. The creators who win aren't publi...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] HubSpot's 2026 report: post less, post better. The creators who win aren't publi...",
+        "Hook Used": "HubSpot's 2026 report: post less, post better. The creators who win aren't publishing 10 garbage posts/day. They're publishing 2 perfect ones.",
+        "Notes": "Phase 4 | X-AM | C-33 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] May 3 - 1PM WAT",
+      "old_entry_title": "[X-PM] It's 3AM and your competitor just published a post. They didn't write it. They d...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] It's 3AM and your competitor just published a post. They didn't write it. They d...",
+        "Hook Used": "It's 3AM and your competitor just published a post. They didn't write it. They didn't schedule it. Their system did. While they slept.",
+        "Notes": "Phase 4 | X-PM | C-8 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] May 3 - 10AM WAT",
+      "old_entry_title": "[LI-1] The content architect vs content creator mindset shift",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] The content architect vs content creator mindset shift",
+        "Notes": "Phase 4 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] May 3 - 5PM WAT",
+      "old_entry_title": "[LI-2] Content as execution: the missing layer in most strategies",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] Content as execution: the missing layer in most strategies",
+        "Notes": "Phase 4 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] May 3 - 9AM WAT",
+    "[TG-2] May 3 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

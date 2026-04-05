@@ -19,3 +19,29 @@ __pycache__/
 
 # Claude local settings
 .claude/settings.local.json
+
+# Raw scrape/API data (large JSON files that bloat git status)
+*_raw.json
+*_transcripts.json
+*_summary.json
+*_temp.json
+yt_transcript_status.log
+
+# Screenshots and temp images
+screen_*.png
+mc_*.png
+reel_thumbnail.jpg
+
+# Google Cloud SDK (installed tool, not project code)
+google-cloud-sdk/
+
+# YouTube subtitle downloads
+yt_subs/
+
+# Windows installers/artifacts
+uninstaller.exe
+*.ico
+install_mode
+
+# Cloud env scripts
+cloud_env.bat

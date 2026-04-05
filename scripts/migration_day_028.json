@@ -1,0 +1,149 @@
+{
+  "date": "2026-04-28",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 28 - 7AM WAT",
+      "old_entry_title": "[TK-1] One system. All platforms. Zero burnout.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] One system. All platforms. Zero burnout.",
+        "Notes": "Phase 4 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 28 - 12PM WAT",
+      "old_entry_title": "[TK-2] Manual content creation is a tax on your time",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Manual content creation is a tax on your time",
+        "Notes": "Phase 4 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 28 - 5PM WAT",
+      "old_entry_title": "[TK-3] What would you build with 10 extra hours/week?",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] What would you build with 10 extra hours/week?",
+        "Notes": "Phase 4 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 28 - 8PM WAT",
+      "old_entry_title": "[TK-4] The $5K vs $50K creator strategy gap",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] The $5K vs $50K creator strategy gap",
+        "Notes": "Phase 4 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 28 - 8AM WAT",
+      "old_entry_title": "[IG-1] The Disappearance Test — 5 signs your content system depends entirely on YOU",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] The Disappearance Test — 5 signs your content system depends entirely on YOU",
+        "Hook Used": "The Disappearance Test — 5 signs your content system depends entirely on YOU",
+        "Notes": "Phase 4 | IG-1 | C-3 | [v1 hook] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 28 - 6PM WAT",
+      "old_entry_title": "[IG-2] The 5 Frameworks behind every viral post",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] The 5 Frameworks behind every viral post",
+        "Notes": "Phase 4 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 28 - 9AM WAT",
+      "old_entry_title": "[X-AM] ChatGPT is a hammer. You need a house. Here's what happens when you build a cont...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] ChatGPT is a hammer. You need a house. Here's what happens when you build a cont...",
+        "Hook Used": "ChatGPT is a hammer. You need a house. Here's what happens when you build a content strategy with just ChatGPT vs a purpose-built system.",
+        "Notes": "Phase 4 | X-AM | C-28 | [v1 hook] | v2",
+        "Content Type": "Thread",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 28 - 1PM WAT",
+      "old_entry_title": "[X-PM] If you stopped posting for 2 weeks, would your brand survive? If the answer scar...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] If you stopped posting for 2 weeks, would your brand survive? If the answer scar...",
+        "Hook Used": "If you stopped posting for 2 weeks, would your brand survive? If the answer scares you, your content system is broken.",
+        "Notes": "Phase 4 | X-PM | C-3 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 28 - 10AM WAT",
+      "old_entry_title": "[LI-1] ChatGPT is a hammer. Your content strategy needs a house — side-by-side comparis...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] ChatGPT is a hammer. Your content strategy needs a house — side-by-side comparis...",
+        "Hook Used": "ChatGPT is a hammer. Your content strategy needs a house — side-by-side comparison.",
+        "Notes": "Phase 4 | LI-1 | C-28 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 28 - 5PM WAT",
+      "old_entry_title": "[LI-2] Live build: content calendar from zero to scheduled",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] Live build: content calendar from zero to scheduled",
+        "Notes": "Phase 4 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 28 - 9AM WAT",
+    "[TG-2] Apr 28 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "date": "2026-06-21",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Jun 21 - 7AM WAT",
+      "old_entry_title": "[TK-1] Not ready for monthly? One-time build option.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] Not ready for monthly? One-time build option.",
+        "Notes": "Phase 7 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Jun 21 - 12PM WAT",
+      "old_entry_title": "[TK-2] 30-day aggregate data: 18 hrs/week saved, 62% cost down",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] 30-day aggregate data: 18 hrs/week saved, 62% cost down",
+        "Notes": "Phase 7 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Jun 21 - 5PM WAT",
+      "old_entry_title": "[TK-3] Comment NEXT if you're riding into Q3 with us",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Comment NEXT if you're riding into Q3 with us",
+        "Notes": "Phase 7 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Jun 21 - 8PM WAT",
+      "old_entry_title": "[TK-4] 5 content trends about to explode — from 10,000-post analysis",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] 5 content trends about to explode — from 10,000-post analysis",
+        "Hook Used": "5 content trends about to explode — from 10,000-post analysis",
+        "Notes": "Phase 7 | TK-4 | C-82 | [v1 hook] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Jun 21 - 8AM WAT",
+      "old_entry_title": "[IG-1] ContentBrain Community: what's inside",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] ContentBrain Community: what's inside",
+        "Notes": "Phase 7 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Jun 21 - 6PM WAT",
+      "old_entry_title": "[IG-2] DeFi protocol spotlight: 3-month follow-up",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] DeFi protocol spotlight: 3-month follow-up",
+        "Notes": "Phase 7 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Jun 21 - 9AM WAT",
+      "old_entry_title": "[X-AM] ContentBrain analyzed 10,000 posts across Web3 this week. Here are the 5 trends ...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] ContentBrain analyzed 10,000 posts across Web3 this week. Here are the 5 trends ...",
+        "Hook Used": "ContentBrain analyzed 10,000 posts across Web3 this week. Here are the 5 trends about to explode — and exactly how to ride them.",
+        "Notes": "Phase 7 | X-AM | C-82 | [v1 hook] | v2",
+        "Content Type": "Thread",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Jun 21 - 1PM WAT",
+      "old_entry_title": "[X-PM] This report generates automatically every week. ContentBrain users get it in the...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] This report generates automatically every week. ContentBrain users get it in the...",
+        "Hook Used": "This report generates automatically every week. ContentBrain users get it in their inbox every Monday morning.",
+        "Notes": "Phase 7 | X-PM | C-82 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Jun 21 - 10AM WAT",
+      "old_entry_title": "[LI-1] The referral program: reward loyalty, grow together",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] The referral program: reward loyalty, grow together",
+        "Notes": "Phase 7 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Jun 21 - 5PM WAT",
+      "old_entry_title": "[LI-2] From scaling to next level: Q3 preview",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] From scaling to next level: Q3 preview",
+        "Notes": "Phase 7 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Jun 21 - 9AM WAT",
+    "[TG-2] Jun 21 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

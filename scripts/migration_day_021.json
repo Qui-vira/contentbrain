@@ -1,0 +1,149 @@
+{
+  "date": "2026-04-21",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 21 - 7AM WAT",
+      "old_entry_title": "[TK-1] ContentBrain first look — raw, unfiltered demo",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] ContentBrain first look — raw, unfiltered demo",
+        "Notes": "Phase 3 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 21 - 12PM WAT",
+      "old_entry_title": "[TK-2] Can you guess which post was written by AI?",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Can you guess which post was written by AI?",
+        "Notes": "Phase 3 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 21 - 5PM WAT",
+      "old_entry_title": "[TK-3] End of month challenge: what's your April goal?",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] End of month challenge: what's your April goal?",
+        "Notes": "Phase 3 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 21 - 8PM WAT",
+      "old_entry_title": "[TK-4] You don't need a content team. You need a content system.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] You don't need a content team. You need a content system.",
+        "Notes": "Phase 3 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 21 - 8AM WAT",
+      "old_entry_title": "[IG-1] Why I Built Quivira OS — And What It Replaces",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Why I Built Quivira OS — And What It Replaces",
+        "Hook Used": "Why I Built Quivira OS — And What It Replaces",
+        "Notes": "Phase 3 | IG-1 | A-12 | [DRAFT READY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "High"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 21 - 6PM WAT",
+      "old_entry_title": "[IG-2] Competitor analysis in 30 seconds — live demo",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Competitor analysis in 30 seconds — live demo",
+        "Notes": "Phase 3 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 21 - 9AM WAT",
+      "old_entry_title": "[X-AM] Last week I ran ContentBrain for a DeFi project as a test. 7 days. 21 posts. Bef...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] Last week I ran ContentBrain for a DeFi project as a test. 7 days. 21 posts. Bef...",
+        "Hook Used": "Last week I ran ContentBrain for a DeFi project as a test. 7 days. 21 posts. Before vs after engagement.",
+        "Notes": "Phase 3 | X-AM | B-26 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 21 - 1PM WAT",
+      "old_entry_title": "[X-PM] The best marketing strategy in crypto right now isn't threads or reels. It's sho...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] The best marketing strategy in crypto right now isn't threads or reels. It's sho...",
+        "Hook Used": "The best marketing strategy in crypto right now isn't threads or reels. It's showing up consistently for 30 days. Most can't do it.",
+        "Notes": "Phase 3 | X-PM | B-26 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 21 - 10AM WAT",
+      "old_entry_title": "[LI-1] I ran a 7-day content experiment for a DeFi project. 21 posts. Zero manual writi...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] I ran a 7-day content experiment for a DeFi project. 21 posts. Zero manual writi...",
+        "Hook Used": "I ran a 7-day content experiment for a DeFi project. 21 posts. Zero manual writing. Here are the results.",
+        "Notes": "Phase 3 | LI-1 | B-26 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 21 - 5PM WAT",
+      "old_entry_title": "[LI-2] The tool stack consolidation: 5 subscriptions → 1 system",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] The tool stack consolidation: 5 subscriptions → 1 system",
+        "Notes": "Phase 3 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 21 - 9AM WAT",
+    "[TG-2] Apr 21 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

@@ -236,15 +236,16 @@ Content goal: [which of the 5 goals this trend serves]
 [continue for all 7 days]
 
 ## Posting Schedule
-- X: Daily (Mon-Sun)
-- LinkedIn: Mon, Wed, Fri
-- TikTok: Tue, Thu, Sat (scripts only, editor handles production)
+- TikTok: 4 posts/day
+- X/Twitter: 2 posts/day
+- Instagram: 2 posts/day
+- LinkedIn: 2 posts/week
 ```
 
 ## RULES
 - Never suggest topics outside the niche (Web3, crypto, AI, trading, personal brand, education).
-- Minimum 1 thread per week on X.
-- Minimum 2 LinkedIn posts per week.
+- Minimum 1 thread per week on X. Total X posts: 2/day.
+- LinkedIn: exactly 2 posts/week.
 - Always use the Callout-Flex-Reveal hook formula unless a different proven hook fits better.
 - Result-based content on Mon/Wed/Fri. Lifestyle/story content on Tue/Thu. Weekend: memes, hot takes, engagement bait.
 - At least 2 posts per week must tie to a monetization goal (Hustler's Krib Signal, course, affiliate, brand deal).

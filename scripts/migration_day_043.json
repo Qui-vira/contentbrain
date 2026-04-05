@@ -1,0 +1,148 @@
+{
+  "date": "2026-05-13",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] May 13 - 7AM WAT",
+      "old_entry_title": "[TK-1] TikTok scripts in 32 seconds. Full hooks + CTAs.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] TikTok scripts in 32 seconds. Full hooks + CTAs.",
+        "Notes": "Phase 5 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] May 13 - 12PM WAT",
+      "old_entry_title": "[TK-2] The real cost breakdown: your current stack vs one system. Calculator on screen.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] The real cost breakdown: your current stack vs one system. Calculator on screen.",
+        "Hook Used": "The real cost breakdown: your current stack vs one system. Calculator on screen.",
+        "Notes": "Phase 5 | TK-2 | C-43 | [v1 hook] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] May 13 - 5PM WAT",
+      "old_entry_title": "[TK-3] Saturday morning vibes — what are you creating?",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Saturday morning vibes — what are you creating?",
+        "Notes": "Phase 5 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] May 13 - 8PM WAT",
+      "old_entry_title": "[TK-4] Most Web3 projects never study competitor content",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] Most Web3 projects never study competitor content",
+        "Notes": "Phase 5 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] May 13 - 8AM WAT",
+      "old_entry_title": "[IG-1] Day in my life: automated content creator",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Day in my life: automated content creator",
+        "Notes": "Phase 5 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] May 13 - 6PM WAT",
+      "old_entry_title": "[IG-2] Quote: 'Saturday morning. Zero content stress.'",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Quote: 'Saturday morning. Zero content stress.'",
+        "Notes": "Phase 5 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Community Post",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] May 13 - 9AM WAT",
+      "old_entry_title": "[X-AM] I added up what the average Web3 project spends on content. Then compared it to ...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] I added up what the average Web3 project spends on content. Then compared it to ...",
+        "Hook Used": "I added up what the average Web3 project spends on content. Then compared it to ContentBrain. The numbers aren't even close.",
+        "Notes": "Phase 5 | X-AM | C-43 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] May 13 - 1PM WAT",
+      "old_entry_title": "[X-PM] The creator who posts 3X more than you isn't grinding harder. They stopped doing...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] The creator who posts 3X more than you isn't grinding harder. They stopped doing...",
+        "Hook Used": "The creator who posts 3X more than you isn't grinding harder. They stopped doing manually what a system handles in seconds.",
+        "Notes": "Phase 5 | X-PM | C-19 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] May 13 - 10AM WAT",
+      "old_entry_title": "[LI-1] Workshop announcement: content engine in 45 minutes",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] Workshop announcement: content engine in 45 minutes",
+        "Notes": "Phase 5 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] May 13 - 5PM WAT",
+      "old_entry_title": "[LI-2] Workshop recap: 6 takeaways from 300 attendees",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] Workshop recap: 6 takeaways from 300 attendees",
+        "Notes": "Phase 5 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] May 13 - 9AM WAT",
+    "[TG-2] May 13 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

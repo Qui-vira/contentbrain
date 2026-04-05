@@ -1,0 +1,147 @@
+{
+  "date": "2026-04-29",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 29 - 7AM WAT",
+      "old_entry_title": "[TK-1] How to turn content into a $10K/month income engine",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] How to turn content into a $10K/month income engine",
+        "Notes": "Phase 4 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 29 - 12PM WAT",
+      "old_entry_title": "[TK-2] 60 posts/month. 4 platforms. Zero burnout.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] 60 posts/month. 4 platforms. Zero burnout.",
+        "Notes": "Phase 4 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 29 - 5PM WAT",
+      "old_entry_title": "[TK-3] Sunday reset: what's changing this week?",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Sunday reset: what's changing this week?",
+        "Notes": "Phase 4 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 29 - 8PM WAT",
+      "old_entry_title": "[TK-4] 5 content frameworks you need to master",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] 5 content frameworks you need to master",
+        "Notes": "Phase 4 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 29 - 8AM WAT",
+      "old_entry_title": "[IG-1] 47 seconds. 30-day calendar. Timer running.",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] 47 seconds. 30-day calendar. Timer running.",
+        "Notes": "Phase 4 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 29 - 6PM WAT",
+      "old_entry_title": "[IG-2] The Time Audit Challenge — track your content hours",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] The Time Audit Challenge — track your content hours",
+        "Notes": "Phase 4 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 29 - 9AM WAT",
+      "old_entry_title": "[X-AM] If one post brings you one client worth $2,000 and you publish 60 posts/month, h...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] If one post brings you one client worth $2,000 and you publish 60 posts/month, h...",
+        "Hook Used": "If one post brings you one client worth $2,000 and you publish 60 posts/month, how many clients do you need to 10X your content investment?",
+        "Notes": "Phase 4 | X-AM | C-29 | [v1 hook] | v2",
+        "Content Type": "Thread",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 29 - 1PM WAT",
+      "old_entry_title": "[X-PM] A content manager costs $4,000/month. A freelance strategist: $2,000. Most Web3 ...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] A content manager costs $4,000/month. A freelance strategist: $2,000. Most Web3 ...",
+        "Hook Used": "A content manager costs $4,000/month. A freelance strategist: $2,000. Most Web3 projects pay both. What if you needed neither?",
+        "Notes": "Phase 4 | X-PM | C-4 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 29 - 10AM WAT",
+      "old_entry_title": "[LI-1] The brand voice problem most founders ignore",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] The brand voice problem most founders ignore",
+        "Notes": "Phase 4 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 29 - 5PM WAT",
+      "old_entry_title": "[LI-2] 47 seconds to build a 30-day calendar. Implications for brands.",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] 47 seconds to build a 30-day calendar. Implications for brands.",
+        "Notes": "Phase 4 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 29 - 9AM WAT",
+    "[TG-2] Apr 29 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

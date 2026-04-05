@@ -10,6 +10,19 @@
 - [ ] Freebie/lead magnet created (if applicable)
 - [ ] ManyChat or DM automation set up (if applicable)
 - [ ] Captions pre-written for all platforms
+- [ ] Character reference images uploaded to fal.ai storage (public URLs saved)
+- [ ] Art direction reference images sourced and uploaded
+- [ ] Brand reference image (quivira-brand-canonical.png) uploaded and URL cached
+
+## Keyframe Generation
+- [ ] Check fal.ai credit balance before starting
+- [ ] If credits available: generate keyframes via fal.ai pipeline (auto)
+- [ ] If NO credits: use the Keyframe Prompt Sheet from `06-Drafts/visuals/[project]/keyframe-prompts.md`
+- [ ] Manual keyframe tools (when fal.ai is out): Midjourney, DALL-E, Ideogram, Leonardo, local Flux, or ChatGPT image gen
+- [ ] Paste each numbered prompt directly into your chosen tool
+- [ ] Save generated images with matching shot numbers (shot-01.png, shot-02.png, etc.)
+- [ ] Verify camera angles match the shot deck requirements
+- [ ] Check character consistency across all keyframes
 
 ## Production (Shoot Day)
 - [ ] Film studio reel (tripod, lighting, external mic)
@@ -25,6 +38,14 @@
 - [ ] Render carousel slides as images
 - [ ] Export all videos in correct aspect ratios (9:16 for Reels/TikTok/Shorts, 16:9 for YouTube)
 - [ ] Review all outputs for quality
+- [ ] Visual consistency check: character face matches reference in all AI shots
+- [ ] Color/lighting consistency check across all AI-generated frames
+- [ ] Re-generate any inconsistent shots using best shot as reference image
+- [ ] SFX placed at every visual cut point and dramatic moment
+- [ ] Zoom/punch effects applied on dialogue cuts and stat reveals
+- [ ] Flash transitions applied on scene category changes
+- [ ] Camera track drift applied on every shot for organic motion
+- [ ] Pacing verified: cuts match voiceover rhythm
 
 ## Publishing
 - [ ] Day 1: Post cell phone reel (highest organic reach)

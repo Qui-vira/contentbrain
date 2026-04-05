@@ -49,10 +49,13 @@ If unclear which mode, ask: "What do you need? 1) Weekly content plan 2) Creativ
 - 04-Patterns/content-format-comparison.md (which formats to prioritize)
 - 04-Patterns/repurposing-matrix.md (plan repurposing at strategy stage)
 - 08-Templates/metrics-tracking-benchmarks.md (set targets during planning)
+- 02-Hooks/visual-hook-index.md (scored visual hooks for video openers)
+- 05-Frameworks/psychological-structure-index.md (retention structures for script building)
+- 06-Delivery/talking-head-style-index.md (camera setups, energy, delivery modes)
 
 ## NOTION CONTENT CALENDAR
 
-Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Database ID: 8f52ebd2efac4eecb05ec4783e924346
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
 Properties the content strategist reads from:
@@ -104,9 +107,23 @@ Step 0: Search Notion Content Calendar for ALL entries in the requested date ran
 
 Step 1: Read CLAUDE.md for identity, voice, tone, audience, brand, and rules.
 
+Step 1B — PERFORMANCE CONTEXT (for Mode 1 weekly plans):
+Before planning, scan `07-Analytics/` for the latest performance reports:
+1. Glob for `07-Analytics/weekly-report-*.md` and `07-Analytics/monthly-report-*.md`. Read the most recent file of each type.
+2. Also read `02-Hooks/performance-data/weekly-report-*.md` (the latest /score-hooks report) if it exists.
+3. Extract from these reports:
+   - **Top-performing content types** (which formats got best engagement) — double down on these
+   - **Underperforming content types** — reduce or rework these
+   - **Best hooks** (highest engagement) — prioritize these hooks or similar patterns
+   - **Worst hooks** — avoid these or test new angles
+   - **Platform-specific insights** (e.g., "TikTok engagement dropped 20%") — adjust platform mix
+   - **Recommendations section** — treat these as constraints for the new plan
+4. If no reports exist, skip this step silently and plan from vault data alone.
+5. When presenting the weekly plan, note which decisions were informed by performance data: "Based on last week's report: [insight] → [plan decision]"
+
 Step 2: Identify the topic from my prompt. Use the topic to determine which niche folders to scan in 10-Niche-Knowledge/. If the topic is about trading, read crypto-trading/. If about AI, read artificial-intelligence/. If about Web3, read web3-development/. If about personal brand or storytelling, read personal-brand/. If the topic spans multiple niches, read all relevant folders.
 
-Step 3: Scan 02-Hooks/ for every hook file. Find hooks that match the topic. Prioritize hooks tagged "proven" or with high engagement scores. If no hooks match the topic exactly, find the closest ones by category (bold claim, question, story, data-led, contrarian).
+Step 3: Read `02-Hooks/hook-index.md` FIRST — this is the scored, ranked hook database. Follow the selection algorithm exactly: (1) Filter by Goal AND Platform, (2) EXCLUDE any hook with `Last Used` within the last 7 days, (3) Sort remaining by Score descending — prioritize SELF-PROVEN first, then COMPETITOR-PROVEN, then STRONG, (4) Pick the top 3 rotation-safe candidates, (5) Select the one that best matches the specific topic, (6) UPDATE the hook's `Last Used` column to today's date. Never pick below score 40. Adapt the hook — the index entry is a formula, not a final draft.
 
 Step 4: Scan 03-Trends/ for any active trend related to the topic. If the topic IS a trend, use that trend data. If the topic relates to a trend, reference the trend to make the content timely.
 
@@ -175,17 +192,50 @@ Never silently use stale data. Always tell me:
 
 This applies to every skill, every request, every time.
 
+## SMART QUESTIONING PROTOCOL
+
+After mode is selected, gather context. Read the vault and Notion first, then ask ONLY what you can't infer:
+
+**Mode 1 (Weekly Content Plan) — Always ask:**
+1. "Which week?" (date range) — unless obvious from prompt
+2. "Any launches, drops, or events this week?" — to align content with business calendar
+3. "Any topics you specifically want covered?" — unless Notion already has draft entries
+
+**Mode 2 (Creative Brief) — Always ask:**
+1. "What's the topic?" — unless already provided
+2. "What platform and format?" — unless specified
+3. "What's the goal?" (sales, reach, leads, authority, community) — unless in Notion
+
+**Mode 3 (Trend Scout) — Always ask:**
+1. "What niche to scout?" (crypto, AI, trading, personal brand, general) — unless obvious
+
+**Ask when relevant (all modes, expert-level clarity):**
+4. "Any products/offers to weave in this week?" — only if monetization priorities are unclear
+5. "Who are the key audience segments right now?" (beginners vs experienced, traders vs builders, buyers vs free users) — only if the content plan needs to serve multiple segments differently. A full week of advanced trading alpha misses beginner followers. Different segments need different content ratios.
+6. "What are 2-3 competitors posting about this week? What angles are they NOT covering?" — only if planning authority or contrarian content. The biggest opportunity is in the gaps competitors leave open, not in copying their topics.
+7. "Any content to avoid or deprioritize?" — only if there's been recent feedback
+
+**Never ask (auto-decide from strategy system):**
+- Content mix ratio → follows CLAUDE.md: 35% Personality/Story, 26% Value/Education, 20% Authority/Transformation/Sales, 8% Promo, 6% Community, 3% Engagement/Memes, 2% Hot Takes
+- Platform distribution → auto-decide from 04-Patterns/repurposing-matrix.md
+- Posting frequency → fixed standard: TikTok 4x/day, X 2x/day, Instagram 2x/day, LinkedIn 2x/week
+- Hook selection → auto-pull from 02-Hooks/ based on topic + goal
+- Trend alignment → auto-scan 03-Trends/ for active trends
+- Monetization tie-ins → auto-connect based on content pillars from CLAUDE.md
+- Format selection → auto-decide from 07-Analytics/ performance data (what's working)
+- CTA strategy → auto-assign based on goal (saves, leads, sales, etc.)
+
 ## PROCESS
 
 ### Mode 1: Weekly Content Plan (default)
 
 1. Identify the top 3 to 5 trending topics from 03-Trends (prefer "rising" over "peaking").
 2. Check 07-Analytics for which content types and hooks performed best recently.
-3. Match trends with proven hooks from 02-Hooks (prefer hooks tagged "proven" or with engagement scores above 70).
+3. Match trends with top-scoring hooks from `02-Hooks/hook-index.md` — filter by Goal, EXCLUDE hooks used in last 7 days (check `Last Used` column), sort by Score, pick from SELF-PROVEN → COMPETITOR-PROVEN → STRONG tier (score 60+). Update `Last Used` after selection.
 4. Check 05-Frameworks for content structures to use.
 5. Generate a 7-day content plan. Each day gets: platform, topic, hook, format, CTA, and monetization tie-in (if applicable).
-6. Ensure content mix: 60% value/education, 20% personal brand/story, 10% engagement/memes, 10% promotional.
-7. Save the plan to 06-Drafts/content-plan-[date].md
+6. Ensure content mix follows CLAUDE.md: 35% Personality/Story, 26% Value/Education, 20% Authority/Transformation/Sales, 8% Promo, 6% Community, 3% Engagement/Memes, 2% Hot Takes.
+7. Save per SAVING TO NOTION rules: push each planned post as a Notion entry with Status="Draft". Only save to 06-Drafts/content-plan-[date].md if Notion entries could not be created.
 
 ### Mode 2: Creative Brief
 
@@ -211,7 +261,7 @@ Suggested hook: [from 02-Hooks/ or new, following Callout-Flex-Reveal]
 ---
 ```
 
-4. Save to 06-Drafts/brief-[date]-[topic-slug].md
+4. If a matching Notion entry exists, save the brief into the "Notes" field of that entry. Only save to 06-Drafts/brief-[date]-[topic-slug].md if no matching Notion entry was found.
 
 ### Mode 3: Trend Scout
 
@@ -239,15 +289,40 @@ Content goal: [which of the 5 goals this trend serves]
 8. Never propose a topic without a specific angle.
 9. Save findings to 03-Trends/trend-scout-[date].md
 
+## Content Type Definitions
+
+**Content types and mix ratios are defined in CLAUDE.md (single source of truth).** Reference: 35% Personality/Story | 26% Value/Education | 20% Authority/Transformation/Sales | 8% Promo | 6% Community | 3% Engagement/Memes | 2% Hot Takes
+
+**Daily TikTok Rotation:** Morning: Value/Education | Midday: Personality/Story | Afternoon: Authority/Transformation | Evening: Promo or Hot Take
+
+**Formats by Platform:**
+- TikTok/Video: Talking head, Screen record, B-roll + voiceover, Quick clip, Reel, YouTube Short
+- Instagram: Reel, Carousel, Static post, Story, Sidecar
+- X/Twitter: Single tweet, Thread, Quote tweet, Poll
+- LinkedIn: Long-form post, Carousel post, Poll post, Article
+
+**Content Structure Types:** Visual Explainer, Tactical, Problem Solver, Authority, Complete Thought/Story, Promo/CTA
+
+**RULE: Before planning any content piece, state:**
+1. Content type (Personality/Story, Value/Education, Authority/Transformation/Sales, Promo, Community, Engagement/Memes, Hot Take)
+2. Platform and format
+3. Structure type
+4. Which daily slot it fills
+
+If these 4 are not defined, stop and ask before writing.
+
 ## OUTPUT FORMAT
 ```
 # Content Plan: Week of [DATE]
 
 ## Content Mix This Week
-- Value/education: X posts
-- Personal brand/story: X posts
-- Engagement/memes: X posts
-- Promotional: X posts
+- Personality/Story (35%): X posts
+- Value/Education (26%): X posts
+- Authority/Transformation/Sales (20%): X posts
+- Promotional (8%): X posts
+- Community (6%): X posts
+- Engagement/Memes (3%): X posts
+- Hot Takes (2%): X posts
 - Monetization tie-ins: [list which posts link to what]
 
 ## Monday
@@ -266,9 +341,10 @@ Content goal: [which of the 5 goals this trend serves]
 [continue for all 7 days]
 
 ## Posting Schedule
-- X: Daily (Mon-Sun)
-- LinkedIn: Mon, Wed, Fri
-- TikTok: Tue, Thu, Sat (scripts only, editor handles production)
+- TikTok: 4 posts/day
+- X/Twitter: 2 posts/day
+- Instagram: 2 posts/day
+- LinkedIn: 2 posts/week
 ```
 
 ### SAVING TO NOTION
@@ -282,8 +358,8 @@ When creating a weekly content plan:
 
 ## RULES
 - Never suggest topics outside the niche (Web3, crypto, AI, trading, personal brand, education).
-- Minimum 1 thread per week on X.
-- Minimum 2 LinkedIn posts per week.
+- Minimum 1 thread per week on X. Total X posts: 2/day.
+- LinkedIn: exactly 2 posts/week.
 - Always use the Callout-Flex-Reveal hook formula unless a different proven hook fits better.
 - Result-based content on Mon/Wed/Fri. Lifestyle/story content on Tue/Thu. Weekend: memes, hot takes, engagement bait.
 - At least 2 posts per week must tie to a monetization goal (Hustler's Krib Signal, course, affiliate, brand deal).
@@ -320,6 +396,13 @@ During Intelligence Gathering, if the vault does not have enough recent informat
 - Do not replace vault knowledge with web results. Web results supplement the vault.
 - Do not cite unverified sources. If a claim seems unreliable, skip it.
 - Do not search Instagram, LinkedIn, or TikTok (they block automated reading).
+
+## CONTENT PLAN VALIDATION
+
+When reviewing a content plan, verify:
+1. **No visual hook is repeated within 7 days** — check `Last Used` in `02-Hooks/visual-hook-index.md` across all planned video content
+2. **No psychological structure is used on consecutive posts for the same platform** — check PS-XXX assignments in `05-Frameworks/psychological-structure-index.md`
+3. **Delivery style varies across the week's content** — check TH-XXX assignments in `06-Delivery/talking-head-style-index.md`, no same camera + energy combo within 5 days
 
 ## QUALITY CHECK
 - Every post has a hook (from 02-Hooks or new, following Callout-Flex-Reveal).

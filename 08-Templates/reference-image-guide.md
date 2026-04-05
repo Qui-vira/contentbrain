@@ -113,10 +113,29 @@ Model: fal-ai/nano-banana-pro/edit
 Input:
   prompt: "[scene description combining prompt-library blocks]"
   image_urls: [
-    "reference-image-1.jpg",   // environment reference
-    "reference-image-2.jpg",   // lighting/mood reference
-    "character-ref.jpg"        // character reference from character-library
+    "https://fal.ai/storage/...",   // environment reference (uploaded URL)
+    "https://fal.ai/storage/...",   // lighting/mood reference (uploaded URL)
+    "https://fal.ai/storage/..."    // character reference (uploaded URL)
   ]
+```
+
+### Upload Local Files to fal.ai Storage (REQUIRED)
+fal.ai requires publicly accessible HTTP URLs. Local file paths will NOT work.
+
+```python
+import fal_client
+
+# Upload each reference image to get a public URL
+env_url = fal_client.upload_file("08-Media/references/environments/city_night.jpg")
+char_url = fal_client.upload_file("08-Media/characters/img_4649.jpg")
+
+# Use the returned URLs in the API call
+payload = {
+    "prompt": "[scene description]",
+    "image_urls": [env_url, char_url],
+    "image_size": {"width": 1080, "height": 1920},
+}
+result = fal_client.subscribe("fal-ai/nano-banana-pro/edit", arguments=payload)
 ```
 
 The model understands natural language instructions about which reference to use for what. Example prompt:

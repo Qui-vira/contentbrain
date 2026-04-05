@@ -1,0 +1,17 @@
+{
+  "slide1_cover": {
+    "request_id": "019d1725-2696-7153-8020-48cc0a838c53",
+    "status_url": "https://queue.fal.run/fal-ai/nano-banana-pro/requests/019d1725-2696-7153-8020-48cc0a838c53/status",
+    "response_url": "https://queue.fal.run/fal-ai/nano-banana-pro/requests/019d1725-2696-7153-8020-48cc0a838c53"
+  },
+  "slide3_tokens": {
+    "request_id": "019d1725-2ae5-78a1-a669-394165293fa8",
+    "status_url": "https://queue.fal.run/fal-ai/nano-banana-pro/requests/019d1725-2ae5-78a1-a669-394165293fa8/status",
+    "response_url": "https://queue.fal.run/fal-ai/nano-banana-pro/requests/019d1725-2ae5-78a1-a669-394165293fa8"
+  },
+  "slide6_price": {
+    "request_id": "019d1725-2f51-7ea1-8a66-c97effedaf90",
+    "status_url": "https://queue.fal.run/fal-ai/nano-banana-pro/requests/019d1725-2f51-7ea1-8a66-c97effedaf90/status",
+    "response_url": "https://queue.fal.run/fal-ai/nano-banana-pro/requests/019d1725-2f51-7ea1-8a66-c97effedaf90"
+  }
+}

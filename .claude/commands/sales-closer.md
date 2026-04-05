@@ -34,10 +34,11 @@ AI can:
 - CLAUDE.md (offers, pricing, value propositions)
 - 05-Frameworks/ (sales frameworks if any exist)
 - 02-Hooks/ (hooks that work in outbound messaging)
+- 10-Niche-Knowledge/partnerships/crypto-exchange-bd-contacts.csv (BD contacts for partnership outreach)
 
 ## NOTION CONTENT CALENDAR
 
-Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Database ID: 8f52ebd2efac4eecb05ec4783e924346
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
 Properties the sales closer reads from:
@@ -149,6 +150,35 @@ Never silently use stale data. Always tell me:
 
 This applies to every skill, every request, every time.
 
+## SMART QUESTIONING PROTOCOL
+
+Before writing, gather context. Read the vault first, then ask ONLY what you can't infer:
+
+**Always ask (essential):**
+1. "What are we writing?" (DM script, objection handling, brand pitch, follow-up sequence, closing script) — unless obvious from prompt
+2. "What product/offer is this for?" — unless specified in the prompt or Notion
+3. "Who's the target?" (cold lead, warm lead, brand/project, existing customer) — unless obvious from context
+
+**Ask when relevant (expert-level clarity):**
+4. "How warm is this prospect?" (cold stranger, engaged follower, they DM'd first, brand contact) — only if warmth isn't clear from context. A cold lead needs value-first openers. A warm follower can get a compliment + pitch. Someone who DM'd first might respond to a direct offer. The entire opener and flow changes.
+5. "Are you talking to the decision-maker or someone who influences but doesn't decide?" — only if writing brand pitches or high-ticket scripts. If pitching a social media manager who reports to a director, your script should give them talking points to sell upward. If pitching the CEO directly, focus on ROI.
+6. "What specific objections need handling?" — only if writing objection responses
+7. "What's the budget/deal size?" — only if writing brand pitches (affects tone and positioning)
+8. "Are there competitors they could choose instead? What must your DM overcome?" — only if writing cold outreach. In a crowded category (trading signals, courses), the opener must immediately explain differentiation. If you're unique, spend more time educating why they need the category at all.
+
+**Never ask (auto-decide from sales system):**
+- DM length → always under 100 words per message
+- Opener style → auto-select (value-first, compliment, mutual connection, direct) based on target warmth
+- Follow-up timing → auto-set (24hr, 48hr, 5 days, 10 days)
+- Number of follow-ups → auto-set based on lead type (3 for cold, 5 for warm, 2 for brand)
+- Tone → always @big_quiv's voice (confident, direct, never desperate)
+- Qualification questions → auto-include based on offer type
+- Objection framework → auto-apply (acknowledge > reframe > proof > redirect)
+- Urgency language → authentic only (limited spots, deadline, early pricing) — never fake scarcity
+- CTA per message → always exactly one, clear and specific
+- Script flow → auto-structure (opener > qualify > value > soft pitch > handle > close)
+- BANT/SPIN qualification → auto-apply based on deal size (Budget, Authority, Need, Timeline for high-ticket; lighter for low-ticket)
+
 ## PROCESS
 
 ### For DM sales scripts:
@@ -161,7 +191,7 @@ This applies to every skill, every request, every time.
    - Close (specific CTA with payment link or next step)
 2. Write exact messages for each stage.
 3. Write 3 variations of the opener (test different angles).
-4. Save to 06-Drafts/[date]-dm-script-[offer].md
+4. Save per SAVING TO NOTION rules. Only save to 06-Drafts/[date]-dm-script-[offer].md if no matching Notion entry exists.
 
 ### For objection handling:
 1. List the top 10 objections for the specific offer:
@@ -182,13 +212,13 @@ This applies to every skill, every request, every time.
    - Social proof (past brand deals, results, testimonials)
    - CTA (suggest a call or ask for their rate card)
 2. Write the pitch as a DM and as an email version.
-3. Save to 06-Drafts/[date]-brand-pitch-[brand].md
+3. Save per SAVING TO NOTION rules. Only save to 06-Drafts/[date]-brand-pitch-[brand].md if no matching Notion entry exists.
 
 ### For follow-up sequences:
 1. Map the follow-up timeline: Day 1 (initial outreach), Day 3 (value add), Day 7 (soft close), Day 14 (final attempt).
 2. Write a message for each touchpoint.
 3. Each follow-up adds new value (not "just checking in").
-4. Save to 06-Drafts/[date]-followup-sequence-[context].md
+4. Save per SAVING TO NOTION rules. Only save to 06-Drafts/[date]-followup-sequence-[context].md if no matching Notion entry exists.
 
 ## OUTPUT FORMAT
 

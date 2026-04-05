@@ -1,0 +1,148 @@
+{
+  "date": "2026-06-20",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Jun 20 - 7AM WAT",
+      "old_entry_title": "[TK-1] Full stack AI Marketing Automation — everything included",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] Full stack AI Marketing Automation — everything included",
+        "Notes": "Phase 7 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Jun 20 - 12PM WAT",
+      "old_entry_title": "[TK-2] AI startup: zero to 15K followers in 60 days",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] AI startup: zero to 15K followers in 60 days",
+        "Notes": "Phase 7 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Jun 20 - 5PM WAT",
+      "old_entry_title": "[TK-3] Q3 starts in 4 days. What's your plan?",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Q3 starts in 4 days. What's your plan?",
+        "Notes": "Phase 7 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Jun 20 - 8PM WAT",
+      "old_entry_title": "[TK-4] ContentBrain analyzed 10,000 Web3 posts this week",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] ContentBrain analyzed 10,000 Web3 posts this week",
+        "Notes": "Phase 7 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Jun 20 - 8AM WAT",
+      "old_entry_title": "[IG-1] Referral program launch: how it works, step by step",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Referral program launch: how it works, step by step",
+        "Hook Used": "Referral program launch: how it works, step by step",
+        "Notes": "Phase 7 | IG-1 | C-81 | [v1 hook] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Jun 20 - 6PM WAT",
+      "old_entry_title": "[IG-2] 30-day data report: 18 hrs/week saved",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] 30-day data report: 18 hrs/week saved",
+        "Notes": "Phase 7 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Jun 20 - 9AM WAT",
+      "old_entry_title": "[X-AM] Starting today: refer a friend to ContentBrain and get a free month. They get on...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] Starting today: refer a friend to ContentBrain and get a free month. They get on...",
+        "Hook Used": "Starting today: refer a friend to ContentBrain and get a free month. They get onboarded. You get rewarded. Everybody wins.",
+        "Notes": "Phase 7 | X-AM | C-81 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Jun 20 - 1PM WAT",
+      "old_entry_title": "[X-PM] Sunday gratitude: 90 days of building together",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] Sunday gratitude: 90 days of building together",
+        "Notes": "Phase 7 | X-PM | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Jun 20 - 10AM WAT",
+      "old_entry_title": "[LI-1] 30-day data report: 18 hrs/week saved, 62% cost reduction across all users — the...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] 30-day data report: 18 hrs/week saved, 62% cost reduction across all users — the...",
+        "Hook Used": "30-day data report: 18 hrs/week saved, 62% cost reduction across all users — the full breakdown.",
+        "Notes": "Phase 7 | LI-1 | C-80 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Jun 20 - 5PM WAT",
+      "old_entry_title": "[LI-2] Upsell: video production joins the platform",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] Upsell: video production joins the platform",
+        "Notes": "Phase 7 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Jun 20 - 9AM WAT",
+    "[TG-2] Jun 20 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

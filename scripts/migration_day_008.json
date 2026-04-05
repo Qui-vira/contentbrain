@@ -1,0 +1,148 @@
+{
+  "date": "2026-04-08",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 8 - 7AM WAT",
+      "old_entry_title": "[TK-1] My morning as a crypto KOL: wake up → check dashboard → approve signals → done.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] My morning as a crypto KOL: wake up → check dashboard → approve signals → done.",
+        "Hook Used": "My morning as a crypto KOL: wake up → check dashboard → approve signals → done.",
+        "Notes": "Phase 1 | TK-1 | A-9 | [DRAFT READY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "High"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 8 - 12PM WAT",
+      "old_entry_title": "[TK-2] The uncomfortable truth about trading courses",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] The uncomfortable truth about trading courses",
+        "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 8 - 5PM WAT",
+      "old_entry_title": "[TK-3] Crypto truths nobody wants to admit",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Crypto truths nobody wants to admit",
+        "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 8 - 8PM WAT",
+      "old_entry_title": "[TK-4] The only 3 indicators you actually need",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] The only 3 indicators you actually need",
+        "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 8 - 8AM WAT",
+      "old_entry_title": "[IG-1] AI portfolio analysis: 3 things found in 2 minutes",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] AI portfolio analysis: 3 things found in 2 minutes",
+        "Notes": "Phase 1 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 8 - 6PM WAT",
+      "old_entry_title": "[IG-2] Quote: 'Systems, not willpower'",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Quote: 'Systems, not willpower'",
+        "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Community Post",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 8 - 9AM WAT",
+      "old_entry_title": "[X-AM] I'll be honest — I was scared to share my actual win rate. 58%. And I'm still pr...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] I'll be honest — I was scared to share my actual win rate. 58%. And I'm still pr...",
+        "Hook Used": "I'll be honest — I was scared to share my actual win rate. 58%. And I'm still profitable. Here's why.",
+        "Notes": "Phase 1 | X-AM | B-13 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 8 - 1PM WAT",
+      "old_entry_title": "[X-PM] If your 'community' is just a Telegram group where you dump signals and nobody r...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] If your 'community' is just a Telegram group where you dump signals and nobody r...",
+        "Hook Used": "If your 'community' is just a Telegram group where you dump signals and nobody replies — that's not a community.",
+        "Notes": "Phase 1 | X-PM | B-13 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 8 - 10AM WAT",
+      "old_entry_title": "[LI-1] The automation paradox: less effort, better results",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] The automation paradox: less effort, better results",
+        "Notes": "Phase 1 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 8 - 5PM WAT",
+      "old_entry_title": "[LI-2] Risk management isn't a strategy — it's the foundation",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] Risk management isn't a strategy — it's the foundation",
+        "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 8 - 9AM WAT",
+    "[TG-2] Apr 8 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

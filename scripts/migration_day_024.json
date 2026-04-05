@@ -1,0 +1,148 @@
+{
+  "date": "2026-04-24",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 24 - 7AM WAT",
+      "old_entry_title": "[TK-1] Free live demo. 48 hours. 50 spots. Here's what you'll see.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] Free live demo. 48 hours. 50 spots. Here's what you'll see.",
+        "Hook Used": "Free live demo. 48 hours. 50 spots. Here's what you'll see.",
+        "Notes": "Phase 3 | TK-1 | B-29 | [v1 hook] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 24 - 12PM WAT",
+      "old_entry_title": "[TK-2] Why one person + a system beats a 5-person team",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Why one person + a system beats a 5-person team",
+        "Notes": "Phase 3 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 24 - 5PM WAT",
+      "old_entry_title": "[TK-3] 29 days of conversations > 29 days of broadcasts",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] 29 days of conversations > 29 days of broadcasts",
+        "Notes": "Phase 3 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 24 - 8PM WAT",
+      "old_entry_title": "[TK-4] AI content sounds robotic? 73% couldn't tell the difference.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] AI content sounds robotic? 73% couldn't tell the difference.",
+        "Notes": "Phase 3 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 24 - 8AM WAT",
+      "old_entry_title": "[IG-1] Free live walkthrough: content system demo",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Free live walkthrough: content system demo",
+        "Notes": "Phase 3 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 24 - 6PM WAT",
+      "old_entry_title": "[IG-2] 7 days of content. 4 minutes. Timer on screen.",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] 7 days of content. 4 minutes. Timer on screen.",
+        "Notes": "Phase 3 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 24 - 9AM WAT",
+      "old_entry_title": "[X-AM] In 48 hours: free live walkthrough — 'How to Build a Content System That Runs Wi...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] In 48 hours: free live walkthrough — 'How to Build a Content System That Runs Wi...",
+        "Hook Used": "In 48 hours: free live walkthrough — 'How to Build a Content System That Runs Without You.' 45 min. 50 spots.",
+        "Notes": "Phase 3 | X-AM | B-29 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 24 - 1PM WAT",
+      "old_entry_title": "[X-PM] 29 days ago: near-zero engagement. Today: real conversations happening daily. On...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] 29 days ago: near-zero engagement. Today: real conversations happening daily. On...",
+        "Hook Used": "29 days ago: near-zero engagement. Today: real conversations happening daily. Only thing that changed: stopped selling, started talking.",
+        "Notes": "Phase 3 | X-PM | B-29 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 24 - 10AM WAT",
+      "old_entry_title": "[LI-1] Content audits that find what you're missing in seconds",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] Content audits that find what you're missing in seconds",
+        "Notes": "Phase 3 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 24 - 5PM WAT",
+      "old_entry_title": "[LI-2] 7 days of content in 4 minutes: the ContentBrain approach",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] 7 days of content in 4 minutes: the ContentBrain approach",
+        "Notes": "Phase 3 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 24 - 9AM WAT",
+    "[TG-2] Apr 24 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

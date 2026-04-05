@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Send scheduled content from Notion to the correct posting platform. Triggers: post, send to typefully, send to buffer, post now"
 allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "mcp__notion__notion-search", "mcp__notion__notion-update-page"]
 ---
@@ -7,7 +8,7 @@ allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "mcp__notion__n
 
 ## NOTION CONTENT CALENDAR
 
-Database ID: f405e62cf2804e6a8c217ebd2f8f4210
+Database ID: 8f52ebd2efac4eecb05ec4783e924346
 Data Source ID: collection://9081ce06-1802-4b43-a988-62c5e384fcfd
 
 This skill reads scheduled content from the Notion Content Calendar and posts it to platforms. Use the database and data source IDs above for all Notion operations.
@@ -98,8 +99,12 @@ Before posting, check the Notion entry for:
 
 ### For TikTok/Instagram (Buffer):
 - Buffer requires a public media URL, not a local file
-- Upload the media file to fal.ai storage (fal.storage.upload) and get a public URL
-- Pass that URL to Buffer API
+- Upload the media file to fal.ai storage to get a public URL:
+  ```python
+  import fal_client
+  public_url = fal_client.upload_file(local_file_path)
+  ```
+- Pass that public URL to Buffer API
 - For TikTok: video required (no image-only posts)
 - For Instagram Reels: video required
 - For Instagram Feed: image or video
@@ -120,12 +125,74 @@ Before posting, check the Notion entry for:
 - Read the image from the path I give
 - Attach it to the Typefully API call
 
+## FALLBACK PROTOCOL — NEVER STOP THE PIPELINE
+
+### FALLBACK F6: Typefully API unavailable (X/Twitter, LinkedIn)
+If Typefully returns an error or times out:
+1. Save the post text to `06-Drafts/[date]-manual-post-x.md` (for X) or `06-Drafts/[date]-manual-post-linkedin.md` (for LinkedIn) with frontmatter:
+   ```
+   ---
+   status: MANUAL_REQUIRED
+   platform: [X/Twitter or LinkedIn]
+   content_type: [Tweet, Thread, LinkedIn Post]
+   reason: Typefully API unavailable
+   ---
+   ```
+2. Body = full post text, ready to copy-paste into the platform.
+3. For threads: number each tweet clearly (1/, 2/, 3/).
+4. Log to 07-Analytics/posting-log.md: `| [date] | [platform] | [title] | MANUAL_REQUIRED | Typefully down |`
+5. Log: "FALLBACK: Typefully unavailable. Post saved to [filepath] for manual posting."
+6. Continue posting remaining entries on other platforms. Do NOT stop the batch.
+
+### FALLBACK F7: Buffer API unavailable (TikTok, Instagram)
+If Buffer returns an error or times out:
+1. Save caption + media paths to `06-Drafts/[date]-manual-post-tiktok.md` or `06-Drafts/[date]-manual-post-ig.md` with frontmatter:
+   ```
+   ---
+   status: MANUAL_REQUIRED
+   platform: [TikTok or Instagram]
+   content_type: [TikTok Script, Reel Script, Carousel]
+   reason: Buffer API unavailable
+   media_files:
+     - [path to video or image 1]
+     - [path to image 2]
+   ---
+   ```
+2. Body = full caption text + media file paths listed.
+3. Log to 07-Analytics/posting-log.md: `| [date] | [platform] | [title] | MANUAL_REQUIRED | Buffer down |`
+4. Log: "FALLBACK: Buffer unavailable. Caption and media paths saved for manual upload."
+5. Continue posting remaining entries. Do NOT stop the batch.
+
+### FALLBACK F8: Telegram Bot API unavailable
+If Telegram Bot API returns an error or times out:
+1. Save message text to `06-Drafts/[date]-manual-telegram.md` with frontmatter:
+   ```
+   ---
+   status: MANUAL_REQUIRED
+   platform: Telegram
+   content_type: Community Post
+   reason: Telegram Bot API unavailable
+   chat_id: [target chat ID]
+   ---
+   ```
+2. Body = full message text formatted for Telegram (Markdown).
+3. Log to 07-Analytics/posting-log.md: `| [date] | Telegram | [title] | MANUAL_REQUIRED | Telegram API down |`
+4. Log: "FALLBACK: Telegram API unavailable. Message saved for manual send."
+
+### FALLBACK F9: Notion unavailable
+If Notion API is unreachable when reading scheduled content:
+1. Fall back to scanning `06-Drafts/` for files with `status: approved` or `status: synced-to-notion`.
+2. Use frontmatter fields (platform, content_type, post_date) to determine routing.
+3. Log: "FALLBACK: Notion unavailable. Reading from 06-Drafts/ instead."
+4. After posting, update the draft file status to `posted` but skip Notion status update.
+5. Log: "Notion status update pending. Run /publish-update when Notion is restored."
+
 ## RULES
 - Always show list and wait for my selection
 - Never auto-post anything without my approval
 - For video content, check Production Status before attempting to post
-- If an API call fails, show the error and do not update status
-- Log every posting attempt to 07-Analytics/posting-log.md
+- If an API call fails, execute the relevant FALLBACK above instead of stopping
+- Log every posting attempt to 07-Analytics/posting-log.md (including MANUAL_REQUIRED entries)
 
 ## INTERACTION PATTERN
 

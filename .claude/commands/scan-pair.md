@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Scan a single crypto pair across all timeframes. Usage: /scan-pair BTCUSDT. Triggers: '/scan-pair [PAIR]', 'scan BTC', 'scan ETHUSDT'"
 allowed-tools: ["Bash", "Read"]
 ---

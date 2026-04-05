@@ -1,0 +1,148 @@
+{
+  "date": "2026-06-25",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Jun 25 - 7AM WAT",
+      "old_entry_title": "[TK-1] 90-day ContentBrain results: the complete story",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] 90-day ContentBrain results: the complete story",
+        "Notes": "Phase 7 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Jun 25 - 12PM WAT",
+      "old_entry_title": "[TK-2] Phase 5 recap: from scaling to next level",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Phase 5 recap: from scaling to next level",
+        "Notes": "Phase 7 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Jun 25 - 5PM WAT",
+      "old_entry_title": "[TK-3] What feature do you want most in Q3?",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] What feature do you want most in Q3?",
+        "Notes": "Phase 7 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Jun 25 - 8PM WAT",
+      "old_entry_title": "[TK-4] Gaming project: 90 days of automated lore content",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] Gaming project: 90 days of automated lore content",
+        "Notes": "Phase 7 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Jun 25 - 8AM WAT",
+      "old_entry_title": "[IG-1] ContentBrain options: monthly packages vs one-time builds — comparison",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] ContentBrain options: monthly packages vs one-time builds — comparison",
+        "Hook Used": "ContentBrain options: monthly packages vs one-time builds — comparison",
+        "Notes": "Phase 7 | IG-1 | C-86 | [v1 hook] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Jun 25 - 6PM WAT",
+      "old_entry_title": "[IG-2] Gaming project spotlight: 90 days of content",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Gaming project spotlight: 90 days of content",
+        "Notes": "Phase 7 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Jun 25 - 9AM WAT",
+      "old_entry_title": "[X-AM] Not ready for monthly? One-Time Build: I build your complete content system, han...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] Not ready for monthly? One-Time Build: I build your complete content system, han...",
+        "Hook Used": "Not ready for monthly? One-Time Build: I build your complete content system, hand you the keys. Yours forever.",
+        "Notes": "Phase 7 | X-AM | C-86 | [v1 hook] | v2",
+        "Content Type": "Thread",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Jun 25 - 1PM WAT",
+      "old_entry_title": "[X-PM] Drop your Q3 content goal below",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] Drop your Q3 content goal below",
+        "Notes": "Phase 7 | X-PM | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Jun 25 - 10AM WAT",
+      "old_entry_title": "[LI-1] One-Time Build option: custom content system, $2.5K-$15K, documentation included...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] One-Time Build option: custom content system, $2.5K-$15K, documentation included...",
+        "Hook Used": "One-Time Build option: custom content system, $2.5K-$15K, documentation included, yours forever.",
+        "Notes": "Phase 7 | LI-1 | C-86 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Jun 25 - 5PM WAT",
+      "old_entry_title": "[LI-2] One-Time Build: custom system, yours forever",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] One-Time Build: custom system, yours forever",
+        "Notes": "Phase 7 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Jun 25 - 9AM WAT",
+    "[TG-2] Jun 25 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

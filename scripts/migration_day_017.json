@@ -1,0 +1,148 @@
+{
+  "date": "2026-04-17",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 17 - 7AM WAT",
+      "old_entry_title": "[TK-1] I built this in 6 months. Watch what it does.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] I built this in 6 months. Watch what it does.",
+        "Hook Used": "I built this in 6 months. Watch what it does.",
+        "Notes": "Phase 3 | TK-1 | B-22 | [v1 hook] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 17 - 12PM WAT",
+      "old_entry_title": "[TK-2] The tool cost that nobody talks about",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] The tool cost that nobody talks about",
+        "Notes": "Phase 3 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 17 - 5PM WAT",
+      "old_entry_title": "[TK-3] 29 days of conversations > 29 days of broadcasts",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] 29 days of conversations > 29 days of broadcasts",
+        "Notes": "Phase 3 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 17 - 8PM WAT",
+      "old_entry_title": "[TK-4] The competitor analysis framework nobody teaches",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] The competitor analysis framework nobody teaches",
+        "Notes": "Phase 3 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 17 - 8AM WAT",
+      "old_entry_title": "[IG-1] Free live walkthrough: content system demo",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Free live walkthrough: content system demo",
+        "Notes": "Phase 3 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 17 - 6PM WAT",
+      "old_entry_title": "[IG-2] 7 days of content. 4 minutes. Timer on screen.",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] 7 days of content. 4 minutes. Timer on screen.",
+        "Notes": "Phase 3 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 17 - 9AM WAT",
+      "old_entry_title": "[X-AM] For 6 months I've been building an AI content engine in the background. Today I'...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] For 6 months I've been building an AI content engine in the background. Today I'...",
+        "Hook Used": "For 6 months I've been building an AI content engine in the background. Today I'm showing you what it does. No pitch — just the raw output.",
+        "Notes": "Phase 3 | X-AM | B-22 | [v1 hook] | v2",
+        "Content Type": "Thread",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 17 - 1PM WAT",
+      "old_entry_title": "[X-PM] If you could automate ONE thing about your content creation process, what would ...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] If you could automate ONE thing about your content creation process, what would ...",
+        "Hook Used": "If you could automate ONE thing about your content creation process, what would it be?",
+        "Notes": "Phase 3 | X-PM | B-22 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 17 - 10AM WAT",
+      "old_entry_title": "[LI-1] Content audits that find what you're missing in seconds",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] Content audits that find what you're missing in seconds",
+        "Notes": "Phase 3 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 17 - 5PM WAT",
+      "old_entry_title": "[LI-2] 7 days of content in 4 minutes: the ContentBrain approach",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] 7 days of content in 4 minutes: the ContentBrain approach",
+        "Notes": "Phase 3 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 17 - 9AM WAT",
+    "[TG-2] Apr 17 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

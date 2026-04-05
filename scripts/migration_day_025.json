@@ -1,0 +1,149 @@
+{
+  "date": "2026-04-25",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 25 - 7AM WAT",
+      "old_entry_title": "[TK-1] DeFi project test: 21 posts in zero manual minutes",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] DeFi project test: 21 posts in zero manual minutes",
+        "Notes": "Phase 3 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 25 - 12PM WAT",
+      "old_entry_title": "[TK-2] The tool cost that nobody talks about",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] The tool cost that nobody talks about",
+        "Notes": "Phase 3 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 25 - 5PM WAT",
+      "old_entry_title": "[TK-3] Share one win from this week. I'll start.",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Share one win from this week. I'll start.",
+        "Notes": "Phase 3 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 25 - 8PM WAT",
+      "old_entry_title": "[TK-4] The trust objection answered with real data",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] The trust objection answered with real data",
+        "Notes": "Phase 3 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 25 - 8AM WAT",
+      "old_entry_title": "[IG-1] 30 days. Zero gimmicks. Here's what happened.",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] 30 days. Zero gimmicks. Here's what happened.",
+        "Hook Used": "30 days. Zero gimmicks. Here's what happened.",
+        "Notes": "Phase 3 | IG-1 | B-30 | [v1 hook] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 25 - 6PM WAT",
+      "old_entry_title": "[IG-2] Quote: 'One person + the right system beats a 5-person team'",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Quote: 'One person + the right system beats a 5-person team'",
+        "Notes": "Phase 3 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Community Post",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 25 - 9AM WAT",
+      "old_entry_title": "[X-AM] 30 days ago I reset everything. No signals. No links. No reposts. Just conversat...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] 30 days ago I reset everything. No signals. No links. No reposts. Just conversat...",
+        "Hook Used": "30 days ago I reset everything. No signals. No links. No reposts. Just conversations. Here are the real numbers.",
+        "Notes": "Phase 3 | X-AM | B-30 | [v1 hook] | v2",
+        "Content Type": "Thread",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 25 - 1PM WAT",
+      "old_entry_title": "[X-PM] Month 1 was about rebuilding trust with the algorithm. Month 2: scaling what wor...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] Month 1 was about rebuilding trust with the algorithm. Month 2: scaling what wor...",
+        "Hook Used": "Month 1 was about rebuilding trust with the algorithm. Month 2: scaling what works. What topic do you want me to go deep on?",
+        "Notes": "Phase 3 | X-PM | B-30 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 25 - 10AM WAT",
+      "old_entry_title": "[LI-1] 30 days ago I restarted from near-zero engagement. Here are the raw numbers, the...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] 30 days ago I restarted from near-zero engagement. Here are the raw numbers, the...",
+        "Hook Used": "30 days ago I restarted from near-zero engagement. Here are the raw numbers, the lessons, and what's next.",
+        "Notes": "Phase 3 | LI-1 | B-30 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 25 - 5PM WAT",
+      "old_entry_title": "[LI-2] Competitor analysis in 30 seconds — what this means",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] Competitor analysis in 30 seconds — what this means",
+        "Notes": "Phase 3 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 25 - 9AM WAT",
+    "[TG-2] Apr 25 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

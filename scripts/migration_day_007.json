@@ -1,0 +1,149 @@
+{
+  "date": "2026-04-07",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] Apr 7 - 7AM WAT",
+      "old_entry_title": "[TK-1] The real cost of doing crypto content manually",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] The real cost of doing crypto content manually",
+        "Notes": "Phase 1 | TK-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] Apr 7 - 12PM WAT",
+      "old_entry_title": "[TK-2] Why your favorite crypto influencer is broke",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] Why your favorite crypto influencer is broke",
+        "Notes": "Phase 1 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] Apr 7 - 5PM WAT",
+      "old_entry_title": "[TK-3] Drop your portfolio age. How long you been at this?",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Drop your portfolio age. How long you been at this?",
+        "Notes": "Phase 1 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] Apr 7 - 8PM WAT",
+      "old_entry_title": "[TK-4] Why 58% win rate is actually elite-level trading",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] Why 58% win rate is actually elite-level trading",
+        "Notes": "Phase 1 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] Apr 7 - 8AM WAT",
+      "old_entry_title": "[IG-1] 5 Trading Mistakes That Cost Beginners $10K+",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] 5 Trading Mistakes That Cost Beginners $10K+",
+        "Hook Used": "5 Trading Mistakes That Cost Beginners $10K+",
+        "Notes": "Phase 1 | IG-1 | A-5 | [DRAFT READY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "High"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] Apr 7 - 6PM WAT",
+      "old_entry_title": "[IG-2] The 16 tokens the SEC cleared — full Q2 update",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] The 16 tokens the SEC cleared — full Q2 update",
+        "Notes": "Phase 1 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Carousel",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] Apr 7 - 9AM WAT",
+      "old_entry_title": "[X-AM] The only 3 things I check before entering any trade. I used to check 12. Simplic...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] The only 3 things I check before entering any trade. I used to check 12. Simplic...",
+        "Hook Used": "The only 3 things I check before entering any trade. I used to check 12. Simplicity made me profitable.",
+        "Notes": "Phase 1 | X-AM | B-12 | [v1 hook] | v2",
+        "Content Type": "Thread",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] Apr 7 - 1PM WAT",
+      "old_entry_title": "[X-PM] You can only keep one for the next bull run: BTC or ETH. No hedging. Which one a...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] You can only keep one for the next bull run: BTC or ETH. No hedging. Which one a...",
+        "Hook Used": "You can only keep one for the next bull run: BTC or ETH. No hedging. Which one and why?",
+        "Notes": "Phase 1 | X-PM | B-12 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] Apr 7 - 10AM WAT",
+      "old_entry_title": "[LI-1] I used to evaluate 12 data points before making a decision. Now I use 3. Here's ...",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] I used to evaluate 12 data points before making a decision. Now I use 3. Here's ...",
+        "Hook Used": "I used to evaluate 12 data points before making a decision. Now I use 3. Here's why less made me sharper.",
+        "Notes": "Phase 1 | LI-1 | B-12 | [v1 hook] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] Apr 7 - 5PM WAT",
+      "old_entry_title": "[LI-2] 2 weeks of conversations over broadcasts: raw engagement data",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] 2 weeks of conversations over broadcasts: raw engagement data",
+        "Notes": "Phase 1 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] Apr 7 - 9AM WAT",
+    "[TG-2] Apr 7 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

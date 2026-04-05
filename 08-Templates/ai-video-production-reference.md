@@ -176,7 +176,11 @@ From the script, generate:
 Saved to: 06-Drafts/[date]-video-[topic]-production.md
 
 ### Stage 3: Asset Generation (You execute, Claude Code writes the prompts)
-1. Generate keyframe images using Nano Banana prompts
+1. Generate keyframe images using Nano Banana Edit (`fal-ai/nano-banana-pro/edit`):
+   - Include character reference image URL as `image_urls[0]` in every call
+   - Include scene reference image URLs from Art Direction step as `image_urls[1+]`
+   - After generating Shot 1, add Shot 1's output URL to the reference set for Shot 2
+   - This ensures visual continuity across all shots
 2. Generate video clips using Kling prompts (feed keyframe images as input where supported)
 3. Generate voiceover using MiniMax with the marked-up script
 4. Save all assets to a folder: assets/[date]-[topic]/
@@ -217,10 +221,14 @@ When Claude Code creates a production plan, it uses this format:
 ## ADDITIONAL PROMPT TIPS
 
 ### Consistency Across Scenes
-- Use the same subject description in every prompt: "African man, dark hoodie, confident expression"
-- Use the same lighting setup: "dark background, red accent light"
+- Use the same subject description in every prompt (weak signal — helps but is NOT sufficient alone)
+- Use the same lighting setup text: "dark background (#0A0A0F), red accent light (#E63946)"
 - Use the same style tags: "cinematic, 8k, professional"
-- This keeps the visual identity consistent across all generated clips
+- **REQUIRED: Pass reference images for true consistency:**
+  - Upload character reference from character-library.md: `ref_url = fal_client.upload_file("08-Media/characters/[file]")`
+  - Pass as `image_urls[0]` in every `fal-ai/nano-banana-pro/edit` call
+  - After generating Shot 1, add its output URL as `image_urls[1]` for Shot 2 (shot chaining)
+  - Text repetition alone does NOT ensure visual consistency — diffusion models are stochastic
 
 ### Negative Prompts (what to avoid)
 - "no blurry, no low quality, no distorted face, no extra fingers, no watermark"
@@ -237,3 +245,51 @@ When Claude Code creates a production plan, it uses this format:
 - Always specify: "8k quality, high detail, photorealistic" for images
 - For video: "high quality, smooth motion, cinematic grade"
 - For voice: "studio quality, no background noise, clear pronunciation"
+
+### Remotion Effect Components Reference
+
+When writing Remotion compositions, use these effect components for professional editing:
+
+| Effect | When to Use | Visual Result |
+|--------|-------------|---------------|
+| PunchZoom | Dialogue cuts, emphasis moments | Quick spring zoom in (1.0 → 1.15 → 1.0) |
+| SlamIn | Stat reveals, data points, bold claims | Element scales from 1.4 → 1.0 with bounce |
+| CameraShake | Dramatic openings, impact moments | Random x/y offset with spring decay |
+| CameraTrack | Every shot (subtle drift) | Slow directional pan for organic motion |
+| KenBurns | Static images (always) | Slow zoom in or out over duration |
+| FlashTransition | Scene category changes | White flash overlay at cut point |
+| LoopFade | Looping video clips | Crossfade at loop boundary |
+
+### SFX Placement Rules
+
+- Place a bass_drop or impact SFX at every hard cut
+- Place a whoosh SFX at every flash transition
+- Place a rise SFX before dramatic reveals
+- Place scan/glitch SFX on data/chart reveals
+- Sync SFX hits to the first frame of each new shot
+- Volume: impacts at 0.7-0.8, ambient SFX at 0.3-0.4
+
+### Shot Manifest Format for Data-Driven Compositions
+
+```json
+{
+  "shots": [
+    {
+      "start_frame": 0,
+      "duration_frames": 90,
+      "type": "image",
+      "asset": "shot_01.png",
+      "effect": "punch",
+      "flash": true,
+      "ken_direction": "in",
+      "track_direction": "left",
+      "sfx": "bass_drop",
+      "sfx_volume": 0.8,
+      "text_overlay": "Caption text here"
+    }
+  ],
+  "voiceover": "voiceover.mp3",
+  "music": "background_music.mp3",
+  "music_volume": 0.15
+}
+```

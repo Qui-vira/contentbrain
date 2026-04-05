@@ -1,32 +1,44 @@
-# Fix: Bad Signal Quality + Duplicate Messages + Binance Geo-block
+# Content Calendar V2 — Full Restructure
 
-## Duplicate Messages Fix
-- [x] SIGTERM handler — old instance stops polling immediately on Railway deploy
-- [x] 8-second startup delay — new instance waits for old one to die
-- [x] Flush confirmation — confirms offset with Telegram API on startup
+## Plan
+- [x] Read v1 calendar (270 scheduled + 17 flex = 287 entries)
+- [x] Generate v2 calendar with 910 entries (91 days × 10/day)
+- [x] Map all ~260 existing hooks to best-fit v2 slots
+- [x] Fill remaining ~650 with topic + angle (phase-appropriate)
+- [x] Deprecate v1 (renamed to unified-content-calendar-v1-deprecated.md)
+- [x] Push 910 entries to Notion in 10 batches (3 parallel agents)
+- [x] Verify: 910 entries, no product mentions before Apr 17, TK rotation correct
 
-## Signal Quality Fix (binance_ta_runner.py — shared by forex_ta_runner.py)
-- [x] Only count confluences matching dominant direction (3 bull + 2 bear = count 3, not 5)
-- [x] Exclude neutral factors (BB_squeeze, Volume) from confluence count
-- [x] Raise threshold from 3 to 4 directional confluences
-- [x] Raise confidence levels (6+ for HIGH, 4+ for MEDIUM)
-- [x] Reject signals with SL wider than 2x ATR
-- [x] Volume check requires vol_avg > 100 (filters CoinGecko zero-volume)
-- [x] Staleness guard for CoinGecko candle data
-- [x] Added missing contradiction filter to forex load_forex_signals
+## Results
+- **File:** `06-Drafts/unified-content-calendar-v2.md` (1,496 lines)
+- **Notion:** 910 entries in Content Calendar database (all Draft status, tagged v2)
+- **V1 hooks preserved:** ~260 mapped into v2 slots (13 [DRAFT READY], ~250 v1 hooks)
+- **New entries:** ~650 [TOPIC ONLY] with phase-appropriate topics + angles
+- **Compliance:** No ContentBrain mentions before Apr 17, TK-1/2/3/4 rotation every day
 
-## Polymarket Scanner Fix
-- [x] Use combined_edge instead of raw edge in threshold
-- [x] Block signals where Claude explicitly disagrees
-- [x] Cap agreement boost BEFORE clamping (prevents 52.5% shifts)
+## Status: Complete
 
-## Binance Geo-block Fix
-- [x] Added Bybit as fallback #1 (public API, global, real volume, no auth)
-- [x] Bybit uses dual domains (api.bybit.com + api.bytick.com) for resilience
-- [x] CoinGecko demoted to fallback #2 (last resort)
-- [ ] **USER ACTION:** Change Railway region to EU in Railway dashboard (Settings > Region)
+---
 
-## Verification
-- [ ] Deploy to Railway
-- [ ] /scan_all — one message, Bybit data source, fewer + stronger signals
-- [ ] Check edge values in Polymarket signals are reasonable (< 35%)
+# /research Command + Outlier AI Research
+
+## Plan
+- [x] Create `.claude/commands/research.md` — full 6-step pipeline (fetch links, web search, synthesize, markdown + PDF + PPTX)
+- [x] Add Apify Python API for X/Twitter links + oEmbed fallback (WebFetch can't fetch tweets)
+- [x] Update COMMAND-INDEX.md (61 → 62 commands)
+- [x] Run /research on Outlier AI — fetch 13 tweets + 12 web searches
+- [x] Write raw-links.md (13 tweets extracted)
+- [x] Write web-research.md (8 pages extracted from RemoWork, TechFixAI, Dollarbreak, Outlier official, AdsPower, Glassdoor)
+- [x] Write research-synthesis.md (cross-referenced findings, resolved contradictions)
+- [x] Write outlier-ai-research.md (15.7KB, 10 sections)
+- [x] Generate outlier-ai-guide.pdf (14.5KB, reportlab)
+- [x] Generate outlier-ai-presentation.pptx (17 slides, python-pptx)
+
+## Results
+- **Command:** `.claude/commands/research.md` — reusable for any topic
+- **Research files:** `00-Research/outlier-ai/` (raw-links, web-research, synthesis)
+- **Outputs:** `06-Drafts/outlier-ai-research.md`, `06-Drafts/outlier-ai-guide.pdf`, `06-Drafts/outlier-ai-presentation.pptx`
+- **Sources:** 13 tweets (oEmbed) + 8 web pages + 12 web searches
+- **Key finding:** Outlier pays $12-$100/hr, weekly Tuesdays, PayPal/Airtm. Nigeria needs VPN/RDP. Aether assessment temporarily suspended April 2026.
+
+## Status: Complete

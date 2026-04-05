@@ -1,0 +1,148 @@
+{
+  "date": "2026-05-10",
+  "matches": [
+    {
+      "new_slot_title": "[TK-1] May 10 - 7AM WAT",
+      "old_entry_title": "[TK-1] 20 days of strategy highlights. Starting Monday: the execution layer. ContentBra...",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-1] 20 days of strategy highlights. Starting Monday: the execution layer. ContentBra...",
+        "Hook Used": "20 days of strategy highlights. Starting Monday: the execution layer. ContentBrain demos begin.",
+        "Notes": "Phase 4 | TK-1 | C-40 | [v1 hook] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Sales",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-2] May 10 - 12PM WAT",
+      "old_entry_title": "[TK-2] 5 frameworks behind every viral post — steal them",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-2] 5 frameworks behind every viral post — steal them",
+        "Notes": "Phase 4 | TK-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-3] May 10 - 5PM WAT",
+      "old_entry_title": "[TK-3] Drop your niche — I'll suggest your next 3 posts",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-3] Drop your niche — I'll suggest your next 3 posts",
+        "Notes": "Phase 4 | TK-3 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Community",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[TK-4] May 10 - 8PM WAT",
+      "old_entry_title": "[TK-4] The live build results: what speed actually looks like",
+      "old_entry_platform": "TikTok",
+      "transfer_properties": {
+        "Title": "[TK-4] The live build results: what speed actually looks like",
+        "Notes": "Phase 4 | TK-4 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "TikTok Script",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-1] May 10 - 8AM WAT",
+      "old_entry_title": "[IG-1] Quote: '60 posts/month. 4 platforms. Zero burnout.'",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-1] Quote: '60 posts/month. 4 platforms. Zero burnout.'",
+        "Notes": "Phase 4 | IG-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Community Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[IG-2] May 10 - 6PM WAT",
+      "old_entry_title": "[IG-2] Live build preview: what you'll see Wednesday",
+      "old_entry_platform": "Instagram",
+      "transfer_properties": {
+        "Title": "[IG-2] Live build preview: what you'll see Wednesday",
+        "Notes": "Phase 4 | IG-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "Reel Script",
+        "Goal": "Reach",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-1] May 10 - 9AM WAT",
+      "old_entry_title": "[X-AM] In the last 20 days I've shared more content strategy than most courses teach. F...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-1] In the last 20 days I've shared more content strategy than most courses teach. F...",
+        "Hook Used": "In the last 20 days I've shared more content strategy than most courses teach. Free content can't give you one thing: execution.",
+        "Notes": "Phase 4 | X-AM | C-40 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Leads",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[X-2] May 10 - 1PM WAT",
+      "old_entry_title": "[X-PM] A rule that will save your content strategy: if you don't have a system, you ARE...",
+      "old_entry_platform": "X/Twitter",
+      "transfer_properties": {
+        "Title": "[X-2] A rule that will save your content strategy: if you don't have a system, you ARE...",
+        "Hook Used": "A rule that will save your content strategy: if you don't have a system, you ARE the system. And you can't scale yourself.",
+        "Notes": "Phase 4 | X-PM | C-15 | [v1 hook] | v2",
+        "Content Type": "Tweet",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-1] May 10 - 10AM WAT",
+      "old_entry_title": "[LI-1] 5 content frameworks that drive every viral post",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-1] 5 content frameworks that drive every viral post",
+        "Notes": "Phase 4 | LI-1 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    },
+    {
+      "new_slot_title": "[LI-2] May 10 - 5PM WAT",
+      "old_entry_title": "[LI-2] The content architect vs content creator mindset shift",
+      "old_entry_platform": "LinkedIn",
+      "transfer_properties": {
+        "Title": "[LI-2] The content architect vs content creator mindset shift",
+        "Notes": "Phase 4 | LI-2 | NEW | [TOPIC ONLY] | v2",
+        "Content Type": "LinkedIn Post",
+        "Goal": "Authority",
+        "Status": "Draft",
+        "Priority": "Normal"
+      }
+    }
+  ],
+  "unmatched_new_slots": [
+    "[TG-1] May 10 - 9AM WAT",
+    "[TG-2] May 10 - 5PM WAT"
+  ],
+  "overflow_old_entries": [],
+  "stats": {
+    "matched": 10,
+    "unmatched_new": 2,
+    "overflow": 0
+  }
+}

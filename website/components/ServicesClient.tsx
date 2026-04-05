@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { GlassCard3D } from "@/components/GlassCard3D";
 import { MagneticButton } from "@/components/MagneticButton";
 import { TextReveal } from "@/components/TextReveal";
@@ -9,6 +10,7 @@ import { ParallaxSection } from "@/components/ParallaxSection";
 import { CTABanner } from "@/components/CTABanner";
 import { SectionWrapper } from "@/components/SectionWrapper";
 import { getIcon } from "@/lib/icons";
+import { PaymentModal } from "@/components/PaymentModal";
 
 interface Service {
   id: number;
@@ -29,9 +31,37 @@ interface ServicesClientProps {
   cta: { headline: string; subtext: string; buttonText: string; buttonHref: string } | null;
 }
 
+function parsePriceNumber(price: string | null): number {
+  if (!price) return 0;
+  const n = parseFloat(price.replace(/[^0-9.]/g, ""));
+  return isNaN(n) ? 0 : n;
+}
+
+function PaymentTriggerButton({ service }: { service: Service }) {
+  const [open, setOpen] = useState(false);
+  const amount = parsePriceNumber(service.price);
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="mt-5 inline-flex items-center justify-center rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent/50"
+      >
+        {service.ctaText || "Get Started"}
+      </button>
+      <PaymentModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        serviceName={service.title}
+        amount={amount}
+      />
+    </>
+  );
+}
+
 function ServiceCard({ service }: { service: Service }) {
   const Icon = getIcon(service.icon || "Zap");
   const href = service.ctaHref;
+  const isContact = !service.price || service.price.toLowerCase().includes("contact");
 
   return (
     <GlassCard3D>
@@ -46,10 +76,12 @@ function ServiceCard({ service }: { service: Service }) {
           )}
         </p>
       )}
-      {service.ctaText && href && (
-        <div className="mt-5">
-          <MagneticButton href={href}>{service.ctaText}</MagneticButton>
-        </div>
+      {service.ctaText && (
+        href
+          ? <div className="mt-5"><MagneticButton href={href}>{service.ctaText}</MagneticButton></div>
+          : isContact
+            ? <div className="mt-5"><MagneticButton href="/contact">{service.ctaText}</MagneticButton></div>
+            : <PaymentTriggerButton service={service} />
       )}
     </GlassCard3D>
   );
@@ -125,16 +157,19 @@ export function ServicesClient({
               {aiProducts.map((s) => {
                 const Icon = getIcon(s.icon || "Zap");
                 const href = s.ctaHref;
+                const isContact = !s.price || s.price.toLowerCase().includes("contact");
                 return (
                   <GlassCard3D key={s.id} className="md:p-10">
                     <Icon className="mb-4 h-10 w-10 text-accent" />
                     <h3 className="text-2xl font-bold text-text-primary">{s.title}</h3>
                     <p className="mt-3 text-text-secondary leading-relaxed whitespace-pre-line">{s.description}</p>
                     {s.price && <p className="mt-6 text-3xl font-extrabold text-accent">{s.price}</p>}
-                    {s.ctaText && href && (
-                      <div className="mt-6">
-                        <MagneticButton href={href}>{s.ctaText}</MagneticButton>
-                      </div>
+                    {s.ctaText && (
+                      href
+                        ? <div className="mt-6"><MagneticButton href={href}>{s.ctaText}</MagneticButton></div>
+                        : isContact
+                          ? <div className="mt-6"><MagneticButton href="/contact">{s.ctaText}</MagneticButton></div>
+                          : <PaymentTriggerButton service={s} />
                     )}
                   </GlassCard3D>
                 );

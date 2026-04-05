@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 name: scrape-instagram
 description: "Scrape competitor posts from ANY social media platform via Apify (Instagram, X/Twitter, TikTok, YouTube, LinkedIn, Facebook, Reddit, Pinterest, Threads). Analyzes for patterns/frameworks/knowledge, distributes insights to vault folders. Triggers: 'scrape instagram', 'scrape @username', 'scrape tiktok', 'scrape twitter', 'scrape youtube', 'scrape linkedin', 'scrape facebook', 'scrape reddit', 'scrape pinterest', 'scrape threads', 'update competitors', 'pull posts from [platform]', 'learn about [topic]', 'research [topic] videos', 'study 50 videos about [topic]', 'scrape videos about [topic]', 'what are the best [topic] videos', 'educate yourself on [topic]', 'research how to [topic]'"
 allowed-tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep", "WebFetch", "WebSearch"]
@@ -101,30 +102,47 @@ url = f'https://api.apify.com/v2/acts/{actor_id}/runs'
 headers = {'Authorization': f'Bearer {API_KEY}'}
 
 print(f'Starting scrape with actor {actor_id}...')
-resp = requests.post(url, json=payload, headers=headers, timeout=30)
-resp.raise_for_status()
-run = resp.json()
-run_id = run['data']['id']
-dataset_id = run['data']['defaultDatasetId']
 
-# Poll until run finishes (max 10 minutes)
-status_url = f'https://api.apify.com/v2/actor-runs/{run_id}'
-for i in range(120):
-    time.sleep(5)
-    status = requests.get(status_url, headers=headers, timeout=15).json()
-    state = status['data']['status']
-    if state in ('SUCCEEDED', 'FAILED', 'ABORTED', 'TIMED-OUT'):
-        break
-    if i % 6 == 0:
-        print(f'  Waiting... ({state})')
+# FALLBACK: Retry up to 2 times on failure
+max_retries = 2
+results = None
+for attempt in range(max_retries + 1):
+    try:
+        resp = requests.post(url, json=payload, headers=headers, timeout=30)
+        resp.raise_for_status()
+        run = resp.json()
+        run_id = run['data']['id']
+        dataset_id = run['data']['defaultDatasetId']
 
-if state != 'SUCCEEDED':
-    print(f'ERROR: Run ended with status {state}')
-    sys.exit(1)
+        # Poll until run finishes (max 10 minutes)
+        status_url = f'https://api.apify.com/v2/actor-runs/{run_id}'
+        state = 'RUNNING'
+        for i in range(120):
+            time.sleep(5)
+            status = requests.get(status_url, headers=headers, timeout=15).json()
+            state = status['data']['status']
+            if state in ('SUCCEEDED', 'FAILED', 'ABORTED', 'TIMED-OUT'):
+                break
+            if i % 6 == 0:
+                print(f'  Waiting... ({state})')
 
-# Fetch results
-dataset_url = f'https://api.apify.com/v2/datasets/{dataset_id}/items'
-results = requests.get(dataset_url, headers=headers, timeout=30).json()
+        if state == 'SUCCEEDED':
+            dataset_url = f'https://api.apify.com/v2/datasets/{dataset_id}/items'
+            results = requests.get(dataset_url, headers=headers, timeout=30).json()
+            break
+        else:
+            print(f'WARN: Attempt {attempt+1} ended with status {state}')
+    except Exception as e:
+        print(f'WARN: Attempt {attempt+1} failed: {e}')
+    if attempt < max_retries:
+        print(f'Retrying in 10s... (attempt {attempt+2}/{max_retries+1})')
+        time.sleep(10)
+
+if results is None:
+    print('FALLBACK: Apify unavailable after retries. Outputting empty results.')
+    print('[]')
+    sys.exit(0)
+
 print(json.dumps(results, indent=2))
 " "$ACTOR_ID" '$PAYLOAD_JSON'
 ```
@@ -432,13 +450,13 @@ This is the core value step. Analyze ALL collected content and generate insights
 
 Use the author's username as `[source]` in filenames.
 
-### 5A: Extract Hooks → `02-Hooks/[platform]-hooks.md`
+### 5A: Extract Hooks → `02-Hooks/[platform]-hooks.md` + `02-Hooks/hook-index.md`
 
 For each post, extract the **first line** (everything before the first newline). This is the hook.
 
 **For Instagram Reels with transcripts:** Also extract the **spoken hook** — the first sentence of the transcript (what they say to open the video). Spoken hooks often differ from caption hooks and reveal what actually stops the scroll.
 
-Append to `02-Hooks/[platform]-hooks.md` (create if missing, never overwrite existing):
+**Step 5A-1: Append to platform hooks file** (create if missing, never overwrite existing):
 - Instagram → `02-Hooks/instagram-hooks.md`
 - Twitter/X → `02-Hooks/twitter-hooks.md`
 - TikTok → `02-Hooks/tiktok-hooks.md`
@@ -453,6 +471,19 @@ Append to `02-Hooks/[platform]-hooks.md` (create if missing, never overwrite exi
 | [first line of caption] | [first sentence of transcript, or — if none] | [count] | [count] | [Reel/Carousel/Image/Video/Tweet/etc.] |
 | [next post first line] | [spoken hook or —] | [count] | [count] | [type] |
 ```
+
+**Step 5A-2: Auto-index high-performing hooks into `02-Hooks/hook-index.md`**
+
+After extracting hooks, add any hook with 1K+ likes (or 10K+ views for X/TikTok/YouTube) to the PROVEN section of `02-Hooks/hook-index.md`. For each qualifying hook:
+
+1. Read the current hook-index.md to find the last used ID number
+2. Assign the next ID (H-XXX)
+3. Score using: `80 + round((engagement_rank / total_scraped) * 20)` where engagement_rank is position in the sorted list (1 = highest)
+4. Determine Goal: Sales/Reach/Leads/Authority/Community based on hook content
+5. Determine Hook Type code: BC (Bold Claim), CG (Curiosity Gap), QN (Question), CT (Contrarian), BA (Before-After), SP (Simplicity Promise), FM (FOMO), DT (Demo Tease), AU (Authority), ST (Story), PS (Problem-Solver), CTA-DM (DM CTA), RF (Result-First), PL (Polarizing)
+6. Append to the correct PROVEN section table in hook-index.md
+
+Hooks below the 1K threshold: add to STRONG section (score 60-79) if they show an interesting pattern or formula worth adapting for @big_quiv. Skip generic/low-effort hooks entirely.
 
 ### 5B: Content Patterns → `04-Patterns/[source]-content-patterns.md`
 
@@ -636,11 +667,21 @@ Key insight: [most interesting finding from the analysis]
 ```
 Researched [topic] across [X] platforms. Collected [Y] videos/posts.
 
-Saved to:
-- 02-Hooks/topic-research-[date].md — [X] hooks extracted ([Y] bold claim, [Z] question, etc.)
-- 05-Frameworks/topic-research-[topic]-[date].md — [X] frameworks reverse-engineered
-- 08-Templates/topic-research-production-[date].md — production techniques analyzed
-- 10-Niche-Knowledge/[folder]/topic-research-[topic]-[date].md — [X] insights extracted
+Skills educated:
+- /ghostwriter — [X] new hook formulas, [Y] writing patterns
+- /video-editor — [X] production techniques, [Y] visual patterns
+- /content-strategist — [X] frameworks, [Y] trend insights
+- /sales-closer — [X] pitch patterns (if relevant to topic)
+- /community-manager — [X] engagement tactics (if relevant)
+- /[other skills] — [what they learned]
+
+Files created/updated:
+- 02-Hooks/topic-research-[date].md — [X] hooks extracted
+- 04-Patterns/topic-research-[topic]-patterns.md — content patterns
+- 05-Frameworks/topic-research-[topic]-[date].md — frameworks
+- 08-Templates/topic-research-production-[date].md — production techniques
+- 10-Niche-Knowledge/[folder]/topic-research-[topic]-[date].md — domain knowledge
+- 07-Analytics/skill-education-log.md — education summary logged
 
 Top 3 videos by engagement:
 1. [video title] — [platform] — [views/likes]
@@ -649,12 +690,11 @@ Top 3 videos by engagement:
 
 Key learning: [most actionable finding from the research]
 
-Suggested vault updates:
-- [X] new hook formulas ready to add to 02-Hooks/
+Suggested template updates (requires approval):
 - [X] new prompt blocks ready for prompt-library.md
-- [X] new framework(s) ready for 05-Frameworks/
+- [X] new framework(s) to merge with existing
 
-Want me to apply these updates to the vault?
+Want me to apply template updates?
 ```
 
 ---
@@ -782,20 +822,114 @@ Extract domain-specific knowledge shared in the content:
 ...
 ```
 
-### 5-ALT-E: Update Existing Vault Files (conditional)
+### 5-ALT-E: Skill Distribution Matrix (ALL skills learn)
 
-After generating the research files above, check if any findings should be appended to existing vault files:
+After generating the research files above, distribute learnings to EVERY relevant skill by saving to the vault folders each skill reads. The scraper doesn't just collect data — it makes the entire system smarter.
 
-1. **New hook formulas discovered** → Append to `02-Hooks/[platform]-hooks.md` (never overwrite)
-2. **New prompt blocks** (camera angles, lighting, moods not in prompt-library) → Suggest additions to `08-Templates/prompt-library.md` but ASK before modifying
-3. **New frameworks** → Check if similar framework exists in `05-Frameworks/`. If not, save as new. If similar, suggest merging.
-4. **Niche knowledge** → Save to the correct subfolder based on topic:
-   - Trading/crypto → `10-Niche-Knowledge/crypto-trading/`
-   - AI/tools → `10-Niche-Knowledge/artificial-intelligence/`
-   - Personal brand/content → `10-Niche-Knowledge/personal-brand/`
-   - Web3 → `10-Niche-Knowledge/web3-development/`
+**SKILL DISTRIBUTION MAP:**
 
-Always ASK before modifying existing template files (prompt-library.md, character-library.md, etc.). Only auto-save to research-specific files.
+| Skill | What It Learns | Where To Save | Auto-Save? |
+|-------|---------------|---------------|------------|
+| /ghostwriter | Writing styles, voice patterns, caption structures, storytelling arcs, tone shifts | `02-Hooks/`, `04-Patterns/`, `10-Niche-Knowledge/personal-brand/` | Yes |
+| /video-editor | Camera angles, lighting, transitions, pacing, visual styles, thumbnail patterns | `08-Templates/topic-research-production-[date].md`, suggest updates to `prompt-library.md` | Research file: Yes. prompt-library: ASK |
+| /content-strategist | Content pillars, posting schedules, format mix, trend angles, calendar patterns | `03-Trends/topic-research-trends-[date].md`, `04-Patterns/`, `05-Frameworks/` | Yes |
+| /concept | Creative angles, visual worlds, narrative approaches, mood boards | `05-Frameworks/`, `10-Niche-Knowledge/` | Yes |
+| /sales-closer | DM scripts, objection handling, pitch structures, closing techniques, follow-up patterns | `10-Niche-Knowledge/sales/topic-research-[topic]-[date].md` | Yes |
+| /funnel-builder | Funnel structures, landing page copy patterns, lead magnet ideas, email sequence flows | `05-Frameworks/`, `10-Niche-Knowledge/sales/` | Yes |
+| /community-manager | Engagement tactics, announcement styles, welcome flows, retention strategies, FAQ patterns | `10-Niche-Knowledge/community/topic-research-[topic]-[date].md` | Yes |
+| /market-report | Report structures, data presentation styles, narrative framing for market data | `10-Niche-Knowledge/crypto-trading/` | Yes |
+| /technical-analyst | Chart presentation, signal formatting, TA teaching approaches | `10-Niche-Knowledge/crypto-trading/` | Yes |
+| /data-analyst | Analytics frameworks, performance metrics, reporting templates | `10-Niche-Knowledge/personal-brand/` | Yes |
+| /operations-lead | Workflow patterns, productivity systems, task management approaches | `10-Niche-Knowledge/personal-brand/` | Yes |
+
+**TOPIC → SKILL ROUTING:**
+
+Based on the research topic, prioritize distribution to the most relevant skills:
+
+| Topic Contains | Primary Skills | Save To |
+|---------------|---------------|---------|
+| "hooks", "writing", "copywriting", "captions" | ghostwriter, content-strategist | `02-Hooks/`, `04-Patterns/` |
+| "video", "editing", "filming", "visuals", "thumbnails" | video-editor, concept | `08-Templates/`, `04-Patterns/` |
+| "sales", "DM", "closing", "objections", "pitch" | sales-closer, funnel-builder | `10-Niche-Knowledge/sales/` |
+| "funnel", "landing page", "email", "lead magnet" | funnel-builder, sales-closer | `05-Frameworks/`, `10-Niche-Knowledge/sales/` |
+| "community", "engagement", "retention", "telegram", "discord" | community-manager | `10-Niche-Knowledge/community/` |
+| "trading", "crypto", "forex", "signals", "TA" | technical-analyst, market-report, signal-tracker | `10-Niche-Knowledge/crypto-trading/` |
+| "content strategy", "calendar", "planning", "scheduling" | content-strategist, operations-lead | `03-Trends/`, `05-Frameworks/` |
+| "branding", "positioning", "personal brand", "authority" | all content skills | `10-Niche-Knowledge/personal-brand/` |
+| "design", "graphics", "carousel", "aesthetic" | video-editor, concept | `08-Templates/`, `04-Patterns/` |
+| "AI", "tools", "automation", "workflow" | all skills | `10-Niche-Knowledge/artificial-intelligence/` |
+
+**DISTRIBUTION STEPS:**
+
+1. **Always save research files** to the 4 standard locations (5-ALT-A through 5-ALT-D) — this is the baseline
+2. **Route by topic** — use the topic routing table above to identify which additional vault folders need updates
+3. **Create subfolders** if they don't exist (e.g., `10-Niche-Knowledge/sales/`, `10-Niche-Knowledge/community/`)
+4. **Append to existing files** in `02-Hooks/`, `03-Trends/`, `04-Patterns/` — never overwrite
+5. **ASK before modifying template files** (`prompt-library.md`, `character-library.md`, etc.)
+6. **Auto-save to niche knowledge subfolders** — these are always safe to write to
+7. **Report which skills were educated** in the final Mode 2 report — list each skill and what it learned
+
+### 5-ALT-F: Auto-Ingest to Indexes
+
+After all distribution, extract elements directly into the 4 scored indexes. This happens automatically — no manual /index-new-data run needed.
+
+**Visual Hook Auto-Ingest (from video posts with 1K+ likes/views):**
+1. For each scraped video post with engagement above 1K likes or views:
+   - Identify the visual hook technique used in the first 1-3 seconds (from caption, thumbnail description, or video metadata)
+   - Check `02-Hooks/visual-hook-index.md` for duplicates (80%+ similarity = skip)
+   - If new, score it: STOP POWER, CURIOSITY VISUAL, UNIQUENESS, EXECUTION EASE
+   - Add as COMPETITOR-PROVEN tier (engagement data proves it works)
+   - Assign next available V-XXX ID
+   - Set Source to scraped creator and engagement numbers
+
+**Text Hook Auto-Ingest (from all high-engagement posts):**
+1. Extract first line of each caption as a hook candidate
+2. Check `02-Hooks/hook-index.md` for duplicates
+3. If new and engagement is high (top 25% of scraped posts), add as COMPETITOR-PROVEN
+4. If new and engagement is moderate, add as STRONG
+5. Score using GAP, SPEC, CHARGE, BREAK rubric
+
+**Psychological Structure Auto-Ingest (from long-form content and tutorials):**
+1. For scraped posts longer than 200 words or video transcripts:
+   - Identify the content structure used (problem-solution, story-lesson, list, before-after, etc.)
+   - Check `05-Frameworks/psychological-structure-index.md` for duplicates
+   - If new structure identified, add with next available PS-XXX ID
+
+**Delivery Style Auto-Ingest (from video posts only):**
+1. For video posts with camera/delivery descriptions in metadata or captions:
+   - Identify camera setup, energy, framing, or movement techniques
+   - Check `06-Delivery/talking-head-style-index.md` for duplicates
+   - If new, add with next available TH-XXX ID
+
+**Auto-ingest report** — append to the Mode 2 education summary:
+```
+**Index auto-ingest:**
+- visual-hook-index.md: [X] new entries added (V-XXX through V-XXX)
+- hook-index.md: [X] new entries added (H-XXX through H-XXX)
+- psychological-structure-index.md: [X] new entries added
+- talking-head-style-index.md: [X] new entries added
+- [X] duplicates skipped
+```
+
+**EDUCATION SUMMARY FILE:**
+
+After all distribution, save a summary to `07-Analytics/skill-education-log.md` (append, never overwrite):
+
+```
+## [date] — Topic: [topic]
+
+**Platforms searched:** [list]
+**Content analyzed:** [count] videos/posts
+**Skills educated:**
+- /ghostwriter — [X] new hook formulas, [Y] writing patterns
+- /video-editor — [X] production techniques, [Y] visual patterns
+- /content-strategist — [X] content frameworks, [Y] trend insights
+- /[skill] — [what it learned]
+
+**Files created/updated:**
+- [file path] — [what was added]
+- [file path] — [what was added]
+```
 
 ---
 

@@ -1,4 +1,5 @@
 ---
+voice: see 08-Templates/voice-rules.md
 description: "Send qualifying crypto TA signals directly — skip approval, distribute immediately. Triggers: '/send-signals-direct', 'send signals direct', 'distribute signals now'"
 allowed-tools: ["Bash"]
 ---
