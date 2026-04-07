@@ -10,11 +10,13 @@ import {
   FolderOpen,
   User,
   MessageCircle,
+  Mail,
   LogOut,
 } from "lucide-react";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/outreach", label: "Outreach", icon: Mail },
   { href: "/admin/settings", label: "Settings", icon: Settings },
   { href: "/admin/homepage", label: "Homepage", icon: Home },
   { href: "/admin/services", label: "Services", icon: Briefcase },
